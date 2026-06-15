@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Online Retail II — Customer Value &amp; Revenue | Robert Maszkiewski</title>
+<meta name="description" content="Case study: customer value, retention and revenue analysis of 1.07M UK online-retail transactions using SQL and Python.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container">
+    <a class="brand" href="../index.html">Robert&nbsp;<span>Maszkiewski</span></a>
+    <div class="nav-links">
+      <a href="../index.html#cases">Case studies</a>
+      <a class="hide-sm" href="../index.html#about">About</a>
+      <a class="nav-cta" href="https://www.kaggle.com/code/robertmaszkiewski/online-retail-ii-customer-value-revenue-analysis" target="_blank" rel="noopener">View on Kaggle</a>
+    </div>
+  </div>
+</nav>
+
+<header class="cs-hero">
+  <div class="container">
+    <a class="back" href="../index.html">← Back to portfolio</a>
+    <h1 style="margin-top:14px">Online Retail II — Customer Value &amp; Revenue</h1>
+    <p class="lede">Who are the most valuable customers, and what really drives revenue for a UK online gift retailer? An end-to-end analysis of <strong>1,067,371</strong> transactions — cleaned, segmented (RFM), and turned into retention and revenue recommendations.</p>
+    <div class="cs-meta">
+      <span><b>Tools:</b> SQL (DuckDB) · Python (pandas, matplotlib)</span>
+      <span><b>Data:</b> UCI Online Retail II</span>
+      <span><b>Period:</b> Dec 2009 – Dec 2011</span>
+      <span><b>Links:</b> <a href="https://www.kaggle.com/code/robertmaszkiewski/online-retail-ii-customer-value-revenue-analysis" target="_blank" rel="noopener">Kaggle notebook</a> · <a href="https://github.com/robertmaszkiewski" target="_blank" rel="noopener">GitHub</a></span>
+    </div>
+  </div>
+</header>
+
+<!-- INTRODUCTION -->
+<section>
+  <div class="container">
+    <span class="phase">1 · Introduction (Ask)</span>
+    <h2>The business question</h2>
+    <p class="lede" style="color:var(--ink-soft)">A UK-registered, non-store online retailer of all-occasion giftware wants to <strong>grow revenue and keep customers</strong> — but doesn't know who its valuable customers are or what drives sales. My job: turn ~1.07M raw transactions into clear answers marketing and operations can act on.</p>
+    <div class="callout">
+      <strong>Assumptions:</strong> negative-quantity rows are returns/cancellations (not sales); rows priced ≤ £0 are samples/adjustments; postage &amp; manual entries are non-product revenue, reported separately; sales without a Customer ID still count toward revenue but are excluded from customer-level analysis.
+    </div>
+  </div>
+</section>
+
+<!-- KPIs -->
+<section class="section-soft">
+  <div class="container">
+    <span class="phase">Headline numbers (after cleaning)</span>
+    <h2>What the cleaned data shows</h2>
+    <div class="kpis">
+      <div class="kpi good"><div class="v">£19.6M</div><div class="l">Product revenue</div></div>
+      <div class="kpi"><div class="v">£18.2M</div><div class="l">Net revenue (after returns)</div></div>
+      <div class="kpi bad"><div class="v">−£1.46M</div><div class="l">Returns (7.4% of revenue)</div></div>
+      <div class="kpi"><div class="v">5,852</div><div class="l">Identified customers</div></div>
+      <div class="kpi"><div class="v">39,517</div><div class="l">Orders</div></div>
+      <div class="kpi"><div class="v">£497</div><div class="l">Avg order value</div></div>
+      <div class="kpi good"><div class="v">72.4%</div><div class="l">Repeat-customer rate</div></div>
+      <div class="kpi"><div class="v">4,901</div><div class="l">Products sold</div></div>
+    </div>
+    <p class="muted" style="margin-top:14px;font-size:.9rem">A subtle data trap handled in cleaning: the source ships two yearly sheets that overlap in Dec 2010 — naïvely merging them double-counts ~£0.5M. De-duplicating on the business columns fixes it. <a href="https://www.kaggle.com/code/robertmaszkiewski/online-retail-ii-customer-value-revenue-analysis" target="_blank" rel="noopener">Full cleaning log →</a></p>
+  </div>
+</section>
+
+<!-- PROBLEMS / ANALYSIS -->
+<section>
+  <div class="container">
+    <span class="phase">2 · Problems → 3 · Analyze &amp; Share</span>
+    <h2>Six questions, answered with evidence</h2>
+    <p class="muted" style="max-width:720px;margin-bottom:28px">Each chart answers one business question and states the fact it supports. Hover any chart for detail.</p>
+
+    <div class="chart-grid">
+      <div class="panel full">
+        <h3>Revenue over time</h3>
+        <div class="sub">Strong, repeatable Q4 seasonality — September to November is the money-making window every year.</div>
+        <div class="chart-wrap"><canvas id="chRevenue"></canvas></div>
+      </div>
+
+      <div class="panel">
+        <h3>Top products by revenue</h3>
+        <div class="sub">A handful of homeware/gift lines drive a large share of sales.</div>
+        <div class="chart-wrap"><canvas id="chProducts"></canvas></div>
+      </div>
+
+      <div class="panel">
+        <h3>Revenue by country</h3>
+        <div class="sub">The UK is ~85% of revenue; some export markets are just 1–3 wholesale accounts (concentration risk).</div>
+        <div class="chart-wrap"><canvas id="chCountry"></canvas></div>
+      </div>
+
+      <div class="panel">
+        <h3>Customer value — RFM segments</h3>
+        <div class="sub">Champions are ~25% of customers but <strong>69%</strong> of revenue. Loyalty, not breadth, is the engine.</div>
+        <div class="chart-wrap"><canvas id="chRfm"></canvas></div>
+      </div>
+
+      <div class="panel">
+        <h3>Revenue leakage — returns</h3>
+        <div class="sub">~7.4% of product revenue is lost to returns/cancellations — a real, addressable leak.</div>
+        <div class="chart-wrap"><canvas id="chReturns"></canvas></div>
+      </div>
+
+      <div class="panel full">
+        <h3>Retention — cohort analysis</h3>
+        <div class="sub">% of each first-purchase cohort still buying in later months. First-month retention is modest, then a loyal core keeps re-purchasing.</div>
+        <div style="overflow-x:auto"><div id="cohort"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUTIONS -->
+<section class="section-soft">
+  <div class="container">
+    <span class="phase">4 · Solutions</span>
+    <h2>Options &amp; trade-offs</h2>
+    <p class="muted" style="max-width:720px;margin-bottom:24px">Revenue is concentrated in a small group of repeat customers, peaks hard in Q4, and loses ~7% to returns. Three options:</p>
+    <div class="sol">
+      <div class="panel rec">
+        <span class="pill">Recommended</span>
+        <h3 style="margin-top:10px">A · Retention &amp; win-back program</h3>
+        <p class="muted">Champion perks + automated win-back for the "At risk (was loyal)" segment (£1.0M at stake).</p>
+        <ul>
+          <li class="pro">+ Targets the segment already driving most revenue</li>
+          <li class="pro">+ Cheap vs. new-customer acquisition</li>
+          <li class="con">– Needs CRM/email setup; won't grow the funnel top</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h3>B · Seasonal plan for Sep–Nov</h3>
+        <p class="muted">Align marketing spend and inventory with the proven Q4 peak.</p>
+        <ul>
+          <li class="pro">+ Lifts the biggest months of the year</li>
+          <li class="con">– Concentrates risk; stock-outs/over-stocks are costly if mis-forecast</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h3>C · Cut returns &amp; de-risk geography</h3>
+        <p class="muted">Investigate the most-returned SKUs; protect single-account export markets.</p>
+        <ul>
+          <li class="pro">+ Recovers part of the ~7% leak</li>
+          <li class="con">– Root-cause work is slow; diversifying markets is a long game</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONCLUSION + NEXT STEPS -->
+<section>
+  <div class="container">
+    <span class="phase">5 · Conclusion &amp; 6 · Next steps</span>
+    <h2>Key takeaways</h2>
+    <ul style="max-width:760px;color:var(--ink-soft)">
+      <li>A <strong>small core of customers ("Champions") drives ~69% of revenue</strong> — retention beats acquisition here.</li>
+      <li>Sales are <strong>strongly seasonal (Sep–Nov)</strong>; the UK is ~85% of revenue with risky single-account export markets.</li>
+      <li><strong>~7% of revenue leaks to returns</strong> — measurable and worth tackling.</li>
+      <li><strong>Lesson:</strong> the analysis is only as good as the cleaning — the Dec-2010 overlap and service-code nuance materially change the numbers.</li>
+    </ul>
+    <h3 style="margin-top:34px">Recommended next steps — what · who · when</h3>
+    <ol class="steps" style="max-width:820px;margin-top:14px">
+      <li><span class="n">1</span><div><strong>Launch a tiered retention program</strong> (Champion perks + win-back for "At risk"). <span class="muted">Who: CRM/Marketing · When: next quarter, measure repeat-rate uplift at 90 days.</span></div></li>
+      <li><span class="n">2</span><div><strong>Build the Sep–Nov seasonal plan</strong> (budget + inventory locked by August). <span class="muted">Who: Marketing + Ops · When: annually, sign-off by 31 Aug.</span></div></li>
+      <li><span class="n">3</span><div><strong>Stand up a returns dashboard</strong> and investigate top returned SKUs. <span class="muted">Who: Analytics + Merchandising · When: within 60 days.</span></div></li>
+      <li><span class="n">4</span><div><strong>Key-account plan</strong> for single-customer export markets (EIRE, NL). <span class="muted">Who: Sales · When: ongoing, quarterly review.</span></div></li>
+    </ol>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="brand" style="color:#fff">Robert <span style="color:#7fd1a8">Maszkiewski</span></div>
+    <p class="muted" style="color:#9fb0cc;margin-top:6px">Online Retail II case study · built with SQL, Python &amp; Chart.js</p>
+    <div class="foot-links">
+      <a href="../index.html">Portfolio home</a>
+      <a href="https://www.kaggle.com/code/robertmaszkiewski/online-retail-ii-customer-value-revenue-analysis" target="_blank" rel="noopener">Kaggle notebook</a>
+      <a href="https://github.com/robertmaszkiewski" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://www.linkedin.com/in/robert-maszkiewski" target="_blank" rel="noopener">LinkedIn</a>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/dashboard.js"></script>
+</body>
+</html>
