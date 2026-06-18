@@ -16,6 +16,7 @@
   .legend i{width:16px;height:12px;border-radius:3px;display:inline-block;margin-right:6px;vertical-align:-1px}
   .map-tip{font-weight:700}
   .map-tip span{font-weight:600;color:var(--ink-soft)}
+  .map.sm{height:420px}
 </style>
 </head>
 <body>
@@ -137,6 +138,38 @@
   </div>
 </section>
 
+<!-- CORRELATION: crime vs house prices -->
+<section>
+  <div class="container">
+    <span class="phase">Deep-dive · Crime × house prices</span>
+    <h2>Do cheaper areas have more crime?</h2>
+    <p class="muted" style="max-width:780px;margin-bottom:10px">Joining crime to <strong>median house price</strong> across <strong>287 local authorities</strong> (92% of recorded crime). The honest answer needs care — a few central-London boroughs flip the headline.</p>
+    <div class="callout">
+      <strong>Read it carefully:</strong> the simple (Pearson) correlation is a misleading <em>+0.18</em>, because the City of London &amp; Westminster have extreme prices <em>and</em> extreme (daytime-driven) crime rates. Rank-based and with London removed, the real pattern is <strong>negative</strong> — <strong>Spearman −0.28 overall, −0.51 excluding London</strong>: more crime tends to go with <em>cheaper</em> housing. Correlation isn't causation — deprivation, urban density and footfall plausibly drive both.
+    </div>
+    <div class="chart-grid">
+      <div class="panel full">
+        <h3>Crime rate vs median house price</h3>
+        <div class="sub">Each dot is one local authority. London (red) is the high-price, high-rate cluster that flips the naive correlation positive.</div>
+        <div class="chart-wrap" style="height:430px"><canvas id="chScatter"></canvas></div>
+      </div>
+      <div class="panel">
+        <h3>Crime hotspots — rate per 1,000</h3>
+        <div class="sub">Darker = more crime per resident. Central London and northern cities stand out.</div>
+        <div id="ladCrimeMap" class="map sm"></div>
+        <div id="ladCrimeLegend" class="legend"></div>
+      </div>
+      <div class="panel">
+        <h3>Median house price</h3>
+        <div class="sub">Darker = pricier. Compare with the crime map — outside London the overlap is weak and mostly inverse.</div>
+        <div id="ladPriceMap" class="map sm"></div>
+        <div id="ladPriceLegend" class="legend"></div>
+      </div>
+    </div>
+    <p class="muted" style="margin-top:14px;font-size:.85rem">Crime: Home Office CSP recorded crime 2024/25 (excl. fraud). Prices: ONS HPSSA median price paid (to Mar 2023). Population: ONS mid-2022. ~70 areas excluded due to local-government reorganisation between data vintages; the 287 shown cover 92% of recorded crime.</p>
+  </div>
+</section>
+
 <!-- IMPLICATIONS -->
 <section class="section-soft">
   <div class="container">
@@ -211,6 +244,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
 <script src="../assets/js/crime-data.js"></script>
+<script src="../assets/js/crime-corr.js"></script>
 <script src="../assets/js/crime-dashboard.js"></script>
 </body>
 </html>

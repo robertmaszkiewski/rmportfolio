@@ -152,4 +152,43 @@
       })
     });
   }
+  /* ---------------- CORRELATION: crime vs house price ---------------- */
+  if (window.LAD_CORR && document.getElementById("chScatter")) {
+    var P = window.LAD_CORR.points;
+    function pts(lon) { return P.filter(function (p) { return !!p.london === lon; }).map(function (p) { return { x: p.price, y: p.rate, lad: p.lad }; }); }
+    new Chart(document.getElementById("chScatter"), {
+      type: "scatter",
+      data: { datasets: [
+        { label: "Rest of England & Wales", data: pts(false), backgroundColor: "rgba(47,109,176,.6)", pointRadius: 4, pointHoverRadius: 6 },
+        { label: "London boroughs", data: pts(true), backgroundColor: "rgba(192,57,43,.82)", pointRadius: 4, pointHoverRadius: 6 }
+      ] },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { display: true, position: "top", labels: { usePointStyle: true, boxWidth: 8 } },
+          tooltip: { callbacks: { label: function (c) { return c.raw.lad + ": £" + Math.round(c.raw.x / 1000) + "k · " + c.raw.y + "/1,000"; } } }
+        },
+        scales: {
+          x: { title: { display: true, text: "Median house price" }, ticks: { callback: function (v) { return "£" + (v / 1000) + "k"; } }, grid: { color: GRID } },
+          y: { title: { display: true, text: "Crime per 1,000 residents" }, beginAtZero: true, grid: { color: GRID } }
+        }
+      }
+    });
+  }
+  function ladChoropleth(elId, legId, field, bins, scale, labels) {
+    if (!window.L || !window.LAD_GEO || !document.getElementById(elId)) return;
+    var map = L.map(elId, { zoomControl: false, attributionControl: false, scrollWheelZoom: false, dragging: false, doubleClickZoom: false, keyboard: false });
+    function col(v) { if (v == null) return "#e6ebf2"; for (var i = 0; i < bins.length; i++) if (v < bins[i]) return scale[i]; return scale[scale.length - 1]; }
+    var layer = L.geoJSON(window.LAD_GEO, {
+      style: function (f) { return { fillColor: col(f.properties[field]), weight: 0.3, color: "#fff", fillOpacity: 0.9 }; },
+      onEachFeature: function (f, l) { var p = f.properties; l.bindTooltip('<div class="map-tip">' + p.name + '<br><span>' + (p.rate == null ? "no data" : (p.rate + "/1,000 · £" + Math.round(p.price / 1000) + "k")) + '</span></div>', { sticky: true }); }
+    }).addTo(map);
+    try { map.fitBounds(layer.getBounds(), { padding: [6, 6] }); } catch (e) { }
+    var leg = document.getElementById(legId);
+    if (leg) { var h = ""; for (var i = 0; i < scale.length; i++) h += '<span><i style="background:' + scale[i] + '"></i>' + labels[i] + '</span>'; leg.innerHTML = h; }
+  }
+  var SC_CRIME = ["#eef4fb", "#cfe0f2", "#9fc0e2", "#6f9fd0", "#447cbb", "#16335c"];
+  var SC_PRICE = ["#eaf5f0", "#c7e7d8", "#9ad4bd", "#67bd9d", "#3f9e7f", "#155c47"];
+  ladChoropleth("ladCrimeMap", "ladCrimeLegend", "rate", [30, 50, 70, 90, 120], SC_CRIME, ["<30", "30–50", "50–70", "70–90", "90–120", "120+"]);
+  ladChoropleth("ladPriceMap", "ladPriceLegend", "price", [200000, 275000, 350000, 450000, 600000], SC_PRICE, ["<£200k", "£200–275k", "£275–350k", "£350–450k", "£450–600k", "£600k+"]);
 })();
