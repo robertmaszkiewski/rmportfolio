@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Climate, country by country — an honest read of the temperature record | Robert Maszkiewski</title>
+<meta name="description" content="Case study: surface-temperature change across 181 countries (1940–2025) and globally (1850–2025) — warming rate, Arctic amplification, the 1659–2025 Central England record, CO₂ correlation and why the Sun is ruled out. Bilingual EN/PL.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+  /* language switch */
+  .lang-pl{display:none}
+  body.lang-pl .lang-en{display:none}
+  body.lang-pl .lang-pl{display:revert}
+  /* segmented controls (language + season country) */
+  .seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:#fff}
+  .seg button{border:0;background:#fff;color:var(--ink-soft);font-weight:700;font-size:.82rem;
+    padding:7px 14px;cursor:pointer;font-family:inherit;transition:.15s}
+  .seg button.active{background:var(--green);color:#fff}
+  .seg button:hover:not(.active){color:var(--green-d)}
+  .lang-seg{margin-left:4px}
+  .seas-controls{display:flex;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
+  .chart-wrap{height:320px}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container">
+    <a class="brand" href="../index.html">Robert&nbsp;<span>Maszkiewski</span></a>
+    <div class="nav-links">
+      <a href="../index.html#cases"><span class="lang-en">Case studies</span><span class="lang-pl">Projekty</span></a>
+      <a class="hide-sm" href="../index.html#about"><span class="lang-en">About</span><span class="lang-pl">O mnie</span></a>
+      <span class="seg lang-seg" role="group" aria-label="Language">
+        <button id="langEn" class="active" onclick="setLang('en')">EN</button>
+        <button id="langPl" onclick="setLang('pl')">PL</button>
+      </span>
+      <a class="nav-cta" href="https://github.com/Ma8a/klimat" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</nav>
+
+<header class="cs-hero">
+  <div class="container">
+    <a class="back" href="../index.html">← <span class="lang-en">Back to portfolio</span><span class="lang-pl">Powrót do portfolio</span></a>
+    <h1 style="margin-top:14px">
+      <span class="lang-en">Climate, country by country — an honest read of the data</span>
+      <span class="lang-pl">Klimat, kraj po kraju — uczciwa analiza danych</span>
+    </h1>
+    <p class="lede">
+      <span class="lang-en">How fast is the surface warming, and is it the same everywhere? An end-to-end analysis of temperature change across <strong>181 countries (1940–2025)</strong> and globally <strong>(1850–2025)</strong>, built only on public, independent datasets. The rule: don't start from the conclusion — take the best data and let it speak. The answer isn't uniform, and that's exactly why it's credible.</span>
+      <span class="lang-pl">Jak szybko ociepla się powierzchnia Ziemi i czy wszędzie tak samo? Kompletna analiza zmian temperatury w <strong>181 krajach (1940–2025)</strong> oraz globalnie <strong>(1850–2025)</strong>, oparta wyłącznie na publicznych, niezależnych zbiorach danych. Zasada: nie zaczynamy od wniosku — bierzemy najlepsze dane i pozwalamy im mówić. Wynik nie jest jednorodny i właśnie dlatego jest wiarygodny.</span>
+    </p>
+    <div class="cs-meta">
+      <span><b>Tools:</b> Python (pandas, numpy) · Chart.js · D3 (source build)</span>
+      <span><b>Data:</b> OWID/ERA5 · HadCRUT5 · Berkeley Earth · Met Office HadCET · SILSO</span>
+      <span><b>Period:</b> 1659–2025</span>
+      <span><b>Links:</b> <a href="https://github.com/Ma8a/klimat" target="_blank" rel="noopener">GitHub (source &amp; data)</a></span>
+    </div>
+  </div>
+</header>
+
+<!-- 1 · ASK -->
+<section>
+  <div class="container">
+    <span class="phase">1 · <span class="lang-en">Introduction (Ask)</span><span class="lang-pl">Wprowadzenie (Pytanie)</span></span>
+    <h2><span class="lang-en">The questions</span><span class="lang-pl">Pytania</span></h2>
+    <p class="lede" style="color:var(--ink-soft)">
+      <span class="lang-en">"Global average" is one number hiding a thousand local stories. The sharper questions: <strong>how fast is it warming, where is it warming fastest, how does the rhythm of the seasons shift, and what does — and doesn't — the data let us say about cause?</strong></span>
+      <span class="lang-pl">„Średnia globalna" to jedna liczba, która ukrywa tysiąc lokalnych historii. Ostrzejsze pytania: <strong>jak szybko się ociepla, gdzie najszybciej, jak przesuwa się rytm pór roku i co dane pozwalają — a czego nie pozwalają — powiedzieć o przyczynie?</strong></span>
+    </p>
+    <div class="callout">
+      <strong><span class="lang-en">Scope &amp; honesty (this matters):</span><span class="lang-pl">Zakres i uczciwość (to ważne):</span></strong>
+      <ul style="margin:8px 0 0;padding-left:18px">
+        <li><span class="lang-en"><b>Reanalysis ≠ direct measurement.</b> Per-country data uses ERA5 (Copernicus) — a model that assimilates observations, the best full-coverage source available, but with its own uncertainty that is larger before 1950.</span><span class="lang-pl"><b>Reanaliza ≠ pomiar bezpośredni.</b> Dane per kraj to ERA5 (Copernicus) — model asymilujący obserwacje, najlepszy zbiór o pełnym pokryciu, ale z własną niepewnością, większą przed 1950 r.</span></li>
+        <li><span class="lang-en"><b>The 1991–2020 baseline</b> means "0" on a country map is its <em>modern</em> normal, not the pre-industrial era. Warming rate (the slope) is the honest cross-country metric.</span><span class="lang-pl"><b>Baza 1991–2020</b> oznacza, że „0" na mapie kraju to jego <em>współczesna</em> norma, a nie epoka przedprzemysłowa. Uczciwą miarą porównawczą jest tempo (nachylenie).</span></li>
+        <li><span class="lang-en"><b>Correlation isn't causation.</b> Two rising lines prove nothing on their own — so attribution leans on physics (the CO₂ logarithmic forcing), not just the raw correlation.</span><span class="lang-pl"><b>Korelacja to nie przyczyna.</b> Dwie rosnące linie same w sobie niczego nie dowodzą — dlatego atrybucja opiera się na fizyce (logarytmiczne wymuszanie CO₂), nie na samej korelacji.</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- KPIs -->
+<section class="section-soft">
+  <div class="container">
+    <span class="phase"><span class="lang-en">Headline numbers</span><span class="lang-pl">Najważniejsze liczby</span></span>
+    <h2><span class="lang-en">The planet at a glance</span><span class="lang-pl">Planeta w skrócie</span></h2>
+    <div class="kpis">
+      <div class="kpi bad"><div class="v">+1.53 °C</div><div class="l"><span class="lang-en">Global warming, 2024 vs pre-industrial</span><span class="lang-pl">Ocieplenie globalne, 2024 vs przedindustrialne</span></div></div>
+      <div class="kpi"><div class="v">+0.21 °C</div><div class="l"><span class="lang-en">Per decade since 1975 (≈ linear, 50 yrs)</span><span class="lang-pl">Na dekadę od 1975 (≈ liniowo, 50 lat)</span></div></div>
+      <div class="kpi"><div class="v">181</div><div class="l"><span class="lang-en">Countries analysed — all warming</span><span class="lang-pl">Przeanalizowanych krajów — wszystkie ocieplają się</span></div></div>
+      <div class="kpi"><div class="v">≈ 9×</div><div class="l"><span class="lang-en">Spread in national warming rates</span><span class="lang-pl">Rozrzut tempa ocieplenia między krajami</span></div></div>
+      <div class="kpi"><div class="v">r = 0.95</div><div class="l"><span class="lang-en">CO₂ ↔ temperature, 1850–2024</span><span class="lang-pl">CO₂ ↔ temperatura, 1850–2024</span></div></div>
+      <div class="kpi bad"><div class="v">+1.4 °C</div><div class="l"><span class="lang-en">Central England: 2000–25 vs 1659–1900</span><span class="lang-pl">Central England: 2000–25 vs 1659–1900</span></div></div>
+      <div class="kpi"><div class="v">1.62×</div><div class="l"><span class="lang-en">High-latitude land warms vs tropics</span><span class="lang-pl">Ląd wys. szerokości grzeje się vs tropiki</span></div></div>
+      <div class="kpi"><div class="v">1740</div><div class="l"><span class="lang-en">Coldest CET year on record (6.9 °C)</span><span class="lang-pl">Najzimniejszy rok CET w historii (6,9 °C)</span></div></div>
+    </div>
+    <p class="muted" style="margin-top:14px;font-size:.9rem">
+      <span class="lang-en">Source convergence for 2024: HadCRUT5 ≈ +1.53 °C, Berkeley Earth ≈ +1.62 °C, WMO ≈ +1.55 °C — small differences, identical direction. <a href="https://github.com/Ma8a/klimat" target="_blank" rel="noopener">Full method &amp; code →</a></span>
+      <span class="lang-pl">Zbieżność źródeł za 2024: HadCRUT5 ≈ +1,53 °C, Berkeley Earth ≈ +1,62 °C, WMO ≈ +1,55 °C — różnice małe, kierunek identyczny. <a href="https://github.com/Ma8a/klimat" target="_blank" rel="noopener">Pełna metodyka i kod →</a></span>
+    </p>
+  </div>
+</section>
+
+<!-- 2/3 · ANALYZE & SHARE -->
+<section>
+  <div class="container">
+    <span class="phase">2 · <span class="lang-en">Problems</span><span class="lang-pl">Problemy</span> → 3 · <span class="lang-en">Analyze &amp; Share</span><span class="lang-pl">Analiza i prezentacja</span></span>
+    <h2><span class="lang-en">The story in the data</span><span class="lang-pl">Historia ukryta w danych</span></h2>
+    <p class="muted" style="max-width:780px;margin-bottom:28px">
+      <span class="lang-en">Each view answers one question and states the fact it supports. Hover any chart for detail; switch EN/PL at the top.</span>
+      <span class="lang-pl">Każdy widok odpowiada na jedno pytanie i podaje fakt, który potwierdza. Najedź na wykres po szczegóły; przełącznik EN/PL na górze.</span>
+    </p>
+
+    <div class="chart-grid">
+
+      <div class="panel full">
+        <h3><span class="lang-en">The global signal — temperature anomaly, 1850–2025</span><span class="lang-pl">Sygnał globalny — anomalia temperatury, 1850–2025</span></h3>
+        <div class="sub"><span class="lang-en">Since ~1975 the world warms at a steady <strong>+0.21 °C/decade</strong> — nearly linear for 50 years, not a one-off jump. The Northern Hemisphere (more land) runs ahead of the Southern.</span><span class="lang-pl">Od ok. 1975 świat ociepla się w stałym tempie <strong>+0,21 °C/dekadę</strong> — niemal liniowo od 50 lat, nie jednorazowy skok. Półkula północna (więcej lądu) wyprzedza południową.</span></div>
+        <div class="chart-wrap"><canvas id="cGlobal"></canvas></div>
+      </div>
+
+      <div class="panel full">
+        <h3><span class="lang-en">The longest thermometer — Central England, 1659–2025</span><span class="lang-pl">Najdłuższy termometr — Central England, 1659–2025</span></h3>
+        <div class="sub"><span class="lang-en">The world's longest continuous instrumental record. The pre-industrial mean (≈ 9.1 °C) and the modern mean (≈ 10.5 °C) are drawn in — a <strong>+1.4 °C</strong> shift. The same region, 366 years running: a thermometer, not a model. Warmest years 2022–2025; coldest 1740 ("Little Ice Age").</span><span class="lang-pl">Najdłuższy ciągły zapis instrumentalny świata. Zaznaczono średnią przedindustrialną (≈ 9,1 °C) i współczesną (≈ 10,5 °C) — przesunięcie o <strong>+1,4 °C</strong>. Ten sam region, 366 lat z rzędu: termometr, nie model. Najcieplejsze lata 2022–2025, najzimniejszy 1740 („mała epoka lodowa").</span></div>
+        <div class="chart-wrap"><canvas id="cCet"></canvas></div>
+      </div>
+
+      <div class="panel">
+        <h3><span class="lang-en">Where — fastest vs slowest warming</span><span class="lang-pl">Gdzie — najszybciej vs najwolniej</span></h3>
+        <div class="sub"><span class="lang-en">Every country warms, but the rate spans <strong>~9×</strong> — Norway (+0.53) to Uruguay (+0.06 °C/decade). The global average hides this.</span><span class="lang-pl">Każdy kraj się ociepla, ale tempo różni się <strong>~9×</strong> — Norwegia (+0,53) do Urugwaju (+0,06 °C/dek.). Średnia globalna to ukrywa.</span></div>
+        <div class="chart-wrap"><canvas id="cRank"></canvas></div>
+      </div>
+
+      <div class="panel">
+        <h3><span class="lang-en">A pattern, not noise — warming vs latitude</span><span class="lang-pl">Wzorzec, nie szum — tempo vs szerokość</span></h3>
+        <div class="sub"><span class="lang-en">Warming rate climbs with latitude — <strong>Arctic amplification</strong>. Each dot is a country (absolute latitude).</span><span class="lang-pl">Tempo ocieplenia rośnie z szerokością geograficzną — <strong>wzmocnienie arktyczne</strong>. Każda kropka to kraj (szerokość bezwzgl.).</span></div>
+        <div class="chart-wrap"><canvas id="cLat"></canvas></div>
+      </div>
+
+      <div class="panel">
+        <h3><span class="lang-en">How much faster — high latitudes vs tropics</span><span class="lang-pl">O ile szybciej — wysokie szerokości vs tropiki</span></h3>
+        <div class="sub"><span class="lang-en">High-latitude land warms about <strong>1.62×</strong> faster than the tropics (group means, since 1960).</span><span class="lang-pl">Ląd wysokich szerokości grzeje się ok. <strong>1,62×</strong> szybciej niż tropiki (średnie grup, od 1960).</span></div>
+        <div class="chart-wrap" style="height:260px"><canvas id="cArctic"></canvas></div>
+      </div>
+
+      <div class="panel">
+        <h3><span class="lang-en">When — the seasons shift unevenly</span><span class="lang-pl">Kiedy — pory roku przesuwają się nierówno</span></h3>
+        <div class="sub"><span class="lang-en">Warming isn't spread evenly across the year. Poland &amp; Finland warm most in <strong>winter</strong> (Poland: January went from −3.7 °C to +0.9 °C); Spain more in summer.</span><span class="lang-pl">Ocieplenie nie jest równomierne w roku. Polska i Finlandia grzeją się najmocniej <strong>zimą</strong> (Polska: styczeń z −3,7 °C na +0,9 °C); Hiszpania mocniej latem.</span></div>
+        <div class="seas-controls">
+          <span class="muted" style="font-size:.82rem"><span class="lang-en">Country:</span><span class="lang-pl">Kraj:</span></span>
+          <span class="seg" role="group">
+            <button id="seasBtn-FIN" onclick="setSeasonCountry('FIN')">FIN</button>
+            <button id="seasBtn-POL" class="active" onclick="setSeasonCountry('POL')">POL</button>
+            <button id="seasBtn-ESP" onclick="setSeasonCountry('ESP')">ESP</button>
+          </span>
+        </div>
+        <div class="chart-wrap" style="height:266px"><canvas id="cSeason"></canvas></div>
+      </div>
+
+      <div class="panel full">
+        <h3><span class="lang-en">Why (1/2) — CO₂ tracks temperature, 1850–2024</span><span class="lang-pl">Dlaczego (1/2) — CO₂ podąża za temperaturą, 1850–2024</span></h3>
+        <div class="sub"><span class="lang-en">Pearson <strong>r = 0.95</strong> (r² = 0.90), slope ≈ 1.0 °C per 100 ppm. Honestly: correlation alone isn't proof — but fitting temperature to <strong>ln(CO₂)</strong>, the physics of the greenhouse effect, explains <strong>89%</strong> of the variance.</span><span class="lang-pl">Pearson <strong>r = 0,95</strong> (r² = 0,90), nachylenie ≈ 1,0 °C na 100 ppm. Uczciwie: sama korelacja to nie dowód — ale dopasowanie temperatury do <strong>ln(CO₂)</strong>, czyli fizyki efektu cieplarnianego, tłumaczy <strong>89%</strong> zmienności.</span></div>
+        <div class="chart-wrap"><canvas id="cCo2"></canvas></div>
+      </div>
+
+      <div class="panel full">
+        <h3><span class="lang-en">Why (2/2) — the Sun is ruled out</span><span class="lang-pl">Dlaczego (2/2) — Słońce zostaje wykluczone</span></h3>
+        <div class="sub"><span class="lang-en">Sunspot activity peaked around 1950–60 and has been flat-to-falling since ~1980 — while temperature climbs sharply. The two <strong>diverge after 1980</strong>, which rules the Sun out as the driver of modern warming.</span><span class="lang-pl">Aktywność plam słonecznych szczytowała ok. 1950–60 i od ~1980 jest płaska/spada — podczas gdy temperatura ostro rośnie. Obie serie <strong>rozchodzą się po 1980</strong>, co wyklucza Słońce jako przyczynę współczesnego ocieplenia.</span></div>
+        <div class="chart-wrap"><canvas id="cSun"></canvas></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- 4 · SOLUTIONS / HOW TO READ -->
+<section class="section-soft">
+  <div class="container">
+    <span class="phase">4 · <span class="lang-en">How to read this honestly</span><span class="lang-pl">Jak to uczciwie czytać</span></span>
+    <h2><span class="lang-en">What the data supports</span><span class="lang-pl">Co potwierdzają dane</span></h2>
+    <p class="muted" style="max-width:760px;margin-bottom:24px">
+      <span class="lang-en">This is descriptive analysis of open data, not a climate model — so the honest output is what holds up, with its caveats:</span>
+      <span class="lang-pl">To opisowa analiza otwartych danych, nie model klimatyczny — więc uczciwym wynikiem jest to, co się broni, wraz z zastrzeżeniami:</span>
+    </p>
+    <div class="sol">
+      <div class="panel rec">
+        <span class="pill"><span class="lang-en">Best supported</span><span class="lang-pl">Najlepiej poparte</span></span>
+        <h3 style="margin-top:10px"><span class="lang-en">A · Independent sources agree</span><span class="lang-pl">A · Niezależne źródła są zgodne</span></h3>
+        <p class="muted"><span class="lang-en">HadCRUT5, Berkeley Earth and WMO land within ~0.1 °C for 2024 and point the same way. The warming signal is not an artifact of one dataset.</span><span class="lang-pl">HadCRUT5, Berkeley Earth i WMO mieszczą się w ~0,1 °C dla 2024 i wskazują to samo. Sygnał ocieplenia to nie artefakt jednego zbioru.</span></p>
+        <ul>
+          <li class="pro"><span class="lang-en">+ Cross-validated across methods</span><span class="lang-pl">+ Walidacja krzyżowa wielu metod</span></li>
+          <li class="con"><span class="lang-en">– Reanalysis carries more uncertainty pre-1950</span><span class="lang-pl">– Reanaliza ma większą niepewność przed 1950</span></li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h3><span class="lang-en">B · Read it regionally</span><span class="lang-pl">B · Czytaj regionalnie</span></h3>
+        <p class="muted"><span class="lang-en">A ~9× spread and clear Arctic amplification mean the global average is a poor guide to any one place — policy and adaptation need the local rate.</span><span class="lang-pl">Rozrzut ~9× i wyraźne wzmocnienie arktyczne sprawiają, że średnia globalna słabo opisuje pojedyncze miejsce — polityka i adaptacja potrzebują tempa lokalnego.</span></p>
+        <ul>
+          <li class="pro"><span class="lang-en">+ Per-country slope is comparable &amp; testable</span><span class="lang-pl">+ Nachylenie per kraj jest porównywalne i testowalne</span></li>
+          <li class="con"><span class="lang-en">– 1940s ERA5 excluded from trends (higher uncertainty)</span><span class="lang-pl">– ERA5 z lat 40. wyłączone z trendów (większa niepewność)</span></li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h3><span class="lang-en">C · Attribution, carefully</span><span class="lang-pl">C · Atrybucja, ostrożnie</span></h3>
+        <p class="muted"><span class="lang-en">Temperature follows ln(CO₂) (89% of variance) while solar activity diverges after 1980. Together these point to greenhouse forcing, not the Sun — stated as evidence, not as a model run here.</span><span class="lang-pl">Temperatura podąża za ln(CO₂) (89% zmienności), a aktywność Słońca rozchodzi się po 1980. Razem wskazują na efekt cieplarniany, nie Słońce — jako dowód, nie jako model liczony tutaj.</span></p>
+        <ul>
+          <li class="pro"><span class="lang-en">+ Physics-based, not bare correlation</span><span class="lang-pl">+ Oparte na fizyce, nie na gołej korelacji</span></li>
+          <li class="con"><span class="lang-en">– Full attribution needs climate models (out of scope)</span><span class="lang-pl">– Pełna atrybucja wymaga modeli klimatu (poza zakresem)</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5/6 · CONCLUSION + NEXT STEPS -->
+<section>
+  <div class="container">
+    <span class="phase">5 · <span class="lang-en">Conclusion</span><span class="lang-pl">Wnioski</span> &amp; 6 · <span class="lang-en">Next steps</span><span class="lang-pl">Następne kroki</span></span>
+    <h2><span class="lang-en">Key takeaways</span><span class="lang-pl">Najważniejsze wnioski</span></h2>
+    <ul style="max-width:800px;color:var(--ink-soft)">
+      <li class="lang-en"><strong>The signal is real and steady.</strong> ~+0.21 °C/decade for 50 years, agreed across three independent datasets, and visible in a 366-year thermometer.</li>
+      <li class="lang-pl"><strong>Sygnał jest realny i stały.</strong> ~+0,21 °C/dekadę od 50 lat, zgodnie w trzech niezależnych zbiorach i widoczny w 366-letnim termometrze.</li>
+      <li class="lang-en"><strong>The average hides the spread.</strong> All 181 countries warm, but ~9× apart; high latitudes run ~1.6× the tropics.</li>
+      <li class="lang-pl"><strong>Średnia ukrywa rozrzut.</strong> Wszystkie 181 krajów się ociepla, ale ~9× różnie; wysokie szerokości ~1,6× szybciej niż tropiki.</li>
+      <li class="lang-en"><strong>Warming reshapes the year</strong>, not just its average — Poland's winters warmed ~2× more than its summers.</li>
+      <li class="lang-pl"><strong>Ocieplenie przebudowuje rok</strong>, nie tylko jego średnią — zimy w Polsce ociepliły się ~2× mocniej niż lata.</li>
+      <li class="lang-en"><strong>The honest lesson:</strong> the numbers are only as trustworthy as their caveats — baselines, reanalysis uncertainty, and "correlation ≠ causation" all change the read.</li>
+      <li class="lang-pl"><strong>Uczciwa lekcja:</strong> liczby są warte tyle, ile ich zastrzeżenia — bazy odniesienia, niepewność reanalizy i „korelacja ≠ przyczyna" zmieniają interpretację.</li>
+    </ul>
+    <h3 style="margin-top:34px"><span class="lang-en">Recommended next steps — what · who · when</span><span class="lang-pl">Rekomendowane następne kroki — co · kto · kiedy</span></h3>
+    <ol class="steps" style="max-width:820px;margin-top:14px">
+      <li><span class="n">1</span><div><span class="lang-en"><strong>Go sub-national</strong> for the fastest-warming countries (regions/cities), where adaptation actually happens. <span class="muted">Who: Analyst · When: next iteration.</span></span><span class="lang-pl"><strong>Zejść poniżej poziomu kraju</strong> dla najszybciej grzejących się państw (regiony/miasta), gdzie dzieje się adaptacja. <span class="muted">Kto: Analityk · Kiedy: następna iteracja.</span></span></div></li>
+      <li><span class="n">2</span><div><span class="lang-en"><strong>Add extremes &amp; precipitation</strong> — a warmer atmosphere holds ~7%/°C more water, so means understate the impact. <span class="muted">Who: Analyst · When: follow-up notebook.</span></span><span class="lang-pl"><strong>Dodać ekstrema i opady</strong> — cieplejsza atmosfera utrzymuje ~7%/°C więcej wody, więc średnie zaniżają skutki. <span class="muted">Kto: Analityk · Kiedy: kolejny notebook.</span></span></div></li>
+      <li><span class="n">3</span><div><span class="lang-en"><strong>Track each year against the Paris 1.5 °C line</strong> as the headline metric to watch. <span class="muted">Who: Anyone · When: annually.</span></span><span class="lang-pl"><strong>Śledzić każdy rok względem paryskiej linii 1,5 °C</strong> jako główny wskaźnik do obserwacji. <span class="muted">Kto: Każdy · Kiedy: corocznie.</span></span></div></li>
+      <li><span class="n">4</span><div><span class="lang-en"><strong>Keep the method open</strong> — every number reproducible from public data &amp; the published code. <span class="muted">Who: Author · When: ongoing.</span></span><span class="lang-pl"><strong>Trzymać metodę otwartą</strong> — każda liczba odtwarzalna z publicznych danych i opublikowanego kodu. <span class="muted">Kto: Autor · Kiedy: na bieżąco.</span></span></div></li>
+    </ol>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="brand" style="color:#fff">Robert <span style="color:#7fd1a8">Maszkiewski</span></div>
+    <p class="muted" style="color:#9fb0cc;margin-top:6px">
+      <span class="lang-en">Climate case study · Python &amp; Chart.js · data: OWID, Copernicus/ECMWF (ERA5), Met Office (HadCRUT5 &amp; HadCET), Berkeley Earth, NOAA, SILSO, WMO</span>
+      <span class="lang-pl">Case study o klimacie · Python &amp; Chart.js · dane: OWID, Copernicus/ECMWF (ERA5), Met Office (HadCRUT5 i HadCET), Berkeley Earth, NOAA, SILSO, WMO</span>
+    </p>
+    <div class="foot-links">
+      <a href="../index.html"><span class="lang-en">Portfolio home</span><span class="lang-pl">Strona główna</span></a>
+      <a href="https://github.com/Ma8a/klimat" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://www.linkedin.com/in/robert-maszkiewski" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://www.kaggle.com/robertmaszkiewski" target="_blank" rel="noopener">Kaggle</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Language switch: toggle body class, sync buttons, persist, and re-render charts.
+  function setLang(l) {
+    var pl = (l === 'pl');
+    document.body.classList.toggle('lang-pl', pl);
+    document.documentElement.lang = pl ? 'pl' : 'en';
+    var be = document.getElementById('langEn'), bp = document.getElementById('langPl');
+    if (be) be.classList.toggle('active', !pl);
+    if (bp) bp.classList.toggle('active', pl);
+    try { localStorage.setItem('rmlang', l); } catch (e) {}
+    if (window.setClimateLang) window.setClimateLang(l);
+  }
+  (function () {
+    var saved = 'en';
+    try { saved = localStorage.getItem('rmlang') || 'en'; } catch (e) {}
+    if (saved === 'pl') setLang('pl');
+  })();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="../assets/js/climate-data.js"></script>
+<script src="../assets/js/climate-dashboard.js"></script>
+</body>
+</html>

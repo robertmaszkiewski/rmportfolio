@@ -8,12 +8,16 @@ Static multi-page portfolio site. No build step, no backend — just HTML, CSS a
 portfolio-site/
 ├── index.html                      # Home: hero, about, case-study grid, contact
 ├── case-studies/
-│   └── online-retail-ii.html       # Case study 1 (live) — full dashboard + narrative
+│   ├── online-retail-ii.html       # Case study 1 (live) — full dashboard + narrative
+│   ├── uk-crime.html               # Case study 2 (live) — choropleth + correlation dashboard
+│   └── climate.html                # Case study 3 (live) — climate dashboard, bilingual EN/PL
 ├── assets/
 │   ├── css/style.css               # Shared styles (one theme for the whole site)
 │   ├── js/
-│   │   ├── data.js                 # window.DASH_DATA — aggregated numbers for the charts
-│   │   └── dashboard.js            # Renders the charts + cohort heatmap
+│   │   ├── data.js / dashboard.js  # Online Retail II — numbers + charts/cohort heatmap
+│   │   ├── crime-*.js              # UK Crime — data + dashboard + correlation
+│   │   ├── climate-data.js         # window.CLIMATE — all climate series (inlined)
+│   │   └── climate-dashboard.js    # Renders the 8 climate charts (bilingual EN/PL)
 │   └── data/
 │       └── dashboard_data.json     # Same data as JSON (reference / reuse)
 └── README.md
