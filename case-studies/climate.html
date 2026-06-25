@@ -14,14 +14,19 @@
   body.lang-pl .lang-en{display:none}
   body.lang-pl .lang-pl{display:revert}
   /* segmented controls (language + season country) */
-  .seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:#fff}
+  .seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:#fff;flex-shrink:0;-webkit-tap-highlight-color:transparent}
   .seg button{border:0;background:#fff;color:var(--ink-soft);font-weight:700;font-size:.82rem;
-    padding:7px 14px;cursor:pointer;font-family:inherit;transition:.15s}
+    padding:7px 14px;cursor:pointer;font-family:inherit;transition:.15s;-webkit-tap-highlight-color:transparent}
   .seg button.active{background:var(--green);color:#fff}
   .seg button:hover:not(.active){color:var(--green-d)}
   .lang-seg{margin-left:4px}
   .seas-controls{display:flex;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
   .chart-wrap{height:320px}
+  /* phones: keep the EN/PL toggle compact &amp; always visible in the bar */
+  @media(max-width:560px){
+    .seg button{padding:6px 11px;font-size:.78rem}
+    .lang-seg{margin-left:0}
+  }
 </style>
 </head>
 <body>
