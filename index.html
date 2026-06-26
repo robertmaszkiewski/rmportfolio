@@ -15,9 +15,13 @@
   <div class="container">
     <a class="brand" href="index.html">Robert&nbsp;<span>Maszkiewski</span></a>
     <div class="nav-links">
-      <a href="#cases">Case studies</a>
-      <a class="hide-sm" href="#about">About</a>
-      <a class="hide-sm" href="#contact">Contact</a>
+      <a href="#cases"><span class="lang-en">Case studies</span><span class="lang-pl">Projekty</span></a>
+      <a class="hide-sm" href="#about"><span class="lang-en">About</span><span class="lang-pl">O mnie</span></a>
+      <a class="hide-sm" href="#contact"><span class="lang-en">Contact</span><span class="lang-pl">Kontakt</span></a>
+      <span class="seg lang-seg" role="group" aria-label="Language">
+        <button id="langEn" class="active" onclick="setLang('en')">EN</button>
+        <button id="langPl" onclick="setLang('pl')">PL</button>
+      </span>
       <a class="nav-cta" href="https://www.linkedin.com/in/robert-maszkiewski" target="_blank" rel="noopener">LinkedIn</a>
     </div>
   </div>
@@ -25,13 +29,13 @@
 
 <header class="hero">
   <div class="container">
-    <span class="eyebrow">Aspiring Data Analyst · SQL · Python · Dashboards</span>
-    <h1>I turn messy, real-world data<br>into decisions a business can act on.</h1>
-    <p class="lead">Google Data Analytics certified. I clean data nobody wants to touch, dig out the story with SQL and Python, and ship it as dashboards people actually use — documented end-to-end so every number is defensible.</p>
+    <span class="eyebrow"><span class="lang-en">Aspiring Data Analyst · SQL · Python · Dashboards</span><span class="lang-pl">Aspirujący analityk danych · SQL · Python · Dashboardy</span></span>
+    <h1><span class="lang-en">I turn messy, real-world data<br>into decisions a business can act on.</span><span class="lang-pl">Zamieniam chaotyczne, prawdziwe dane<br>w decyzje, na których biznes może działać.</span></h1>
+    <p class="lead"><span class="lang-en">Google Data Analytics certified. I clean data nobody wants to touch, dig out the story with SQL and Python, and ship it as dashboards people actually use — documented end-to-end so every number is defensible.</span><span class="lang-pl">Certyfikat Google Data Analytics. Czyszczę dane, których nikt nie chce dotykać, wydobywam z nich historię w SQL i Pythonie i dostarczam jako dashboardy, z których ludzie naprawdę korzystają — udokumentowane od początku do końca, tak że każdą liczbę da się obronić.</span></p>
     <div class="hero-actions">
-      <a class="btn btn-primary" href="#cases">View case studies</a>
-      <a class="btn btn-ghost" href="https://www.kaggle.com/robertmaszkiewski" target="_blank" rel="noopener">Kaggle profile</a>
-      <a class="btn btn-ghost" href="mailto:robertmaszkiewski@gmail.com">Get in touch</a>
+      <a class="btn btn-primary" href="#cases"><span class="lang-en">View case studies</span><span class="lang-pl">Zobacz projekty</span></a>
+      <a class="btn btn-ghost" href="https://www.kaggle.com/robertmaszkiewski" target="_blank" rel="noopener"><span class="lang-en">Kaggle profile</span><span class="lang-pl">Profil Kaggle</span></a>
+      <a class="btn btn-ghost" href="mailto:robertmaszkiewski@gmail.com"><span class="lang-en">Get in touch</span><span class="lang-pl">Napisz do mnie</span></a>
     </div>
   </div>
 </header>
@@ -41,8 +45,8 @@
   <div class="container">
     <div class="section-head">
       <span class="eyebrow">Portfolio</span>
-      <h2>Case studies</h2>
-      <p class="muted">End-to-end analyses on real datasets — from raw and broken to a clear recommendation. More are on the way.</p>
+      <h2><span class="lang-en">Case studies</span><span class="lang-pl">Projekty</span></h2>
+      <p class="muted"><span class="lang-en">End-to-end analyses on real datasets — from raw and broken to a clear recommendation. More are on the way.</span><span class="lang-pl">Kompletne analizy na prawdziwych zbiorach danych — od surowych i wadliwych po jasną rekomendację. Kolejne w drodze.</span></p>
     </div>
 
     <div class="cards">
@@ -54,16 +58,16 @@
           <span class="muted" style="font-size:.85rem">SQL · Python · Dashboard</span>
         </div>
         <div class="card-body">
-          <h3>Online Retail II — Customer Value &amp; Revenue</h3>
-          <p class="muted">Who are the most valuable customers and what drives revenue for a UK online gift retailer? RFM segmentation, cohort retention, seasonality and revenue-leakage from 1.07M transactions.</p>
+          <h3><span class="lang-en">Online Retail II — Customer Value &amp; Revenue</span><span class="lang-pl">Online Retail II — wartość klienta i przychody</span></h3>
+          <p class="muted"><span class="lang-en">Who are the most valuable customers and what drives revenue for a UK online gift retailer? RFM segmentation, cohort retention, seasonality and revenue-leakage from 1.07M transactions.</span><span class="lang-pl">Kim są najbardziej wartościowi klienci i co napędza przychody brytyjskiego sklepu internetowego z upominkami? Segmentacja RFM, retencja kohort, sezonowość i wyciek przychodu z 1,07 mln transakcji.</span></p>
           <div class="card-metrics">
-            <div><b>£19.6M</b>revenue analysed</div>
-            <div><b>5,852</b>customers</div>
-            <div><b>1.07M</b>rows cleaned</div>
+            <div><b>£19.6M</b><span class="lang-en">revenue analysed</span><span class="lang-pl">przeanalizowanego przychodu</span></div>
+            <div><b>5,852</b><span class="lang-en">customers</span><span class="lang-pl">klientów</span></div>
+            <div><b>1.07M</b><span class="lang-en">rows cleaned</span><span class="lang-pl">oczyszczonych wierszy</span></div>
           </div>
           <div class="spark"></div>
           <div class="card-foot" style="margin-top:18px">
-            <a class="btn btn-primary" href="case-studies/online-retail-ii.html">Open case study →</a>
+            <a class="btn btn-primary" href="case-studies/online-retail-ii.html"><span class="lang-en">Open case study →</span><span class="lang-pl">Otwórz projekt →</span></a>
             <a href="https://www.kaggle.com/code/robertmaszkiewski/online-retail-ii-customer-value-revenue-analysis" target="_blank" rel="noopener">Kaggle</a>
           </div>
         </div>
@@ -76,16 +80,16 @@
           <span class="muted" style="font-size:.85rem">Python · Geo · Dashboard</span>
         </div>
         <div class="card-body">
-          <h3>UK Crime — Where, What &amp; How it's resolved</h3>
-          <p class="muted">Where crime concentrates per head of population, what types dominate, how the trend moved, and how few crimes end in a charge — 6.6M offences mapped across England &amp; Wales using official Home Office &amp; ONS data.</p>
+          <h3><span class="lang-en">UK Crime — Where, What &amp; How it's resolved</span><span class="lang-pl">Przestępczość w UK — gdzie, jakie i jak rozwiązywane</span></h3>
+          <p class="muted"><span class="lang-en">Where crime concentrates per head of population, what types dominate, how the trend moved, and how few crimes end in a charge — 6.6M offences mapped across England &amp; Wales using official Home Office &amp; ONS data.</span><span class="lang-pl">Gdzie przestępczość koncentruje się na mieszkańca, jakie typy dominują, jak zmieniał się trend i jak mało spraw kończy się zarzutem — 6,6 mln przestępstw zmapowanych w Anglii i Walii na podstawie oficjalnych danych Home Office i ONS.</span></p>
           <div class="card-metrics">
-            <div><b>6.6M</b>crimes analysed</div>
-            <div><b>43</b>force areas</div>
-            <div><b>8.6%</b>charge rate</div>
+            <div><b>6.6M</b><span class="lang-en">crimes analysed</span><span class="lang-pl">przeanalizowanych przestępstw</span></div>
+            <div><b>43</b><span class="lang-en">force areas</span><span class="lang-pl">obszary policyjne</span></div>
+            <div><b>8.6%</b><span class="lang-en">charge rate</span><span class="lang-pl">wskaźnik zarzutów</span></div>
           </div>
           <div class="spark"></div>
           <div class="card-foot" style="margin-top:18px">
-            <a class="btn btn-primary" href="case-studies/uk-crime.html">Open case study →</a>
+            <a class="btn btn-primary" href="case-studies/uk-crime.html"><span class="lang-en">Open case study →</span><span class="lang-pl">Otwórz projekt →</span></a>
             <a href="https://www.kaggle.com/code/robertmaszkiewski/uk-crime" target="_blank" rel="noopener">Kaggle</a>
             <a href="https://github.com/robertmaszkiewski/uk-crime-analysis" target="_blank" rel="noopener">GitHub</a>
           </div>
@@ -99,16 +103,16 @@
           <span class="muted" style="font-size:.85rem">Python · Climate · EN/PL</span>
         </div>
         <div class="card-body">
-          <h3>Climate — Global Warming, Country by Country</h3>
-          <p class="muted">How fast is the surface warming, and is it the same everywhere? Temperature change across 181 countries (1940–2025) and globally (1850–2025) — warming rate, Arctic amplification, the 366-year Central England record, the CO₂ link, and why the Sun is ruled out. Bilingual EN/PL.</p>
+          <h3><span class="lang-en">Climate — Global Warming, Country by Country</span><span class="lang-pl">Klimat — globalne ocieplenie, kraj po kraju</span></h3>
+          <p class="muted"><span class="lang-en">How fast is the surface warming, and is it the same everywhere? Temperature change across 181 countries (1940–2025) and globally (1850–2025) — warming rate, Arctic amplification, the 366-year Central England record, the CO₂ link, and why the Sun is ruled out. Bilingual EN/PL.</span><span class="lang-pl">Jak szybko ociepla się powierzchnia Ziemi i czy wszędzie tak samo? Zmiana temperatury w 181 krajach (1940–2025) i globalnie (1850–2025) — tempo ocieplenia, wzmocnienie arktyczne, 366-letni zapis Central England, związek z CO₂ i dlaczego Słońce zostaje wykluczone. Dwujęzyczne EN/PL.</span></p>
           <div class="card-metrics">
-            <div><b>181</b>countries analysed</div>
-            <div><b>+1.53°C</b>2024 vs pre-industrial</div>
-            <div><b>r=0.95</b>CO₂ ↔ temperature</div>
+            <div><b>181</b><span class="lang-en">countries analysed</span><span class="lang-pl">przeanalizowanych krajów</span></div>
+            <div><b>+1.53°C</b><span class="lang-en">2024 vs pre-industrial</span><span class="lang-pl">2024 vs przedindustrialne</span></div>
+            <div><b>r=0.95</b><span class="lang-en">CO₂ ↔ temperature</span><span class="lang-pl">CO₂ ↔ temperatura</span></div>
           </div>
           <div class="spark"></div>
           <div class="card-foot" style="margin-top:18px">
-            <a class="btn btn-primary" href="case-studies/climate.html">Open case study →</a>
+            <a class="btn btn-primary" href="case-studies/climate.html"><span class="lang-en">Open case study →</span><span class="lang-pl">Otwórz projekt →</span></a>
             <a href="https://github.com/Ma8a/klimat" target="_blank" rel="noopener">GitHub</a>
           </div>
         </div>
@@ -122,22 +126,22 @@
 <section id="about" class="section-soft">
   <div class="container">
     <div class="section-head">
-      <span class="eyebrow">About</span>
-      <h2>Hi, I'm Robert.</h2>
+      <span class="eyebrow"><span class="lang-en">About</span><span class="lang-pl">O mnie</span></span>
+      <h2><span class="lang-en">Hi, I'm Robert.</span><span class="lang-pl">Cześć, jestem Robert.</span></h2>
     </div>
     <div style="max-width:760px">
-      <p>I'm an aspiring data analyst with the <strong>Google Data Analytics</strong> certificate, focused on turning raw, messy data into clear business decisions. I like the unglamorous part — cleaning, validating, and documenting — because that's what makes the conclusions trustworthy.</p>
-      <p>My current work pairs <strong>SQL</strong> for the heavy lifting, <strong>Python (pandas, matplotlib)</strong> for analysis and visualisation, and interactive dashboards to make findings usable. Open to junior data analyst roles.</p>
+      <p><span class="lang-en">I'm an aspiring data analyst with the <strong>Google Data Analytics</strong> certificate, focused on turning raw, messy data into clear business decisions. I like the unglamorous part — cleaning, validating, and documenting — because that's what makes the conclusions trustworthy.</span><span class="lang-pl">Jestem aspirującym analitykiem danych z certyfikatem <strong>Google Data Analytics</strong>, skupionym na zamienianiu surowych, chaotycznych danych w jasne decyzje biznesowe. Lubię tę mniej efektowną część — czyszczenie, walidację i dokumentowanie — bo to ona sprawia, że wnioskom można zaufać.</span></p>
+      <p><span class="lang-en">My current work pairs <strong>SQL</strong> for the heavy lifting, <strong>Python (pandas, matplotlib)</strong> for analysis and visualisation, and interactive dashboards to make findings usable. Open to junior data analyst roles.</span><span class="lang-pl">W swojej pracy łączę <strong>SQL</strong> do najcięższej roboty, <strong>Python (pandas, matplotlib)</strong> do analizy i wizualizacji oraz interaktywne dashboardy, by wyniki dało się wykorzystać. Otwarty na stanowiska młodszego analityka danych.</span></p>
     </div>
     <div class="chips" style="margin-top:24px">
       <span class="chip"><strong>SQL</strong> (DuckDB / window functions)</span>
       <span class="chip"><strong>Python</strong> · pandas · numpy</span>
-      <span class="chip">Data cleaning &amp; validation</span>
-      <span class="chip">RFM segmentation</span>
-      <span class="chip">Cohort &amp; retention analysis</span>
+      <span class="chip"><span class="lang-en">Data cleaning &amp; validation</span><span class="lang-pl">Czyszczenie i walidacja danych</span></span>
+      <span class="chip"><span class="lang-en">RFM segmentation</span><span class="lang-pl">Segmentacja RFM</span></span>
+      <span class="chip"><span class="lang-en">Cohort &amp; retention analysis</span><span class="lang-pl">Analiza kohort i retencji</span></span>
       <span class="chip">matplotlib · Chart.js</span>
-      <span class="chip">Dashboards</span>
-      <span class="chip">Spreadsheets / Excel</span>
+      <span class="chip"><span class="lang-en">Dashboards</span><span class="lang-pl">Dashboardy</span></span>
+      <span class="chip"><span class="lang-en">Spreadsheets / Excel</span><span class="lang-pl">Arkusze / Excel</span></span>
     </div>
   </div>
 </section>
@@ -146,9 +150,9 @@
 <section id="contact">
   <div class="container center">
     <div class="section-head center" style="margin:0 auto 28px">
-      <span class="eyebrow">Contact</span>
-      <h2>Let's talk data.</h2>
-      <p class="muted">Looking for a junior data analyst? I'd love to hear from you.</p>
+      <span class="eyebrow"><span class="lang-en">Contact</span><span class="lang-pl">Kontakt</span></span>
+      <h2><span class="lang-en">Let's talk data.</span><span class="lang-pl">Porozmawiajmy o danych.</span></h2>
+      <p class="muted"><span class="lang-en">Looking for a junior data analyst? I'd love to hear from you.</span><span class="lang-pl">Szukasz młodszego analityka danych? Chętnie się odezwę.</span></p>
     </div>
     <div class="hero-actions" style="justify-content:center">
       <a class="btn btn-primary" href="mailto:robertmaszkiewski@gmail.com">robertmaszkiewski@gmail.com</a>
@@ -162,9 +166,9 @@
 <footer>
   <div class="container">
     <div class="brand" style="color:#fff">Robert <span style="color:#7fd1a8">Maszkiewski</span></div>
-    <p class="muted" style="color:#9fb0cc;margin-top:6px">Data Analyst · Portfolio · rmportfolio.co.uk</p>
+    <p class="muted" style="color:#9fb0cc;margin-top:6px"><span class="lang-en">Data Analyst</span><span class="lang-pl">Analityk danych</span> · Portfolio · rmportfolio.co.uk</p>
     <div class="foot-links">
-      <a href="mailto:robertmaszkiewski@gmail.com">Email</a>
+      <a href="mailto:robertmaszkiewski@gmail.com"><span class="lang-en">Email</span><span class="lang-pl">E-mail</span></a>
       <a href="https://www.linkedin.com/in/robert-maszkiewski" target="_blank" rel="noopener">LinkedIn</a>
       <a href="https://github.com/robertmaszkiewski" target="_blank" rel="noopener">GitHub</a>
       <a href="https://www.kaggle.com/robertmaszkiewski" target="_blank" rel="noopener">Kaggle</a>
@@ -172,5 +176,6 @@
   </div>
 </footer>
 
+<script src="assets/js/lang.js"></script>
 </body>
 </html>
