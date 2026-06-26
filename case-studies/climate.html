@@ -9,24 +9,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/css/style.css">
 <style>
-  /* language switch */
-  .lang-pl{display:none}
-  body.lang-pl .lang-en{display:none}
-  body.lang-pl .lang-pl{display:revert}
-  /* segmented controls (language + season country) */
-  .seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:#fff;flex-shrink:0;-webkit-tap-highlight-color:transparent}
-  .seg button{border:0;background:#fff;color:var(--ink-soft);font-weight:700;font-size:.82rem;
-    padding:7px 14px;cursor:pointer;font-family:inherit;transition:.15s;-webkit-tap-highlight-color:transparent}
-  .seg button.active{background:var(--green);color:#fff}
-  .seg button:hover:not(.active){color:var(--green-d)}
-  .lang-seg{margin-left:4px}
+  /* language toggle + .seg controls are now in shared style.css */
   .seas-controls{display:flex;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
   .chart-wrap{height:320px}
-  /* phones: keep the EN/PL toggle compact &amp; always visible in the bar */
-  @media(max-width:560px){
-    .seg button{padding:6px 11px;font-size:.78rem}
-    .lang-seg{margin-left:0}
-  }
 </style>
 </head>
 <body>
@@ -260,24 +245,7 @@
   </div>
 </footer>
 
-<script>
-  // Language switch: toggle body class, sync buttons, persist, and re-render charts.
-  function setLang(l) {
-    var pl = (l === 'pl');
-    document.body.classList.toggle('lang-pl', pl);
-    document.documentElement.lang = pl ? 'pl' : 'en';
-    var be = document.getElementById('langEn'), bp = document.getElementById('langPl');
-    if (be) be.classList.toggle('active', !pl);
-    if (bp) bp.classList.toggle('active', pl);
-    try { localStorage.setItem('rmlang', l); } catch (e) {}
-    if (window.setClimateLang) window.setClimateLang(l);
-  }
-  (function () {
-    var saved = 'en';
-    try { saved = localStorage.getItem('rmlang') || 'en'; } catch (e) {}
-    if (saved === 'pl') setLang('pl');
-  })();
-</script>
+<script src="../assets/js/lang.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="../assets/js/climate-data.js"></script>
 <script src="../assets/js/climate-dashboard.js"></script>

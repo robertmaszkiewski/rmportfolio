@@ -25,23 +25,27 @@
   <div class="container">
     <a class="brand" href="../index.html">Robert&nbsp;<span>Maszkiewski</span></a>
     <div class="nav-links">
-      <a href="../index.html#cases">Case studies</a>
-      <a class="hide-sm" href="../index.html#about">About</a>
-      <a class="nav-cta" href="https://www.kaggle.com/code/robertmaszkiewski/uk-crime" target="_blank" rel="noopener">View on Kaggle</a>
+      <a href="../index.html#cases"><span class="lang-en">Case studies</span><span class="lang-pl">Projekty</span></a>
+      <a class="hide-sm" href="../index.html#about"><span class="lang-en">About</span><span class="lang-pl">O mnie</span></a>
+      <span class="seg lang-seg" role="group" aria-label="Language">
+        <button id="langEn" class="active" onclick="setLang('en')">EN</button>
+        <button id="langPl" onclick="setLang('pl')">PL</button>
+      </span>
+      <a class="nav-cta" href="https://www.kaggle.com/code/robertmaszkiewski/uk-crime" target="_blank" rel="noopener"><span class="lang-en">View on Kaggle</span><span class="lang-pl">Zobacz na Kaggle</span></a>
     </div>
   </div>
 </nav>
 
 <header class="cs-hero">
   <div class="container">
-    <a class="back" href="../index.html">← Back to portfolio</a>
-    <h1 style="margin-top:14px">UK Crime — Where, What &amp; How it's resolved</h1>
-    <p class="lede">Where does crime actually concentrate in England &amp; Wales once you control for population, what types dominate, how has the trend moved, and how often does a crime end in a charge? An end-to-end analysis of <strong>6.6&nbsp;million</strong> police-recorded offences (year ending March 2025) using official Home Office and ONS open data.</p>
+    <a class="back" href="../index.html">← <span class="lang-en">Back to portfolio</span><span class="lang-pl">Powrót do portfolio</span></a>
+    <h1 style="margin-top:14px"><span class="lang-en">UK Crime — Where, What &amp; How it's resolved</span><span class="lang-pl">Przestępczość w UK — gdzie, jakie i jak rozwiązywane</span></h1>
+    <p class="lede"><span class="lang-en">Where does crime actually concentrate in England &amp; Wales once you control for population, what types dominate, how has the trend moved, and how often does a crime end in a charge? An end-to-end analysis of <strong>6.6&nbsp;million</strong> police-recorded offences (year ending March 2025) using official Home Office and ONS open data.</span><span class="lang-pl">Gdzie tak naprawdę koncentruje się przestępczość w England &amp; Wales po uwzględnieniu liczby ludności, jakie typy dominują, jak zmieniał się trend i jak często sprawa kończy się postawieniem zarzutów? Kompleksowa analiza <strong>6,6&nbsp;miliona</strong> przestępstw zarejestrowanych przez policję (rok zakończony w marcu 2025) na podstawie oficjalnych otwartych danych Home Office i ONS.</span></p>
     <div class="cs-meta">
-      <span><b>Tools:</b> Python (pandas, matplotlib) · GeoJSON / Leaflet</span>
-      <span><b>Data:</b> Home Office &amp; ONS (Open Government Licence)</span>
-      <span><b>Period:</b> Year ending March 2025</span>
-      <span><b>Links:</b> <a href="https://www.kaggle.com/code/robertmaszkiewski/uk-crime" target="_blank" rel="noopener">Kaggle notebook</a> · <a href="https://github.com/robertmaszkiewski/uk-crime-analysis" target="_blank" rel="noopener">GitHub</a></span>
+      <span><b><span class="lang-en">Tools:</span><span class="lang-pl">Narzędzia:</span></b> Python (pandas, matplotlib) · GeoJSON / Leaflet</span>
+      <span><b><span class="lang-en">Data:</span><span class="lang-pl">Dane:</span></b> Home Office &amp; ONS (Open Government Licence)</span>
+      <span><b><span class="lang-en">Period:</span><span class="lang-pl">Okres:</span></b> <span class="lang-en">Year ending March 2025</span><span class="lang-pl">Rok zakończony w marcu 2025</span></span>
+      <span><b><span class="lang-en">Links:</span><span class="lang-pl">Linki:</span></b> <a href="https://www.kaggle.com/code/robertmaszkiewski/uk-crime" target="_blank" rel="noopener"><span class="lang-en">Kaggle notebook</span><span class="lang-pl">Notebook Kaggle</span></a> · <a href="https://github.com/robertmaszkiewski/uk-crime-analysis" target="_blank" rel="noopener">GitHub</a></span>
     </div>
   </div>
 </header>
@@ -49,17 +53,17 @@
 <!-- INTRODUCTION -->
 <section>
   <div class="container">
-    <span class="phase">1 · Introduction (Ask)</span>
-    <h2>The questions</h2>
-    <p class="lede" style="color:var(--ink-soft)">Crime headlines usually quote raw counts — which just tells you where the most <em>people</em> live. The useful questions are sharper: <strong>where is crime highest per head of population, what kinds of crime drive the totals, which way is the trend moving, and what happens to all those reports?</strong></p>
+    <span class="phase"><span class="lang-en">1 · Introduction (Ask)</span><span class="lang-pl">1 · Wprowadzenie (Pytanie)</span></span>
+    <h2><span class="lang-en">The questions</span><span class="lang-pl">Pytania</span></h2>
+    <p class="lede" style="color:var(--ink-soft)"><span class="lang-en">Crime headlines usually quote raw counts — which just tells you where the most <em>people</em> live. The useful questions are sharper: <strong>where is crime highest per head of population, what kinds of crime drive the totals, which way is the trend moving, and what happens to all those reports?</strong></span><span class="lang-pl">Nagłówki o przestępczości zwykle podają surowe liczby — które mówią jedynie, gdzie mieszka najwięcej <em>ludzi</em>. Bardziej użyteczne pytania są ostrzejsze: <strong>gdzie przestępczość jest najwyższa w przeliczeniu na mieszkańca, jakie rodzaje przestępstw napędzają sumy, w którą stronę zmierza trend i co dzieje się ze wszystkimi tymi zgłoszeniami?</strong></span></p>
     <div class="callout">
-      <strong>Scope &amp; honesty (this matters):</strong>
+      <strong><span class="lang-en">Scope &amp; honesty (this matters):</span><span class="lang-pl">Zakres i uczciwość (to ważne):</span></strong>
       <ul style="margin:8px 0 0;padding-left:18px">
-        <li><b>Recorded crime ≠ actual crime.</b> These are offences <em>recorded by police</em>; they depend on what's reported and how it's logged. The Crime Survey (CSEW) measures victimisation differently, and part of the 2013–2019 rise reflects improved recording practices, not just more crime.</li>
-        <li><b>England &amp; Wales only</b> (43 territorial forces). Scotland and Northern Ireland use separate systems.</li>
-        <li><b>Fraud is recorded centrally</b> (Action Fraud), not by local forces, so it's excluded from the per-area rates and reported separately.</li>
-        <li><b>Rates use ONS mid-2024 resident population.</b> That distorts commuter/tourist hubs — most visibly the City of London (≈9k residents, huge daytime population), which is flagged, not headlined.</li>
-        <li><b>No offender demographics.</b> UK open crime data contains no nationality or ethnicity of offenders, so this study makes no such claims — it would not be supportable from the data.</li>
+        <li><span class="lang-en"><b>Recorded crime ≠ actual crime.</b> These are offences <em>recorded by police</em>; they depend on what's reported and how it's logged. The Crime Survey (CSEW) measures victimisation differently, and part of the 2013–2019 rise reflects improved recording practices, not just more crime.</span><span class="lang-pl"><b>Przestępczość rejestrowana ≠ rzeczywista.</b> To przestępstwa <em>rejestrowane przez policję</em>; zależą od tego, co zostało zgłoszone i jak zostało odnotowane. Badanie Crime Survey (CSEW) mierzy wiktymizację inaczej, a część wzrostu w latach 2013–2019 odzwierciedla udoskonalone praktyki rejestrowania, a nie tylko więcej przestępstw.</span></li>
+        <li><span class="lang-en"><b>England &amp; Wales only</b> (43 territorial forces). Scotland and Northern Ireland use separate systems.</span><span class="lang-pl"><b>Tylko England &amp; Wales</b> (43 jednostki terytorialne). Scotland i Northern Ireland korzystają z odrębnych systemów.</span></li>
+        <li><span class="lang-en"><b>Fraud is recorded centrally</b> (Action Fraud), not by local forces, so it's excluded from the per-area rates and reported separately.</span><span class="lang-pl"><b>Oszustwa są rejestrowane centralnie</b> (Action Fraud), a nie przez lokalne jednostki, więc są wyłączone ze wskaźników dla poszczególnych obszarów i raportowane osobno.</span></li>
+        <li><span class="lang-en"><b>Rates use ONS mid-2024 resident population.</b> That distorts commuter/tourist hubs — most visibly the City of London (≈9k residents, huge daytime population), which is flagged, not headlined.</span><span class="lang-pl"><b>Wskaźniki korzystają z liczby ludności ONS na połowę 2024.</b> To zniekształca ośrodki dojazdów do pracy i turystyki — najwyraźniej City of London (≈9 tys. mieszkańców, ogromna populacja w ciągu dnia), które jest oznaczone, a nie eksponowane w nagłówku.</span></li>
+        <li><span class="lang-en"><b>No offender demographics.</b> UK open crime data contains no nationality or ethnicity of offenders, so this study makes no such claims — it would not be supportable from the data.</span><span class="lang-pl"><b>Brak danych demograficznych sprawców.</b> Otwarte dane o przestępczości w UK nie zawierają narodowości ani pochodzenia etnicznego sprawców, więc to opracowanie nie formułuje takich twierdzeń — nie dałoby się ich obronić na podstawie danych.</span></li>
       </ul>
     </div>
   </div>
@@ -68,70 +72,70 @@
 <!-- KPIs -->
 <section class="section-soft">
   <div class="container">
-    <span class="phase">Headline numbers · year ending March 2025</span>
-    <h2>England &amp; Wales at a glance</h2>
+    <span class="phase"><span class="lang-en">Headline numbers · year ending March 2025</span><span class="lang-pl">Najważniejsze liczby · rok zakończony w marcu 2025</span></span>
+    <h2><span class="lang-en">England &amp; Wales at a glance</span><span class="lang-pl">England &amp; Wales w skrócie</span></h2>
     <div class="kpis">
-      <div class="kpi"><div class="v">6.59M</div><div class="l">Total recorded crimes</div></div>
-      <div class="kpi"><div class="v">5.23M</div><div class="l">Territorial forces (excl. fraud)</div></div>
-      <div class="kpi"><div class="v">84.5</div><div class="l">Crimes per 1,000 residents</div></div>
-      <div class="kpi"><div class="v">1.28M</div><div class="l">Fraud (recorded centrally)</div></div>
-      <div class="kpi bad"><div class="v">8.6%</div><div class="l">Charged / summonsed</div></div>
-      <div class="kpi bad"><div class="v">39.8%</div><div class="l">Closed: no suspect identified</div></div>
-      <div class="kpi"><div class="v">43</div><div class="l">Police force areas</div></div>
-      <div class="kpi"><div class="v">61.8M</div><div class="l">Population (mid-2024)</div></div>
+      <div class="kpi"><div class="v">6.59M</div><div class="l"><span class="lang-en">Total recorded crimes</span><span class="lang-pl">Wszystkie zarejestrowane przestępstwa</span></div></div>
+      <div class="kpi"><div class="v">5.23M</div><div class="l"><span class="lang-en">Territorial forces (excl. fraud)</span><span class="lang-pl">Jednostki terytorialne (bez oszustw)</span></div></div>
+      <div class="kpi"><div class="v">84.5</div><div class="l"><span class="lang-en">Crimes per 1,000 residents</span><span class="lang-pl">Przestępstwa na 1000 mieszkańców</span></div></div>
+      <div class="kpi"><div class="v">1.28M</div><div class="l"><span class="lang-en">Fraud (recorded centrally)</span><span class="lang-pl">Oszustwa (rejestrowane centralnie)</span></div></div>
+      <div class="kpi bad"><div class="v">8.6%</div><div class="l"><span class="lang-en">Charged / summonsed</span><span class="lang-pl">Zarzuty / wezwania do sądu</span></div></div>
+      <div class="kpi bad"><div class="v">39.8%</div><div class="l"><span class="lang-en">Closed: no suspect identified</span><span class="lang-pl">Umorzone: nie ustalono podejrzanego</span></div></div>
+      <div class="kpi"><div class="v">43</div><div class="l"><span class="lang-en">Police force areas</span><span class="lang-pl">Obszary jednostek policji</span></div></div>
+      <div class="kpi"><div class="v">61.8M</div><div class="l"><span class="lang-en">Population (mid-2024)</span><span class="lang-pl">Liczba ludności (połowa 2024)</span></div></div>
     </div>
-    <p class="muted" style="margin-top:14px;font-size:.9rem">Reconciles to source: 5.23M (territorial, excl. fraud) + 1.28M (fraud) + ~0.08M (British Transport Police) = 6.59M total recorded. <a href="https://github.com/robertmaszkiewski/uk-crime-analysis" target="_blank" rel="noopener">Full method &amp; code →</a></p>
+    <p class="muted" style="margin-top:14px;font-size:.9rem"><span class="lang-en">Reconciles to source: 5.23M (territorial, excl. fraud) + 1.28M (fraud) + ~0.08M (British Transport Police) = 6.59M total recorded. <a href="https://github.com/robertmaszkiewski/uk-crime-analysis" target="_blank" rel="noopener">Full method &amp; code →</a></span><span class="lang-pl">Zgodne ze źródłem: 5,23M (terytorialne, bez oszustw) + 1,28M (oszustwa) + ~0,08M (British Transport Police) = 6,59M ogółu zarejestrowanych. <a href="https://github.com/robertmaszkiewski/uk-crime-analysis" target="_blank" rel="noopener">Pełna metoda i kod →</a></span></p>
   </div>
 </section>
 
 <!-- ANALYSIS -->
 <section>
   <div class="container">
-    <span class="phase">2 · Problems → 3 · Analyze &amp; Share</span>
-    <h2>The story in the data</h2>
-    <p class="muted" style="max-width:760px;margin-bottom:28px">Each view answers one question and states the fact it supports. Hover the map or charts for detail.</p>
+    <span class="phase"><span class="lang-en">2 · Problems → 3 · Analyze &amp; Share</span><span class="lang-pl">2 · Problemy → 3 · Analiza i prezentacja</span></span>
+    <h2><span class="lang-en">The story in the data</span><span class="lang-pl">Historia ukryta w danych</span></h2>
+    <p class="muted" style="max-width:760px;margin-bottom:28px"><span class="lang-en">Each view answers one question and states the fact it supports. Hover the map or charts for detail.</span><span class="lang-pl">Każdy widok odpowiada na jedno pytanie i podaje fakt, który potwierdza. Najedź na mapę lub wykresy, aby zobaczyć szczegóły.</span></p>
 
     <div class="chart-grid">
       <div class="panel full">
-        <h3>Where — crime rate per 1,000 residents</h3>
-        <div class="sub">Per-capita rate by police force area (excl. fraud). Darker = higher. Raw counts peak in London, but <strong>per head</strong> the highest rates sit in northern metro forces — Cleveland, West Yorkshire, Greater Manchester.</div>
+        <h3><span class="lang-en">Where — crime rate per 1,000 residents</span><span class="lang-pl">Gdzie — wskaźnik przestępczości na 1000 mieszkańców</span></h3>
+        <div class="sub"><span class="lang-en">Per-capita rate by police force area (excl. fraud). Darker = higher. Raw counts peak in London, but <strong>per head</strong> the highest rates sit in northern metro forces — Cleveland, West Yorkshire, Greater Manchester.</span><span class="lang-pl">Wskaźnik na mieszkańca według obszaru jednostki policji (bez oszustw). Ciemniejszy = wyższy. Surowe liczby są najwyższe w London, ale <strong>na mieszkańca</strong> najwyższe wskaźniki notują północne jednostki metropolitalne — Cleveland, West Yorkshire, Greater Manchester.</span></div>
         <div id="crimeMap" class="map"></div>
         <div id="mapLegend" class="legend"></div>
       </div>
 
       <div class="panel">
-        <h3>Highest-rate forces</h3>
-        <div class="sub">Top 12 by crimes per 1,000. City of London (red) is a denominator artifact — tiny resident population vs. a huge daytime/commuter one.</div>
+        <h3><span class="lang-en">Highest-rate forces</span><span class="lang-pl">Jednostki o najwyższym wskaźniku</span></h3>
+        <div class="sub"><span class="lang-en">Top 12 by crimes per 1,000. City of London (red) is a denominator artifact — tiny resident population vs. a huge daytime/commuter one.</span><span class="lang-pl">Pierwsza dwunastka według przestępstw na 1000. City of London (czerwony) to artefakt mianownika — znikoma liczba mieszkańców wobec ogromnej populacji dziennej/dojeżdżającej.</span></div>
         <div class="chart-wrap"><canvas id="chRate"></canvas></div>
       </div>
 
       <div class="panel">
-        <h3>What — offences by type</h3>
-        <div class="sub"><strong>Violence (37%)</strong> and <strong>theft (33%)</strong> make up two-thirds of recorded crime (fraud shown separately).</div>
+        <h3><span class="lang-en">What — offences by type</span><span class="lang-pl">Jakie — przestępstwa według typu</span></h3>
+        <div class="sub"><span class="lang-en"><strong>Violence (37%)</strong> and <strong>theft (33%)</strong> make up two-thirds of recorded crime (fraud shown separately).</span><span class="lang-pl"><strong>Przemoc (37%)</strong> i <strong>kradzież (33%)</strong> stanowią dwie trzecie przestępczości rejestrowanej (oszustwa pokazane osobno).</span></div>
         <div class="chart-wrap"><canvas id="chMix"></canvas></div>
       </div>
 
       <div class="panel full">
-        <h3>When — the trend (territorial forces, excl. fraud)</h3>
-        <div class="sub">Recorded crime climbed from 3.5M (2012/13) to ~5.2M by 2019/20 — partly real, partly improved recording — dipped in the COVID year, peaked in 2022/23, and has eased slightly since.</div>
+        <h3><span class="lang-en">When — the trend (territorial forces, excl. fraud)</span><span class="lang-pl">Kiedy — trend (jednostki terytorialne, bez oszustw)</span></h3>
+        <div class="sub"><span class="lang-en">Recorded crime climbed from 3.5M (2012/13) to ~5.2M by 2019/20 — partly real, partly improved recording — dipped in the COVID year, peaked in 2022/23, and has eased slightly since.</span><span class="lang-pl">Przestępczość rejestrowana wzrosła z 3,5M (2012/13) do ~5,2M w 2019/20 — częściowo realnie, częściowo dzięki lepszemu rejestrowaniu — spadła w roku pandemii COVID, osiągnęła szczyt w 2022/23 i od tego czasu nieco zmalała.</span></div>
         <div class="chart-wrap"><canvas id="chTrend"></canvas></div>
       </div>
 
       <div class="panel">
-        <h3>Shoplifting — a sharp recent rise</h3>
-        <div class="sub">Recorded shoplifting jumped from 340k (2022/23) to <strong>526k (2024/25)</strong> — up ~54% in two years, one of the clearest recent shifts.</div>
+        <h3><span class="lang-en">Shoplifting — a sharp recent rise</span><span class="lang-pl">Kradzieże sklepowe — ostry niedawny wzrost</span></h3>
+        <div class="sub"><span class="lang-en">Recorded shoplifting jumped from 340k (2022/23) to <strong>526k (2024/25)</strong> — up ~54% in two years, one of the clearest recent shifts.</span><span class="lang-pl">Zarejestrowane kradzieże sklepowe skoczyły z 340 tys. (2022/23) do <strong>526 tys. (2024/25)</strong> — wzrost o ~54% w dwa lata, jedna z najwyraźniejszych ostatnich zmian.</span></div>
         <div class="chart-wrap"><canvas id="chShop"></canvas></div>
       </div>
 
       <div class="panel">
-        <h3>How it's resolved — outcomes</h3>
-        <div class="sub">Only <strong>8.6%</strong> of recorded crimes end in a charge or summons; ~40% are closed with no suspect identified.</div>
+        <h3><span class="lang-en">How it's resolved — outcomes</span><span class="lang-pl">Jak są rozwiązywane — rezultaty</span></h3>
+        <div class="sub"><span class="lang-en">Only <strong>8.6%</strong> of recorded crimes end in a charge or summons; ~40% are closed with no suspect identified.</span><span class="lang-pl">Tylko <strong>8,6%</strong> zarejestrowanych przestępstw kończy się postawieniem zarzutów lub wezwaniem do sądu; ~40% jest umarzanych bez ustalenia podejrzanego.</span></div>
         <div class="chart-wrap"><canvas id="chOutcomes"></canvas></div>
       </div>
 
       <div class="panel full">
-        <h3>Charge rate by offence type</h3>
-        <div class="sub">Charge rates are highest for offences uncovered <em>by</em> policing (weapons, drugs) and lowest for volume crimes like criminal damage, theft and violence — where suspects are often never identified.</div>
+        <h3><span class="lang-en">Charge rate by offence type</span><span class="lang-pl">Wskaźnik postawienia zarzutów według typu przestępstwa</span></h3>
+        <div class="sub"><span class="lang-en">Charge rates are highest for offences uncovered <em>by</em> policing (weapons, drugs) and lowest for volume crimes like criminal damage, theft and violence — where suspects are often never identified.</span><span class="lang-pl">Wskaźniki postawienia zarzutów są najwyższe dla przestępstw wykrywanych <em>przez</em> działania policji (broń, narkotyki), a najniższe dla przestępstw masowych, takich jak uszkodzenie mienia, kradzież i przemoc — gdzie podejrzani często nigdy nie zostają ustaleni.</span></div>
         <div class="chart-wrap" style="height:340px"><canvas id="chChargeGroup"></canvas></div>
       </div>
     </div>
@@ -141,66 +145,66 @@
 <!-- CORRELATION: crime vs house prices -->
 <section>
   <div class="container">
-    <span class="phase">Deep-dive · Crime × house prices</span>
-    <h2>Do cheaper areas have more crime?</h2>
-    <p class="muted" style="max-width:780px;margin-bottom:10px">Joining crime to <strong>median house price</strong> across <strong>287 local authorities</strong> (92% of recorded crime). The honest answer needs care — a few central-London boroughs flip the headline.</p>
+    <span class="phase"><span class="lang-en">Deep-dive · Crime × house prices</span><span class="lang-pl">Pogłębiona analiza · Przestępczość × ceny domów</span></span>
+    <h2><span class="lang-en">Do cheaper areas have more crime?</span><span class="lang-pl">Czy tańsze obszary mają więcej przestępczości?</span></h2>
+    <p class="muted" style="max-width:780px;margin-bottom:10px"><span class="lang-en">Joining crime to <strong>median house price</strong> across <strong>287 local authorities</strong> (92% of recorded crime). The honest answer needs care — a few central-London boroughs flip the headline.</span><span class="lang-pl">Połączenie przestępczości z <strong>medianą ceny domu</strong> w <strong>287 jednostkach samorządu lokalnego</strong> (92% przestępczości rejestrowanej). Uczciwa odpowiedź wymaga ostrożności — kilka centralnych dzielnic London odwraca nagłówek.</span></p>
     <div class="callout">
-      <strong>Read it carefully:</strong> the simple (Pearson) correlation is a misleading <em>+0.18</em>, because the City of London &amp; Westminster have extreme prices <em>and</em> extreme (daytime-driven) crime rates. Rank-based and with London removed, the real pattern is <strong>negative</strong> — <strong>Spearman −0.28 overall, −0.51 excluding London</strong>: more crime tends to go with <em>cheaper</em> housing. Correlation isn't causation — deprivation, urban density and footfall plausibly drive both.
+      <span class="lang-en"><strong>Read it carefully:</strong> the simple (Pearson) correlation is a misleading <em>+0.18</em>, because the City of London &amp; Westminster have extreme prices <em>and</em> extreme (daytime-driven) crime rates. Rank-based and with London removed, the real pattern is <strong>negative</strong> — <strong>Spearman −0.28 overall, −0.51 excluding London</strong>: more crime tends to go with <em>cheaper</em> housing. Correlation isn't causation — deprivation, urban density and footfall plausibly drive both.</span><span class="lang-pl"><strong>Czytaj uważnie:</strong> prosta korelacja (Pearson) wynosi mylące <em>+0,18</em>, ponieważ City of London i Westminster mają skrajne ceny <em>oraz</em> skrajne (napędzane ruchem dziennym) wskaźniki przestępczości. Oparty na rangach i po usunięciu London prawdziwy wzorzec jest <strong>ujemny</strong> — <strong>Spearman −0,28 ogółem, −0,51 z wyłączeniem London</strong>: więcej przestępczości zwykle wiąże się z <em>tańszymi</em> mieszkaniami. Korelacja to nie przyczynowość — bieda, gęstość miejska i natężenie ruchu pieszego prawdopodobnie napędzają jedno i drugie.</span>
     </div>
     <div class="chart-grid">
       <div class="panel full">
-        <h3>Crime rate vs median house price</h3>
-        <div class="sub">Each dot is one local authority. London (red) is the high-price, high-rate cluster that flips the naive correlation positive.</div>
+        <h3><span class="lang-en">Crime rate vs median house price</span><span class="lang-pl">Wskaźnik przestępczości a mediana ceny domu</span></h3>
+        <div class="sub"><span class="lang-en">Each dot is one local authority. London (red) is the high-price, high-rate cluster that flips the naive correlation positive.</span><span class="lang-pl">Każda kropka to jedna jednostka samorządu lokalnego. London (czerwony) to skupisko o wysokich cenach i wysokim wskaźniku, które odwraca naiwną korelację na dodatnią.</span></div>
         <div class="chart-wrap" style="height:430px"><canvas id="chScatter"></canvas></div>
       </div>
       <div class="panel">
-        <h3>Crime hotspots — rate per 1,000</h3>
-        <div class="sub">Darker = more crime per resident. Central London and northern cities stand out.</div>
+        <h3><span class="lang-en">Crime hotspots — rate per 1,000</span><span class="lang-pl">Ogniska przestępczości — wskaźnik na 1000</span></h3>
+        <div class="sub"><span class="lang-en">Darker = more crime per resident. Central London and northern cities stand out.</span><span class="lang-pl">Ciemniejszy = więcej przestępczości na mieszkańca. Wyróżniają się centralne London i miasta na północy.</span></div>
         <div id="ladCrimeMap" class="map sm"></div>
         <div id="ladCrimeLegend" class="legend"></div>
       </div>
       <div class="panel">
-        <h3>Median house price</h3>
-        <div class="sub">Darker = pricier. Compare with the crime map — outside London the overlap is weak and mostly inverse.</div>
+        <h3><span class="lang-en">Median house price</span><span class="lang-pl">Mediana ceny domu</span></h3>
+        <div class="sub"><span class="lang-en">Darker = pricier. Compare with the crime map — outside London the overlap is weak and mostly inverse.</span><span class="lang-pl">Ciemniejszy = droższy. Porównaj z mapą przestępczości — poza London pokrywanie się jest słabe i przeważnie odwrotne.</span></div>
         <div id="ladPriceMap" class="map sm"></div>
         <div id="ladPriceLegend" class="legend"></div>
       </div>
     </div>
-    <p class="muted" style="margin-top:14px;font-size:.85rem">Crime: Home Office CSP recorded crime 2024/25 (excl. fraud). Prices: ONS HPSSA median price paid (to Mar 2023). Population: ONS mid-2022. ~70 areas excluded due to local-government reorganisation between data vintages; the 287 shown cover 92% of recorded crime.</p>
+    <p class="muted" style="margin-top:14px;font-size:.85rem"><span class="lang-en">Crime: Home Office CSP recorded crime 2024/25 (excl. fraud). Prices: ONS HPSSA median price paid (to Mar 2023). Population: ONS mid-2022. ~70 areas excluded due to local-government reorganisation between data vintages; the 287 shown cover 92% of recorded crime.</span><span class="lang-pl">Przestępczość: Home Office CSP, przestępczość rejestrowana 2024/25 (bez oszustw). Ceny: ONS HPSSA, mediana zapłaconej ceny (do marca 2023). Liczba ludności: ONS, połowa 2022. ~70 obszarów wyłączono z powodu reorganizacji samorządu lokalnego między rocznikami danych; pokazane 287 obejmuje 92% przestępczości rejestrowanej.</span></p>
   </div>
 </section>
 
 <!-- IMPLICATIONS -->
 <section class="section-soft">
   <div class="container">
-    <span class="phase">4 · Solutions (how to use this)</span>
-    <h2>What the data supports — options &amp; trade-offs</h2>
-    <p class="muted" style="max-width:760px;margin-bottom:24px">This is descriptive open data, not a causal model — so the honest output is prioritisation, not blame. Three evidence-based directions:</p>
+    <span class="phase"><span class="lang-en">4 · Solutions (how to use this)</span><span class="lang-pl">4 · Rozwiązania (jak to wykorzystać)</span></span>
+    <h2><span class="lang-en">What the data supports — options &amp; trade-offs</span><span class="lang-pl">Co potwierdzają dane — opcje i kompromisy</span></h2>
+    <p class="muted" style="max-width:760px;margin-bottom:24px"><span class="lang-en">This is descriptive open data, not a causal model — so the honest output is prioritisation, not blame. Three evidence-based directions:</span><span class="lang-pl">To opisowe dane otwarte, a nie model przyczynowy — więc uczciwym efektem jest ustalanie priorytetów, a nie wskazywanie winnych. Trzy kierunki oparte na dowodach:</span></p>
     <div class="sol">
       <div class="panel rec">
-        <span class="pill">Best supported</span>
-        <h3 style="margin-top:10px">A · Target the volume crimes</h3>
-        <p class="muted">Violence + theft are two-thirds of all crime. Shoplifting is surging. These are where effort moves the total.</p>
+        <span class="pill"><span class="lang-en">Best supported</span><span class="lang-pl">Najlepiej poparte</span></span>
+        <h3 style="margin-top:10px"><span class="lang-en">A · Target the volume crimes</span><span class="lang-pl">A · Skup się na przestępstwach masowych</span></h3>
+        <p class="muted"><span class="lang-en">Violence + theft are two-thirds of all crime. Shoplifting is surging. These are where effort moves the total.</span><span class="lang-pl">Przemoc + kradzież to dwie trzecie całej przestępczości. Kradzieże sklepowe gwałtownie rosną. To tutaj wysiłek przekłada się na zmianę sumy.</span></p>
         <ul>
-          <li class="pro">+ Largest share of the problem; clear recent trend</li>
-          <li class="pro">+ Measurable (rate per 1,000, charge rate)</li>
-          <li class="con">– Needs retail/business cooperation and recording consistency</li>
+          <li class="pro"><span class="lang-en">+ Largest share of the problem; clear recent trend</span><span class="lang-pl">+ Największy udział w problemie; wyraźny niedawny trend</span></li>
+          <li class="pro"><span class="lang-en">+ Measurable (rate per 1,000, charge rate)</span><span class="lang-pl">+ Mierzalne (wskaźnik na 1000, wskaźnik postawienia zarzutów)</span></li>
+          <li class="con"><span class="lang-en">– Needs retail/business cooperation and recording consistency</span><span class="lang-pl">– Wymaga współpracy handlu/biznesu i spójności rejestrowania</span></li>
         </ul>
       </div>
       <div class="panel">
-        <h3>B · Allocate by rate, not raw count</h3>
-        <p class="muted">Compare forces per 1,000 residents; investigate why northern metros run high and rural forces low.</p>
+        <h3><span class="lang-en">B · Allocate by rate, not raw count</span><span class="lang-pl">B · Przydzielaj według wskaźnika, nie surowej liczby</span></h3>
+        <p class="muted"><span class="lang-en">Compare forces per 1,000 residents; investigate why northern metros run high and rural forces low.</span><span class="lang-pl">Porównuj jednostki na 1000 mieszkańców; zbadaj, dlaczego północne metropolie mają wysokie, a jednostki wiejskie niskie wskaźniki.</span></p>
         <ul>
-          <li class="pro">+ Fairer cross-area comparison than headlines</li>
-          <li class="con">– Resident population mis-states commuter hubs (City of London)</li>
+          <li class="pro"><span class="lang-en">+ Fairer cross-area comparison than headlines</span><span class="lang-pl">+ Sprawiedliwsze porównanie między obszarami niż nagłówki</span></li>
+          <li class="con"><span class="lang-en">– Resident population mis-states commuter hubs (City of London)</span><span class="lang-pl">– Liczba mieszkańców zniekształca ośrodki dojazdów do pracy (City of London)</span></li>
         </ul>
       </div>
       <div class="panel">
-        <h3>C · Tackle the charge-rate gap</h3>
-        <p class="muted">An 8.6% charge rate and ~40% “no suspect” point to investigative capacity and victim-support questions.</p>
+        <h3><span class="lang-en">C · Tackle the charge-rate gap</span><span class="lang-pl">C · Zmierz się z luką we wskaźniku zarzutów</span></h3>
+        <p class="muted"><span class="lang-en">An 8.6% charge rate and ~40% “no suspect” point to investigative capacity and victim-support questions.</span><span class="lang-pl">Wskaźnik zarzutów na poziomie 8,6% i ~40% „bez podejrzanego” wskazują na pytania o zdolności śledcze i wsparcie ofiar.</span></p>
         <ul>
-          <li class="pro">+ Directly tied to public confidence</li>
-          <li class="con">– Outcome data shows <em>what</em>, not <em>why</em>; needs case-level work</li>
+          <li class="pro"><span class="lang-en">+ Directly tied to public confidence</span><span class="lang-pl">+ Bezpośrednio związane z zaufaniem społecznym</span></li>
+          <li class="con"><span class="lang-en">– Outcome data shows <em>what</em>, not <em>why</em>; needs case-level work</span><span class="lang-pl">– Dane o rezultatach pokazują <em>co</em>, a nie <em>dlaczego</em>; potrzebna praca na poziomie spraw</span></li>
         </ul>
       </div>
     </div>
@@ -210,20 +214,20 @@
 <!-- CONCLUSION + NEXT STEPS -->
 <section>
   <div class="container">
-    <span class="phase">5 · Conclusion &amp; 6 · Next steps</span>
-    <h2>Key takeaways</h2>
+    <span class="phase"><span class="lang-en">5 · Conclusion &amp; 6 · Next steps</span><span class="lang-pl">5 · Wnioski i 6 · Kolejne kroki</span></span>
+    <h2><span class="lang-en">Key takeaways</span><span class="lang-pl">Najważniejsze wnioski</span></h2>
     <ul style="max-width:780px;color:var(--ink-soft)">
-      <li><strong>Raw counts mislead.</strong> London records the most crime because it has the most people; per 1,000 residents the highest rates are in <strong>Cleveland, West Yorkshire and Greater Manchester</strong>.</li>
-      <li><strong>Two crime types dominate</strong> — violence (37%) and theft (33%) — and <strong>shoplifting is rising fast</strong> (+54% in two years).</li>
-      <li><strong>Most crimes go unresolved:</strong> only <strong>8.6%</strong> end in a charge; ~40% close with no suspect identified.</li>
-      <li><strong>Lesson:</strong> the numbers are only as honest as their caveats — population denominators, central fraud recording, and "recorded ≠ actual" all change the read.</li>
+      <li><span class="lang-en"><strong>Raw counts mislead.</strong> London records the most crime because it has the most people; per 1,000 residents the highest rates are in <strong>Cleveland, West Yorkshire and Greater Manchester</strong>.</span><span class="lang-pl"><strong>Surowe liczby wprowadzają w błąd.</strong> London rejestruje najwięcej przestępstw, bo ma najwięcej ludzi; na 1000 mieszkańców najwyższe wskaźniki są w <strong>Cleveland, West Yorkshire i Greater Manchester</strong>.</span></li>
+      <li><span class="lang-en"><strong>Two crime types dominate</strong> — violence (37%) and theft (33%) — and <strong>shoplifting is rising fast</strong> (+54% in two years).</span><span class="lang-pl"><strong>Dwa typy przestępstw dominują</strong> — przemoc (37%) i kradzież (33%) — a <strong>kradzieże sklepowe szybko rosną</strong> (+54% w dwa lata).</span></li>
+      <li><span class="lang-en"><strong>Most crimes go unresolved:</strong> only <strong>8.6%</strong> end in a charge; ~40% close with no suspect identified.</span><span class="lang-pl"><strong>Większość przestępstw pozostaje nierozwiązana:</strong> tylko <strong>8,6%</strong> kończy się postawieniem zarzutów; ~40% umarza się bez ustalenia podejrzanego.</span></li>
+      <li><span class="lang-en"><strong>Lesson:</strong> the numbers are only as honest as their caveats — population denominators, central fraud recording, and "recorded ≠ actual" all change the read.</span><span class="lang-pl"><strong>Lekcja:</strong> liczby są tak uczciwe, jak ich zastrzeżenia — mianowniki liczby ludności, centralne rejestrowanie oszustw i zasada „rejestrowane ≠ rzeczywiste” zmieniają odczyt.</span></li>
     </ul>
-    <h3 style="margin-top:34px">Recommended next steps — what · who · when</h3>
+    <h3 style="margin-top:34px"><span class="lang-en">Recommended next steps — what · who · when</span><span class="lang-pl">Rekomendowane kolejne kroki — co · kto · kiedy</span></h3>
     <ol class="steps" style="max-width:820px;margin-top:14px">
-      <li><span class="n">1</span><div><strong>Add a daytime-population denominator</strong> so commuter hubs (City of London, central London) are comparable. <span class="muted">Who: Analyst · When: next iteration.</span></div></li>
-      <li><span class="n">2</span><div><strong>Drill into street-level hotspots</strong> using data.police.uk lat/long for the top forces. <span class="muted">Who: Analyst · When: follow-up notebook.</span></div></li>
-      <li><span class="n">3</span><div><strong>Join to deprivation (IMD)</strong> to test how much of the area variation socio-economics explains. <span class="muted">Who: Analyst · When: follow-up.</span></div></li>
-      <li><span class="n">4</span><div><strong>Track shoplifting &amp; charge rates quarterly</strong> as the headline metrics to watch. <span class="muted">Who: Force/PCC analysts · When: ongoing.</span></div></li>
+      <li><span class="n">1</span><div><span class="lang-en"><strong>Add a daytime-population denominator</strong> so commuter hubs (City of London, central London) are comparable. <span class="muted">Who: Analyst · When: next iteration.</span></span><span class="lang-pl"><strong>Dodaj mianownik populacji dziennej</strong>, aby ośrodki dojazdów do pracy (City of London, centralne London) były porównywalne. <span class="muted">Kto: Analityk · Kiedy: kolejna iteracja.</span></span></div></li>
+      <li><span class="n">2</span><div><span class="lang-en"><strong>Drill into street-level hotspots</strong> using data.police.uk lat/long for the top forces. <span class="muted">Who: Analyst · When: follow-up notebook.</span></span><span class="lang-pl"><strong>Zejdź do ognisk na poziomie ulic</strong>, korzystając ze współrzędnych geograficznych data.police.uk dla czołowych jednostek. <span class="muted">Kto: Analityk · Kiedy: kolejny notebook.</span></span></div></li>
+      <li><span class="n">3</span><div><span class="lang-en"><strong>Join to deprivation (IMD)</strong> to test how much of the area variation socio-economics explains. <span class="muted">Who: Analyst · When: follow-up.</span></span><span class="lang-pl"><strong>Połącz z biedą (IMD)</strong>, aby sprawdzić, jak dużą część zróżnicowania obszarów wyjaśniają czynniki społeczno-ekonomiczne. <span class="muted">Kto: Analityk · Kiedy: kontynuacja.</span></span></div></li>
+      <li><span class="n">4</span><div><span class="lang-en"><strong>Track shoplifting &amp; charge rates quarterly</strong> as the headline metrics to watch. <span class="muted">Who: Force/PCC analysts · When: ongoing.</span></span><span class="lang-pl"><strong>Śledź kwartalnie kradzieże sklepowe i wskaźniki zarzutów</strong> jako kluczowe metryki do obserwacji. <span class="muted">Kto: Analitycy jednostki/PCC · Kiedy: na bieżąco.</span></span></div></li>
     </ol>
   </div>
 </section>
@@ -231,9 +235,9 @@
 <footer>
   <div class="container">
     <div class="brand" style="color:#fff">Robert <span style="color:#7fd1a8">Maszkiewski</span></div>
-    <p class="muted" style="color:#9fb0cc;margin-top:6px">UK Crime case study · Python &amp; Leaflet · data © Crown copyright, Open Government Licence v3.0</p>
+    <p class="muted" style="color:#9fb0cc;margin-top:6px"><span class="lang-en">UK Crime case study · Python &amp; Leaflet · data © Crown copyright, Open Government Licence v3.0</span><span class="lang-pl">Studium przypadku przestępczości w UK · Python &amp; Leaflet · dane © Crown copyright, Open Government Licence v3.0</span></p>
     <div class="foot-links">
-      <a href="../index.html">Portfolio home</a>
+      <a href="../index.html"><span class="lang-en">Portfolio home</span><span class="lang-pl">Strona główna portfolio</span></a>
       <a href="https://github.com/robertmaszkiewski/uk-crime-analysis" target="_blank" rel="noopener">GitHub</a>
       <a href="https://www.linkedin.com/in/robert-maszkiewski" target="_blank" rel="noopener">LinkedIn</a>
       <a href="https://www.kaggle.com/code/robertmaszkiewski/uk-crime" target="_blank" rel="noopener">Kaggle</a>
@@ -241,6 +245,7 @@
   </div>
 </footer>
 
+<script src="../assets/js/lang.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
 <script src="../assets/js/crime-data.js"></script>

@@ -15,23 +15,27 @@
   <div class="container">
     <a class="brand" href="../index.html">Robert&nbsp;<span>Maszkiewski</span></a>
     <div class="nav-links">
-      <a href="../index.html#cases">Case studies</a>
-      <a class="hide-sm" href="../index.html#about">About</a>
-      <a class="nav-cta" href="https://www.kaggle.com/code/robertmaszkiewski/online-retail-ii-customer-value-revenue-analysis" target="_blank" rel="noopener">View on Kaggle</a>
+      <a href="../index.html#cases"><span class="lang-en">Case studies</span><span class="lang-pl">Projekty</span></a>
+      <a class="hide-sm" href="../index.html#about"><span class="lang-en">About</span><span class="lang-pl">O mnie</span></a>
+      <span class="seg lang-seg" role="group" aria-label="Language">
+        <button id="langEn" class="active" onclick="setLang('en')">EN</button>
+        <button id="langPl" onclick="setLang('pl')">PL</button>
+      </span>
+      <a class="nav-cta" href="https://www.kaggle.com/code/robertmaszkiewski/online-retail-ii-customer-value-revenue-analysis" target="_blank" rel="noopener"><span class="lang-en">View on Kaggle</span><span class="lang-pl">Zobacz na Kaggle</span></a>
     </div>
   </div>
 </nav>
 
 <header class="cs-hero">
   <div class="container">
-    <a class="back" href="../index.html">← Back to portfolio</a>
-    <h1 style="margin-top:14px">Online Retail II — Customer Value &amp; Revenue</h1>
-    <p class="lede">Who are the most valuable customers, and what really drives revenue for a UK online gift retailer? An end-to-end analysis of <strong>1,067,371</strong> transactions — cleaned, segmented (RFM), and turned into retention and revenue recommendations.</p>
+    <a class="back" href="../index.html">← <span class="lang-en">Back to portfolio</span><span class="lang-pl">Powrót do portfolio</span></a>
+    <h1 style="margin-top:14px"><span class="lang-en">Online Retail II — Customer Value &amp; Revenue</span><span class="lang-pl">Online Retail II — wartość klienta i przychody</span></h1>
+    <p class="lede"><span class="lang-en">Who are the most valuable customers, and what really drives revenue for a UK online gift retailer? An end-to-end analysis of <strong>1,067,371</strong> transactions — cleaned, segmented (RFM), and turned into retention and revenue recommendations.</span><span class="lang-pl">Kim są najbardziej wartościowi klienci i co naprawdę napędza przychody brytyjskiego sklepu internetowego z upominkami? Kompleksowa analiza <strong>1 067 371</strong> transakcji — oczyszczonych, posegmentowanych (RFM) i przełożonych na rekomendacje dotyczące retencji i przychodów.</span></p>
     <div class="cs-meta">
-      <span><b>Tools:</b> SQL (DuckDB) · Python (pandas, matplotlib)</span>
-      <span><b>Data:</b> UCI Online Retail II</span>
-      <span><b>Period:</b> Dec 2009 – Dec 2011</span>
-      <span><b>Links:</b> <a href="https://www.kaggle.com/code/robertmaszkiewski/online-retail-ii-customer-value-revenue-analysis" target="_blank" rel="noopener">Kaggle notebook</a> · <a href="https://github.com/robertmaszkiewski" target="_blank" rel="noopener">GitHub</a></span>
+      <span><b><span class="lang-en">Tools:</span><span class="lang-pl">Narzędzia:</span></b> SQL (DuckDB) · Python (pandas, matplotlib)</span>
+      <span><b><span class="lang-en">Data:</span><span class="lang-pl">Dane:</span></b> UCI Online Retail II</span>
+      <span><b><span class="lang-en">Period:</span><span class="lang-pl">Okres:</span></b> Dec 2009 – Dec 2011</span>
+      <span><b><span class="lang-en">Links:</span><span class="lang-pl">Linki:</span></b> <a href="https://www.kaggle.com/code/robertmaszkiewski/online-retail-ii-customer-value-revenue-analysis" target="_blank" rel="noopener"><span class="lang-en">Kaggle notebook</span><span class="lang-pl">Notebook Kaggle</span></a> · <a href="https://github.com/robertmaszkiewski" target="_blank" rel="noopener">GitHub</a></span>
     </div>
   </div>
 </header>
@@ -39,11 +43,11 @@
 <!-- INTRODUCTION -->
 <section>
   <div class="container">
-    <span class="phase">1 · Introduction (Ask)</span>
-    <h2>The business question</h2>
-    <p class="lede" style="color:var(--ink-soft)">A UK-registered, non-store online retailer of all-occasion giftware wants to <strong>grow revenue and keep customers</strong> — but doesn't know who its valuable customers are or what drives sales. My job: turn ~1.07M raw transactions into clear answers marketing and operations can act on.</p>
+    <span class="phase"><span class="lang-en">1 · Introduction (Ask)</span><span class="lang-pl">1 · Wprowadzenie (Pytanie)</span></span>
+    <h2><span class="lang-en">The business question</span><span class="lang-pl">Pytanie biznesowe</span></h2>
+    <p class="lede" style="color:var(--ink-soft)"><span class="lang-en">A UK-registered, non-store online retailer of all-occasion giftware wants to <strong>grow revenue and keep customers</strong> — but doesn't know who its valuable customers are or what drives sales. My job: turn ~1.07M raw transactions into clear answers marketing and operations can act on.</span><span class="lang-pl">Zarejestrowany w Wielkiej Brytanii, internetowy (bezsklepowy) sprzedawca upominków na każdą okazję chce <strong>zwiększyć przychody i utrzymać klientów</strong> — ale nie wie, kim są jego wartościowi klienci ani co napędza sprzedaż. Moje zadanie: zamienić ~1,07 mln surowych transakcji w jasne odpowiedzi, na podstawie których marketing i operacje mogą działać.</span></p>
     <div class="callout">
-      <strong>Assumptions:</strong> negative-quantity rows are returns/cancellations (not sales); rows priced ≤ £0 are samples/adjustments; postage &amp; manual entries are non-product revenue, reported separately; sales without a Customer ID still count toward revenue but are excluded from customer-level analysis.
+      <span class="lang-en"><strong>Assumptions:</strong> negative-quantity rows are returns/cancellations (not sales); rows priced ≤ £0 are samples/adjustments; postage &amp; manual entries are non-product revenue, reported separately; sales without a Customer ID still count toward revenue but are excluded from customer-level analysis.</span><span class="lang-pl"><strong>Założenia:</strong> wiersze z ujemną ilością to zwroty/anulowania (nie sprzedaż); wiersze z ceną ≤ £0 to próbki/korekty; przesyłka &amp; wpisy ręczne to przychód niezwiązany z produktem, raportowany osobno; sprzedaż bez identyfikatora klienta (Customer ID) nadal wlicza się do przychodu, ale jest wyłączona z analizy na poziomie klienta.</span>
     </div>
   </div>
 </section>
@@ -51,63 +55,63 @@
 <!-- KPIs -->
 <section class="section-soft">
   <div class="container">
-    <span class="phase">Headline numbers (after cleaning)</span>
-    <h2>What the cleaned data shows</h2>
+    <span class="phase"><span class="lang-en">Headline numbers (after cleaning)</span><span class="lang-pl">Najważniejsze liczby (po oczyszczeniu)</span></span>
+    <h2><span class="lang-en">What the cleaned data shows</span><span class="lang-pl">Co pokazują oczyszczone dane</span></h2>
     <div class="kpis">
-      <div class="kpi good"><div class="v">£19.6M</div><div class="l">Product revenue</div></div>
-      <div class="kpi"><div class="v">£18.2M</div><div class="l">Net revenue (after returns)</div></div>
-      <div class="kpi bad"><div class="v">−£1.46M</div><div class="l">Returns (7.4% of revenue)</div></div>
-      <div class="kpi"><div class="v">5,852</div><div class="l">Identified customers</div></div>
-      <div class="kpi"><div class="v">39,517</div><div class="l">Orders</div></div>
-      <div class="kpi"><div class="v">£497</div><div class="l">Avg order value</div></div>
-      <div class="kpi good"><div class="v">72.4%</div><div class="l">Repeat-customer rate</div></div>
-      <div class="kpi"><div class="v">4,901</div><div class="l">Products sold</div></div>
+      <div class="kpi good"><div class="v">£19.6M</div><div class="l"><span class="lang-en">Product revenue</span><span class="lang-pl">Przychód z produktów</span></div></div>
+      <div class="kpi"><div class="v">£18.2M</div><div class="l"><span class="lang-en">Net revenue (after returns)</span><span class="lang-pl">Przychód netto (po zwrotach)</span></div></div>
+      <div class="kpi bad"><div class="v">−£1.46M</div><div class="l"><span class="lang-en">Returns (7.4% of revenue)</span><span class="lang-pl">Zwroty (7,4% przychodu)</span></div></div>
+      <div class="kpi"><div class="v">5,852</div><div class="l"><span class="lang-en">Identified customers</span><span class="lang-pl">Zidentyfikowani klienci</span></div></div>
+      <div class="kpi"><div class="v">39,517</div><div class="l"><span class="lang-en">Orders</span><span class="lang-pl">Zamówienia</span></div></div>
+      <div class="kpi"><div class="v">£497</div><div class="l"><span class="lang-en">Avg order value</span><span class="lang-pl">Średnia wartość zamówienia</span></div></div>
+      <div class="kpi good"><div class="v">72.4%</div><div class="l"><span class="lang-en">Repeat-customer rate</span><span class="lang-pl">Odsetek powracających klientów</span></div></div>
+      <div class="kpi"><div class="v">4,901</div><div class="l"><span class="lang-en">Products sold</span><span class="lang-pl">Sprzedane produkty</span></div></div>
     </div>
-    <p class="muted" style="margin-top:14px;font-size:.9rem">A subtle data trap handled in cleaning: the source ships two yearly sheets that overlap in Dec 2010 — naïvely merging them double-counts ~£0.5M. De-duplicating on the business columns fixes it. <a href="https://www.kaggle.com/code/robertmaszkiewski/online-retail-ii-customer-value-revenue-analysis" target="_blank" rel="noopener">Full cleaning log →</a></p>
+    <p class="muted" style="margin-top:14px;font-size:.9rem"><span class="lang-en">A subtle data trap handled in cleaning: the source ships two yearly sheets that overlap in Dec 2010 — naïvely merging them double-counts ~£0.5M. De-duplicating on the business columns fixes it. <a href="https://www.kaggle.com/code/robertmaszkiewski/online-retail-ii-customer-value-revenue-analysis" target="_blank" rel="noopener">Full cleaning log →</a></span><span class="lang-pl">Subtelna pułapka w danych obsłużona przy oczyszczaniu: źródło dostarcza dwa roczne arkusze, które nakładają się w grudniu 2010 — naiwne ich połączenie podwójnie liczy ~£0,5M. Usunięcie duplikatów po kolumnach biznesowych rozwiązuje problem. <a href="https://www.kaggle.com/code/robertmaszkiewski/online-retail-ii-customer-value-revenue-analysis" target="_blank" rel="noopener">Pełny dziennik oczyszczania →</a></span></p>
   </div>
 </section>
 
 <!-- PROBLEMS / ANALYSIS -->
 <section>
   <div class="container">
-    <span class="phase">2 · Problems → 3 · Analyze &amp; Share</span>
-    <h2>Six questions, answered with evidence</h2>
-    <p class="muted" style="max-width:720px;margin-bottom:28px">Each chart answers one business question and states the fact it supports. Hover any chart for detail.</p>
+    <span class="phase"><span class="lang-en">2 · Problems → 3 · Analyze &amp; Share</span><span class="lang-pl">2 · Problemy → 3 · Analiza &amp; Prezentacja</span></span>
+    <h2><span class="lang-en">Six questions, answered with evidence</span><span class="lang-pl">Sześć pytań, odpowiedzi poparte danymi</span></h2>
+    <p class="muted" style="max-width:720px;margin-bottom:28px"><span class="lang-en">Each chart answers one business question and states the fact it supports. Hover any chart for detail.</span><span class="lang-pl">Każdy wykres odpowiada na jedno pytanie biznesowe i podaje fakt, który potwierdza. Najedź na dowolny wykres, aby zobaczyć szczegóły.</span></p>
 
     <div class="chart-grid">
       <div class="panel full">
-        <h3>Revenue over time</h3>
-        <div class="sub">Strong, repeatable Q4 seasonality — September to November is the money-making window every year.</div>
+        <h3><span class="lang-en">Revenue over time</span><span class="lang-pl">Przychód w czasie</span></h3>
+        <div class="sub"><span class="lang-en">Strong, repeatable Q4 seasonality — September to November is the money-making window every year.</span><span class="lang-pl">Silna, powtarzalna sezonowość w IV kwartale — wrzesień–listopad to co roku okno najwyższych zarobków.</span></div>
         <div class="chart-wrap"><canvas id="chRevenue"></canvas></div>
       </div>
 
       <div class="panel">
-        <h3>Top products by revenue</h3>
-        <div class="sub">A handful of homeware/gift lines drive a large share of sales.</div>
+        <h3><span class="lang-en">Top products by revenue</span><span class="lang-pl">Najlepsze produkty według przychodu</span></h3>
+        <div class="sub"><span class="lang-en">A handful of homeware/gift lines drive a large share of sales.</span><span class="lang-pl">Garstka linii artykułów domowych/upominkowych generuje dużą część sprzedaży.</span></div>
         <div class="chart-wrap"><canvas id="chProducts"></canvas></div>
       </div>
 
       <div class="panel">
-        <h3>Revenue by country</h3>
-        <div class="sub">The UK is ~85% of revenue; some export markets are just 1–3 wholesale accounts (concentration risk).</div>
+        <h3><span class="lang-en">Revenue by country</span><span class="lang-pl">Przychód według kraju</span></h3>
+        <div class="sub"><span class="lang-en">The UK is ~85% of revenue; some export markets are just 1–3 wholesale accounts (concentration risk).</span><span class="lang-pl">Wielka Brytania to ~85% przychodu; niektóre rynki eksportowe to zaledwie 1–3 konta hurtowe (ryzyko koncentracji).</span></div>
         <div class="chart-wrap"><canvas id="chCountry"></canvas></div>
       </div>
 
       <div class="panel">
-        <h3>Customer value — RFM segments</h3>
-        <div class="sub">Champions are ~25% of customers but <strong>69%</strong> of revenue. Loyalty, not breadth, is the engine.</div>
+        <h3><span class="lang-en">Customer value — RFM segments</span><span class="lang-pl">Wartość klienta — segmenty RFM</span></h3>
+        <div class="sub"><span class="lang-en">Champions are ~25% of customers but <strong>69%</strong> of revenue. Loyalty, not breadth, is the engine.</span><span class="lang-pl">Champions to ~25% klientów, ale <strong>69%</strong> przychodu. Napędem jest lojalność, a nie zasięg.</span></div>
         <div class="chart-wrap"><canvas id="chRfm"></canvas></div>
       </div>
 
       <div class="panel">
-        <h3>Revenue leakage — returns</h3>
-        <div class="sub">~7.4% of product revenue is lost to returns/cancellations — a real, addressable leak.</div>
+        <h3><span class="lang-en">Revenue leakage — returns</span><span class="lang-pl">Wyciek przychodu — zwroty</span></h3>
+        <div class="sub"><span class="lang-en">~7.4% of product revenue is lost to returns/cancellations — a real, addressable leak.</span><span class="lang-pl">~7,4% przychodu z produktów ginie przez zwroty/anulowania — realny, możliwy do ograniczenia wyciek.</span></div>
         <div class="chart-wrap"><canvas id="chReturns"></canvas></div>
       </div>
 
       <div class="panel full">
-        <h3>Retention — cohort analysis</h3>
-        <div class="sub">% of each first-purchase cohort still buying in later months. First-month retention is modest, then a loyal core keeps re-purchasing.</div>
+        <h3><span class="lang-en">Retention — cohort analysis</span><span class="lang-pl">Retencja — analiza kohortowa</span></h3>
+        <div class="sub"><span class="lang-en">% of each first-purchase cohort still buying in later months. First-month retention is modest, then a loyal core keeps re-purchasing.</span><span class="lang-pl">Odsetek każdej kohorty pierwszego zakupu wciąż kupującej w kolejnych miesiącach. Retencja w pierwszym miesiącu jest umiarkowana, potem lojalny trzon nadal ponawia zakupy.</span></div>
         <div style="overflow-x:auto"><div id="cohort"></div></div>
       </div>
     </div>
@@ -117,34 +121,34 @@
 <!-- SOLUTIONS -->
 <section class="section-soft">
   <div class="container">
-    <span class="phase">4 · Solutions</span>
-    <h2>Options &amp; trade-offs</h2>
-    <p class="muted" style="max-width:720px;margin-bottom:24px">Revenue is concentrated in a small group of repeat customers, peaks hard in Q4, and loses ~7% to returns. Three options:</p>
+    <span class="phase"><span class="lang-en">4 · Solutions</span><span class="lang-pl">4 · Rozwiązania</span></span>
+    <h2><span class="lang-en">Options &amp; trade-offs</span><span class="lang-pl">Opcje &amp; kompromisy</span></h2>
+    <p class="muted" style="max-width:720px;margin-bottom:24px"><span class="lang-en">Revenue is concentrated in a small group of repeat customers, peaks hard in Q4, and loses ~7% to returns. Three options:</span><span class="lang-pl">Przychód koncentruje się w niewielkiej grupie powracających klientów, mocno szczytuje w IV kwartale i traci ~7% na zwrotach. Trzy opcje:</span></p>
     <div class="sol">
       <div class="panel rec">
-        <span class="pill">Recommended</span>
-        <h3 style="margin-top:10px">A · Retention &amp; win-back program</h3>
-        <p class="muted">Champion perks + automated win-back for the "At risk (was loyal)" segment (£1.0M at stake).</p>
+        <span class="pill"><span class="lang-en">Recommended</span><span class="lang-pl">Rekomendowane</span></span>
+        <h3 style="margin-top:10px"><span class="lang-en">A · Retention &amp; win-back program</span><span class="lang-pl">A · Program retencji &amp; odzyskiwania klientów</span></h3>
+        <p class="muted"><span class="lang-en">Champion perks + automated win-back for the "At risk (was loyal)" segment (£1.0M at stake).</span><span class="lang-pl">Przywileje dla Champions + automatyczne odzyskiwanie segmentu „Zagrożeni (byli lojalni)" (w grze £1,0M).</span></p>
         <ul>
-          <li class="pro">+ Targets the segment already driving most revenue</li>
-          <li class="pro">+ Cheap vs. new-customer acquisition</li>
-          <li class="con">– Needs CRM/email setup; won't grow the funnel top</li>
+          <li class="pro"><span class="lang-en">+ Targets the segment already driving most revenue</span><span class="lang-pl">+ Celuje w segment, który już generuje większość przychodu</span></li>
+          <li class="pro"><span class="lang-en">+ Cheap vs. new-customer acquisition</span><span class="lang-pl">+ Tani w porównaniu z pozyskaniem nowego klienta</span></li>
+          <li class="con"><span class="lang-en">– Needs CRM/email setup; won't grow the funnel top</span><span class="lang-pl">– Wymaga wdrożenia CRM/e-mail; nie powiększy góry lejka</span></li>
         </ul>
       </div>
       <div class="panel">
-        <h3>B · Seasonal plan for Sep–Nov</h3>
-        <p class="muted">Align marketing spend and inventory with the proven Q4 peak.</p>
+        <h3><span class="lang-en">B · Seasonal plan for Sep–Nov</span><span class="lang-pl">B · Plan sezonowy na wrzesień–listopad</span></h3>
+        <p class="muted"><span class="lang-en">Align marketing spend and inventory with the proven Q4 peak.</span><span class="lang-pl">Dopasuj wydatki marketingowe i zapasy do udokumentowanego szczytu w IV kwartale.</span></p>
         <ul>
-          <li class="pro">+ Lifts the biggest months of the year</li>
-          <li class="con">– Concentrates risk; stock-outs/over-stocks are costly if mis-forecast</li>
+          <li class="pro"><span class="lang-en">+ Lifts the biggest months of the year</span><span class="lang-pl">+ Podnosi najlepsze miesiące w roku</span></li>
+          <li class="con"><span class="lang-en">– Concentrates risk; stock-outs/over-stocks are costly if mis-forecast</span><span class="lang-pl">– Koncentruje ryzyko; braki/nadwyżki zapasów są kosztowne przy błędnej prognozie</span></li>
         </ul>
       </div>
       <div class="panel">
-        <h3>C · Cut returns &amp; de-risk geography</h3>
-        <p class="muted">Investigate the most-returned SKUs; protect single-account export markets.</p>
+        <h3><span class="lang-en">C · Cut returns &amp; de-risk geography</span><span class="lang-pl">C · Ogranicz zwroty &amp; zmniejsz ryzyko geograficzne</span></h3>
+        <p class="muted"><span class="lang-en">Investigate the most-returned SKUs; protect single-account export markets.</span><span class="lang-pl">Zbadaj najczęściej zwracane SKU; zabezpiecz rynki eksportowe oparte na jednym koncie.</span></p>
         <ul>
-          <li class="pro">+ Recovers part of the ~7% leak</li>
-          <li class="con">– Root-cause work is slow; diversifying markets is a long game</li>
+          <li class="pro"><span class="lang-en">+ Recovers part of the ~7% leak</span><span class="lang-pl">+ Odzyskuje część ~7% wycieku</span></li>
+          <li class="con"><span class="lang-en">– Root-cause work is slow; diversifying markets is a long game</span><span class="lang-pl">– Praca nad przyczynami źródłowymi jest powolna; dywersyfikacja rynków to gra długoterminowa</span></li>
         </ul>
       </div>
     </div>
@@ -154,20 +158,20 @@
 <!-- CONCLUSION + NEXT STEPS -->
 <section>
   <div class="container">
-    <span class="phase">5 · Conclusion &amp; 6 · Next steps</span>
-    <h2>Key takeaways</h2>
+    <span class="phase"><span class="lang-en">5 · Conclusion &amp; 6 · Next steps</span><span class="lang-pl">5 · Wnioski &amp; 6 · Kolejne kroki</span></span>
+    <h2><span class="lang-en">Key takeaways</span><span class="lang-pl">Najważniejsze wnioski</span></h2>
     <ul style="max-width:760px;color:var(--ink-soft)">
-      <li>A <strong>small core of customers ("Champions") drives ~69% of revenue</strong> — retention beats acquisition here.</li>
-      <li>Sales are <strong>strongly seasonal (Sep–Nov)</strong>; the UK is ~85% of revenue with risky single-account export markets.</li>
-      <li><strong>~7% of revenue leaks to returns</strong> — measurable and worth tackling.</li>
-      <li><strong>Lesson:</strong> the analysis is only as good as the cleaning — the Dec-2010 overlap and service-code nuance materially change the numbers.</li>
+      <li><span class="lang-en">A <strong>small core of customers ("Champions") drives ~69% of revenue</strong> — retention beats acquisition here.</span><span class="lang-pl">Niewielki <strong>trzon klientów („Champions") generuje ~69% przychodu</strong> — tutaj retencja wygrywa z pozyskiwaniem.</span></li>
+      <li><span class="lang-en">Sales are <strong>strongly seasonal (Sep–Nov)</strong>; the UK is ~85% of revenue with risky single-account export markets.</span><span class="lang-pl">Sprzedaż jest <strong>silnie sezonowa (wrzesień–listopad)</strong>; Wielka Brytania to ~85% przychodu, z ryzykownymi rynkami eksportowymi opartymi na jednym koncie.</span></li>
+      <li><span class="lang-en"><strong>~7% of revenue leaks to returns</strong> — measurable and worth tackling.</span><span class="lang-pl"><strong>~7% przychodu ginie na zwrotach</strong> — mierzalne i warte zajęcia się.</span></li>
+      <li><span class="lang-en"><strong>Lesson:</strong> the analysis is only as good as the cleaning — the Dec-2010 overlap and service-code nuance materially change the numbers.</span><span class="lang-pl"><strong>Lekcja:</strong> analiza jest tylko tak dobra, jak oczyszczenie danych — nakładanie się danych z grudnia 2010 i niuanse kodów usługowych istotnie zmieniają liczby.</span></li>
     </ul>
-    <h3 style="margin-top:34px">Recommended next steps — what · who · when</h3>
+    <h3 style="margin-top:34px"><span class="lang-en">Recommended next steps — what · who · when</span><span class="lang-pl">Rekomendowane kolejne kroki — co · kto · kiedy</span></h3>
     <ol class="steps" style="max-width:820px;margin-top:14px">
-      <li><span class="n">1</span><div><strong>Launch a tiered retention program</strong> (Champion perks + win-back for "At risk"). <span class="muted">Who: CRM/Marketing · When: next quarter, measure repeat-rate uplift at 90 days.</span></div></li>
-      <li><span class="n">2</span><div><strong>Build the Sep–Nov seasonal plan</strong> (budget + inventory locked by August). <span class="muted">Who: Marketing + Ops · When: annually, sign-off by 31 Aug.</span></div></li>
-      <li><span class="n">3</span><div><strong>Stand up a returns dashboard</strong> and investigate top returned SKUs. <span class="muted">Who: Analytics + Merchandising · When: within 60 days.</span></div></li>
-      <li><span class="n">4</span><div><strong>Key-account plan</strong> for single-customer export markets (EIRE, NL). <span class="muted">Who: Sales · When: ongoing, quarterly review.</span></div></li>
+      <li><span class="n">1</span><div><span class="lang-en"><strong>Launch a tiered retention program</strong> (Champion perks + win-back for "At risk"). <span class="muted">Who: CRM/Marketing · When: next quarter, measure repeat-rate uplift at 90 days.</span></span><span class="lang-pl"><strong>Uruchom wielopoziomowy program retencji</strong> (przywileje dla Champions + odzyskiwanie segmentu „Zagrożeni"). <span class="muted">Kto: CRM/Marketing · Kiedy: w przyszłym kwartale, mierz wzrost odsetka powrotów po 90 dniach.</span></span></div></li>
+      <li><span class="n">2</span><div><span class="lang-en"><strong>Build the Sep–Nov seasonal plan</strong> (budget + inventory locked by August). <span class="muted">Who: Marketing + Ops · When: annually, sign-off by 31 Aug.</span></span><span class="lang-pl"><strong>Zbuduj plan sezonowy na wrzesień–listopad</strong> (budżet + zapasy ustalone do sierpnia). <span class="muted">Kto: Marketing + Operacje · Kiedy: corocznie, zatwierdzenie do 31 sierpnia.</span></span></div></li>
+      <li><span class="n">3</span><div><span class="lang-en"><strong>Stand up a returns dashboard</strong> and investigate top returned SKUs. <span class="muted">Who: Analytics + Merchandising · When: within 60 days.</span></span><span class="lang-pl"><strong>Uruchom pulpit zwrotów</strong> i zbadaj najczęściej zwracane SKU. <span class="muted">Kto: Analityka + Merchandising · Kiedy: w ciągu 60 dni.</span></span></div></li>
+      <li><span class="n">4</span><div><span class="lang-en"><strong>Key-account plan</strong> for single-customer export markets (EIRE, NL). <span class="muted">Who: Sales · When: ongoing, quarterly review.</span></span><span class="lang-pl"><strong>Plan kluczowych klientów</strong> dla rynków eksportowych z jednym klientem (EIRE, NL). <span class="muted">Kto: Sprzedaż · Kiedy: na bieżąco, przegląd kwartalny.</span></span></div></li>
     </ol>
   </div>
 </section>
@@ -175,16 +179,17 @@
 <footer>
   <div class="container">
     <div class="brand" style="color:#fff">Robert <span style="color:#7fd1a8">Maszkiewski</span></div>
-    <p class="muted" style="color:#9fb0cc;margin-top:6px">Online Retail II case study · built with SQL, Python &amp; Chart.js</p>
+    <p class="muted" style="color:#9fb0cc;margin-top:6px"><span class="lang-en">Online Retail II case study · built with SQL, Python &amp; Chart.js</span><span class="lang-pl">Studium przypadku Online Retail II · zbudowane w SQL, Python &amp; Chart.js</span></p>
     <div class="foot-links">
-      <a href="../index.html">Portfolio home</a>
-      <a href="https://www.kaggle.com/code/robertmaszkiewski/online-retail-ii-customer-value-revenue-analysis" target="_blank" rel="noopener">Kaggle notebook</a>
+      <a href="../index.html"><span class="lang-en">Portfolio home</span><span class="lang-pl">Strona główna portfolio</span></a>
+      <a href="https://www.kaggle.com/code/robertmaszkiewski/online-retail-ii-customer-value-revenue-analysis" target="_blank" rel="noopener"><span class="lang-en">Kaggle notebook</span><span class="lang-pl">Notebook Kaggle</span></a>
       <a href="https://github.com/robertmaszkiewski" target="_blank" rel="noopener">GitHub</a>
       <a href="https://www.linkedin.com/in/robert-maszkiewski" target="_blank" rel="noopener">LinkedIn</a>
     </div>
   </div>
 </footer>
 
+<script src="../assets/js/lang.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="../assets/js/data.js"></script>
 <script src="../assets/js/dashboard.js"></script>
