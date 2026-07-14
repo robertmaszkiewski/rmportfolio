@@ -97,20 +97,56 @@
   function val(el) { var e = document.getElementById(el); return e ? e.value : null; }
   function fmt(n) { return n.toLocaleString(lang === "pl" ? "pl-PL" : "en-GB"); }
 
-  /* Buduje punkty {x: rok, y: wartosc}. Gdy seria jest nieciagla (zmiana ICD),
-     wstawiamy null na granicy rewizji, zeby Chart.js NIE narysowal linii przez przerwe. */
-  function points(key, metric, breakOnRev) {
+  /* WSPOLNA SIATKA LAT.
+     Chart.js w trybie 'index' dopasowuje punkty po pozycji w tablicy, nie po roku.
+     Serie startuja w roznych latach i maja rozne dlugosci, wiec bez wspolnej siatki
+     "indeks 3" oznaczalby inny rok dla kazdego kraju — i kropki pod kursorem
+     rozjezdzalyby sie w pionie. Kladziemy wiec wszystko na tej samej osi lat. */
+  function gridOf(ranges) {
+    var lo = Infinity, hi = -Infinity;
+    ranges.forEach(function (r) {
+      if (!r) return;
+      lo = Math.min(lo, r[0]);
+      hi = Math.max(hi, r[1]);
+    });
+    if (!isFinite(lo)) return [];
+    var g = [];
+    for (var y = lo; y <= hi; y++) g.push(y);
+    return g;
+  }
+  function rangeOf(key, metric) {
+    var s = H.series[key];
+    return s ? [s.y0, s.y0 + s[metric].length - 1] : null;
+  }
+  /* Wartosci serii polozone na zadanej siatce lat; brak danych -> null (luka na wykresie). */
+  function onGrid(grid, key, metric) {
     var s = H.series[key];
     if (!s) return null;
-    var arr = s[metric], rev = s.rev, out = [];
-    for (var i = 0; i < arr.length; i++) {
-      var year = s.y0 + i;
-      if (breakOnRev && i > 0 && rev[i] && rev[i - 1] && rev[i] !== rev[i - 1]) {
-        out.push({ x: year - 0.5, y: null });   // jawna przerwa na granicy rewizji
-      }
-      out.push({ x: year, y: arr[i] });
-    }
-    return out;
+    var arr = s[metric];
+    return grid.map(function (y) {
+      var i = y - s.y0;
+      return { x: y, y: (i >= 0 && i < arr.length) ? arr[i] : null };
+    });
+  }
+  /* To samo dla serii spoza cancer-history (pokrycie, dzietnosc, gardlo...): {years, v}. */
+  function onGridRaw(grid, years, vals) {
+    var map = {};
+    years.forEach(function (y, i) { map[y] = vals[i]; });
+    return grid.map(function (y) {
+      return { x: y, y: (y in map) ? map[y] : null };
+    });
+  }
+  /* Przerwa na zmianie rewizji ICD: zamiast wstawiac dodatkowy punkt (co psulo
+     indeksowanie), ukrywamy sam ODCINEK linii miedzy dwiema rewizjami. */
+  function breakSegment(key) {
+    var s = H.series[key];
+    return function (ctx) {
+      if (!s) return undefined;
+      var a = ctx.p0.parsed.x - s.y0, b = ctx.p1.parsed.x - s.y0;
+      var ra = (a >= 0 && a < s.rev.length) ? s.rev[a] : null;
+      var rb = (b >= 0 && b < s.rev.length) ? s.rev[b] : null;
+      return (ra && rb && ra !== rb) ? "transparent" : undefined;
+    };
   }
 
   /* ---------- 1. Szesc nowotworow, szesc roznych kierunkow ---------- */
@@ -124,10 +160,14 @@
   ];
   function divergeChart() {
     var iso = val("dvIso") || homeGeo();
-    var ds = DIVERGE.map(function (d) {
+    var keys = DIVERGE.map(function (d) { return iso + "|" + d.site + "|both"; });
+    var grid = gridOf(keys.map(function (k) { return rangeOf(k, "asr"); }));
+    var ds = DIVERGE.map(function (d, i) {
+      var key = keys[i];
       return {
         label: L(H.sites[d.site]),
-        data: points(iso + "|" + d.site + "|both", "asr", !H.sites[d.site].continuous),
+        data: onGrid(grid, key, "asr"),
+        segment: { borderColor: breakSegment(key) },
         borderColor: d.col, backgroundColor: d.col,
         borderWidth: 2.2, pointRadius: 0, tension: .25, spanGaps: false
       };
@@ -147,8 +187,10 @@
     var iso = val("cvIso") || homeGeo(), site = val("cvSite") || "LUNG";
     var meta = H.sites[site];
     var sex = meta.sex || "male";
+    var key = iso + "|" + site + "|" + sex;
+    var grid = gridOf([rangeOf(key, "asr")]);
     var mk = function (metric, color, dash, label) {
-      return { label: label, data: points(iso + "|" + site + "|" + sex, metric, false),
+      return { label: label, data: onGrid(grid, key, metric),
         borderColor: color, backgroundColor: color, borderDash: dash,
         borderWidth: 2.2, pointRadius: 0, tension: .25 };
     };
@@ -171,8 +213,13 @@
     var sexSel = val("trSex") || "both";
     var sex = meta.sex || sexSel;
     var brk = !meta.continuous;
-    var ds = ["POL", "GBR", "ESP", "USA"].map(function (iso) {
-      return { label: T().geo[iso], data: points(iso + "|" + site + "|" + sex, metric, brk),
+    var isos = ["POL", "GBR", "ESP", "USA"];
+    var keys = isos.map(function (iso) { return iso + "|" + site + "|" + sex; });
+    var grid = gridOf(keys.map(function (k) { return rangeOf(k, metric); }));
+    var ds = isos.map(function (iso, i) {
+      var key = keys[i];
+      return { label: T().geo[iso], data: onGrid(grid, key, metric),
+        segment: brk ? { borderColor: breakSegment(key) } : undefined,
         borderColor: GEO_COL[iso], backgroundColor: GEO_COL[iso],
         borderWidth: 2.2, pointRadius: 0, tension: .25, spanGaps: false };
     }).filter(function (d) { return d.data; });
@@ -261,13 +308,18 @@
   /* 7. Pokrycie szczepieniami HPV */
   function hpvCovChart() {
     if (!P || !document.getElementById("cHpvCov")) return;
-    var ds = ["GBR", "ESP", "USA", "POL"].map(function (iso) {
-      var s = P.coverage[iso];
+    var isos = ["GBR", "ESP", "USA", "POL"];
+    var grid = gridOf(isos.map(function (iso) {
+      var c = P.coverage[iso];
+      return c ? [c.years[0], c.years[c.years.length - 1]] : null;
+    }));
+    var ds = isos.map(function (iso) {
+      var c = P.coverage[iso];
       return {
         label: T().geo[iso],
-        data: s ? s.years.map(function (y, i) { return { x: y, y: s.pct[i] }; }) : [],
+        data: c ? onGridRaw(grid, c.years, c.pct) : [],
         borderColor: GEO_COL[iso], backgroundColor: GEO_COL[iso],
-        borderWidth: 2.4, pointRadius: 2.5, tension: .2
+        borderWidth: 2.4, pointRadius: 2.5, tension: .2, spanGaps: false
       };
     });
     charts.hc = new Chart(document.getElementById("cHpvCov"), {
@@ -308,15 +360,20 @@
   /* 9. Dzietnosc — test twierdzenia "szczepionka niszczy plodnosc" */
   function fertChart() {
     if (!P || !document.getElementById("cFert")) return;
-    var ds = ["GBR", "USA", "POL", "ESP"].map(function (iso) {
-      var s = P.fertility[iso];
+    var isos = ["GBR", "USA", "POL", "ESP"];
+    var grid = gridOf(isos.map(function (iso) {
+      var f = P.fertility[iso];
+      return [f.years[0], f.years[f.years.length - 1]];
+    }));
+    var ds = isos.map(function (iso) {
+      var f = P.fertility[iso];
       var cov = P.coverage[iso];
       var last = cov ? cov.pct[cov.pct.length - 1] : 0;
       return {
         label: T().geo[iso] + " (" + T().cov + " " + last + "%)",
-        data: s.years.map(function (y, i) { return { x: y, y: s.tfr[i] }; }),
+        data: onGridRaw(grid, f.years, f.tfr),
         borderColor: GEO_COL[iso], backgroundColor: GEO_COL[iso],
-        borderWidth: 2.2, pointRadius: 0, tension: .25
+        borderWidth: 2.2, pointRadius: 0, tension: .25, spanGaps: false
       };
     });
     charts.ft2 = new Chart(document.getElementById("cFert"), {
@@ -384,15 +441,18 @@
          Srednia 3-letnia — liczby sa male i surowa seria to szum. */
   function cervYoungChart() {
     if (!P || !document.getElementById("cCervYoung")) return;
-    var ds = ["GBR", "USA", "ESP", "POL"].map(function (iso) {
+    var isos = ["GBR", "USA", "ESP", "POL"];
+    var grid = gridOf(isos.map(function (iso) {
+      var y = P.cervixYoungRate[iso].years;
+      return [y[0], y[y.length - 1]];
+    }));
+    var ds = isos.map(function (iso) {
       var s = P.cervixYoungRate[iso];
       return {
         label: T().geo[iso],
-        // lata JAWNIE — Polska nie ma 1997-98, UK nie ma 2000.
-        // Zalozenie ciaglosci przesuwalo cala polska linie o dwa lata.
-        data: s.rate.map(function (v, i) { return { x: s.years[i], y: v }; }),
+        data: onGridRaw(grid, s.years, s.rate),   // lata jawne + wspolna siatka
         borderColor: GEO_COL[iso], backgroundColor: GEO_COL[iso],
-        borderWidth: 2.2, pointRadius: 0, tension: .3
+        borderWidth: 2.2, pointRadius: 0, tension: .3, spanGaps: false
       };
     });
     charts.cyg = new Chart(document.getElementById("cCervYoung"), {
@@ -492,12 +552,16 @@
     var iso = val("oroIso") || (lang === "pl" ? "POL" : "GBR");
     var o = P.oro[iso];
     if (!o) return;
+    var grid = gridOf(["hpv", "other"].map(function (g) {
+      var y = o[g].years;
+      return [y[0], y[y.length - 1]];
+    }));
     var mk = function (grp, col, dash, label) {
       var s = o[grp];
       return { label: label,
-        data: s.years.map(function (y, i) { return { x: y, y: s.v[i] }; }),
+        data: onGridRaw(grid, s.years, s.v),
         borderColor: col, backgroundColor: col, borderDash: dash,
-        borderWidth: 2.4, pointRadius: 0, tension: .25 };
+        borderWidth: 2.4, pointRadius: 0, tension: .25, spanGaps: false };
     };
     charts.oro = new Chart(document.getElementById("cOro"), {
       type: "line",
