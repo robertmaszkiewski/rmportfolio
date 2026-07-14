@@ -23,7 +23,17 @@
       crude: "Crude rate", asr: "Age-standardised",
       inc: "Incidence", mort: "Mortality",
       loading: "Loading data…", nodata: "No data for this combination.",
-      breakNote: "Series is drawn in segments — the ICD revision changed the definition."
+      breakNote: "Series is drawn in segments — the ICD revision changed the definition.",
+      covY: "Girls vaccinated against HPV (%)", cov: "coverage",
+      tfrY: "Births per woman (total fertility rate)",
+      under45X: "Share of deaths before age 45 (%)",
+      deathsY: "Deaths (women aged 20–34)",
+      typeX: "Share of HPV-positive cervical cancers (%)",
+      typeBi: "Covered by every HPV vaccine (types 16, 18)",
+      typeNona: "Added by the 9-valent vaccine (31, 33, 45, 52, 58)",
+      typeNone: "Covered by no vaccine",
+      infertY: "Infertile (%), married women aged 15–44",
+      youngRateY: "Cervical cancer deaths per 100,000 (women 20–34)"
     },
     pl: {
       asrY: "Zgony na 100 tys. (standaryzowane wiekiem)",
@@ -35,11 +45,21 @@
       crude: "Surowy", asr: "Standaryzowany",
       inc: "Zachorowania", mort: "Zgony",
       loading: "Wczytywanie danych…", nodata: "Brak danych dla tej kombinacji.",
-      breakNote: "Seria rysowana odcinkami — zmiana rewizji ICD zmieniła definicję."
+      breakNote: "Seria rysowana odcinkami — zmiana rewizji ICD zmieniła definicję.",
+      covY: "Zaszczepione dziewczęta przeciw HPV (%)", cov: "pokrycie",
+      tfrY: "Dzieci na kobietę (współczynnik dzietności)",
+      under45X: "Udział zgonów przed 45. rokiem życia (%)",
+      deathsY: "Zgony (kobiety 20–34 lata)",
+      typeX: "Udział wśród HPV-dodatnich raków szyjki (%)",
+      typeBi: "Pokryte przez KAŻDĄ szczepionkę HPV (typy 16, 18)",
+      typeNona: "Dodane przez szczepionkę 9-walentną (31, 33, 45, 52, 58)",
+      typeNone: "Nie pokryte przez żadną szczepionkę",
+      infertY: "Niepłodne (%), kobiety zamężne 15–44 lata",
+      youngRateY: "Zgony na raka szyjki na 100 tys. (kobiety 20–34)"
     }
   };
 
-  var H = null, C = null, F = null, charts = {}, lang = "en";
+  var H = null, C = null, F = null, P = null, charts = {}, lang = "en";
   function T() { return STR[lang]; }
   function L(o) { return (lang === "pl" ? o.pl : o.en) || o.en; }
   /* Wersja EN opowiada o Wielkiej Brytanii, wersja PL o Polsce —
@@ -221,9 +241,163 @@
     });
   }
 
+  /* ================= HPV ================= */
+
+  /* Rok startu krajowego programu szczepien (do adnotacji na wykresie) */
+  var HPV_START = { GBR: 2008, ESP: 2008, USA: 2006, POL: 2023 };
+
+  /* 7. Pokrycie szczepieniami HPV */
+  function hpvCovChart() {
+    if (!P || !document.getElementById("cHpvCov")) return;
+    var ds = ["GBR", "ESP", "USA", "POL"].map(function (iso) {
+      var s = P.coverage[iso];
+      return {
+        label: T().geo[iso],
+        data: s ? s.years.map(function (y, i) { return { x: y, y: s.pct[i] }; }) : [],
+        borderColor: GEO_COL[iso], backgroundColor: GEO_COL[iso],
+        borderWidth: 2.4, pointRadius: 2.5, tension: .2
+      };
+    });
+    charts.hc = new Chart(document.getElementById("cHpvCov"), {
+      type: "line", data: { datasets: ds },
+      options: legendOn({
+        responsive: true, maintainAspectRatio: false, parsing: false,
+        interaction: { mode: "index", intersect: false },
+        scales: axes(T().year, T().covY, {
+          x: { type: "linear", min: 2008, max: 2024, ticks: { stepSize: 2 } },
+          y: { beginAtZero: true, max: 100 }
+        })
+      })
+    });
+  }
+
+  /* 8. Kogo zabija rak szyjki macicy — udzial zgonow ponizej 45 r.z. */
+  function youngChart() {
+    if (!P || !document.getElementById("cYoung")) return;
+    var order = Object.keys(P.under45).sort(function (a, b) { return P.under45[b] - P.under45[a]; });
+    charts.yg = new Chart(document.getElementById("cYoung"), {
+      type: "bar",
+      data: {
+        labels: order.map(function (c) { return L(H.sites[c] || { en: c, pl: c }); }),
+        datasets: [{
+          data: order.map(function (c) { return P.under45[c]; }),
+          backgroundColor: order.map(function (c) { return c === "CERVIX" ? RED : SLATE; }),
+          borderRadius: 5
+        }]
+      },
+      options: {
+        indexAxis: "y", responsive: true, maintainAspectRatio: false,
+        plugins: { tooltip: { callbacks: { label: function (c) { return c.raw + "%"; } } } },
+        scales: axes(T().under45X, null, { x: { grid: { color: GRID }, beginAtZero: true } })
+      }
+    });
+  }
+
+  /* 9. Dzietnosc — test twierdzenia "szczepionka niszczy plodnosc" */
+  function fertChart() {
+    if (!P || !document.getElementById("cFert")) return;
+    var ds = ["GBR", "USA", "POL", "ESP"].map(function (iso) {
+      var s = P.fertility[iso];
+      var cov = P.coverage[iso];
+      var last = cov ? cov.pct[cov.pct.length - 1] : 0;
+      return {
+        label: T().geo[iso] + " (" + T().cov + " " + last + "%)",
+        data: s.years.map(function (y, i) { return { x: y, y: s.tfr[i] }; }),
+        borderColor: GEO_COL[iso], backgroundColor: GEO_COL[iso],
+        borderWidth: 2.2, pointRadius: 0, tension: .25
+      };
+    });
+    charts.ft2 = new Chart(document.getElementById("cFert"), {
+      type: "line", data: { datasets: ds },
+      options: legendOn({
+        responsive: true, maintainAspectRatio: false, parsing: false,
+        interaction: { mode: "index", intersect: false },
+        scales: axes(T().year, T().tfrY, {
+          x: { type: "linear", min: 1970, max: 2024, ticks: { stepSize: 10 } },
+          y: { beginAtZero: false }
+        })
+      })
+    });
+  }
+
+
+  /* 10. Ktory typ HPV wywoluje ile raka — i co pokrywa ktora szczepionka */
+  var VCOL = { bi: GREEN, nona: BLUE, none: SLATE };
+  function typeChart() {
+    if (!P || !document.getElementById("cTypes")) return;
+    var rows = P.types.rows;
+    charts.ty = new Chart(document.getElementById("cTypes"), {
+      type: "bar",
+      data: {
+        labels: rows.map(function (r) {
+          return r.t === "other" ? (lang === "pl" ? "pozostałe" : "other types") : "HPV " + r.t;
+        }),
+        datasets: [{
+          data: rows.map(function (r) { return r.rc; }),
+          backgroundColor: rows.map(function (r) { return VCOL[r.v]; }),
+          borderRadius: 5
+        }]
+      },
+      options: {
+        indexAxis: "y", responsive: true, maintainAspectRatio: false,
+        plugins: { tooltip: { callbacks: { label: function (c) { return c.raw + "%"; } } } },
+        scales: axes(T().typeX, null, { x: { grid: { color: GRID }, beginAtZero: true } })
+      }
+    });
+  }
+
+  /* 11. Jedyna ZMIERZONA nieplodnosc (USA, NSFG) — ksztalt litery U */
+  function infertChart() {
+    if (!P || !document.getElementById("cInfert")) return;
+    charts.inf = new Chart(document.getElementById("cInfert"), {
+      type: "line",
+      data: {
+        labels: P.nsfg.labels,
+        datasets: [{
+          data: P.nsfg.infertility,
+          borderColor: RED, backgroundColor: "rgba(192,57,43,.10)",
+          borderWidth: 2.6, pointRadius: 4, fill: true, tension: .2
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { tooltip: { callbacks: { label: function (c) { return c.raw + "%"; } } } },
+        scales: axes(null, T().infertY, { y: { beginAtZero: false } })
+      }
+    });
+  }
+
+
+  /* 12. Korelacja, o ktora chodzi: umieralnosc mlodych kobiet vs szczepienia.
+         Srednia 3-letnia — liczby sa male i surowa seria to szum. */
+  function cervYoungChart() {
+    if (!P || !document.getElementById("cCervYoung")) return;
+    var ds = ["GBR", "USA", "ESP", "POL"].map(function (iso) {
+      var s = P.cervixYoungRate[iso];
+      return {
+        label: T().geo[iso],
+        data: s.rate.map(function (v, i) { return { x: s.y0 + i, y: v }; }),
+        borderColor: GEO_COL[iso], backgroundColor: GEO_COL[iso],
+        borderWidth: 2.2, pointRadius: 0, tension: .3
+      };
+    });
+    charts.cyg = new Chart(document.getElementById("cCervYoung"), {
+      type: "line", data: { datasets: ds },
+      options: legendOn({
+        responsive: true, maintainAspectRatio: false, parsing: false,
+        interaction: { mode: "index", intersect: false },
+        scales: axes(T().year, T().youngRateY, {
+          x: { type: "linear", min: 1995, max: 2022, ticks: { stepSize: 5 } },
+          y: { beginAtZero: true }
+        })
+      })
+    });
+  }
+
   function renderAll() {
     destroy();
     divergeChart(); crudeChart(); trendChart(); rankChart(); ageChart(); futureChart();
+    hpvCovChart(); youngChart(); fertChart(); typeChart(); infertChart(); cervYoungChart();
   }
 
   /* ---------- selektory ---------- */
@@ -294,9 +468,10 @@
     Promise.all([
       fetch("../assets/data/cancer-history.json").then(function (r) { return r.json(); }),
       fetch("../assets/data/cancer-current.json").then(function (r) { return r.json(); }),
-      fetch("../assets/data/cancer-future.json").then(function (r) { return r.json(); })
+      fetch("../assets/data/cancer-future.json").then(function (r) { return r.json(); }),
+      fetch("../assets/data/cancer-hpv.json").then(function (r) { return r.json(); })
     ]).then(function (res) {
-      H = res[0]; C = res[1]; F = res[2];
+      H = res[0]; C = res[1]; F = res[2]; P = res[3];
       lang = document.body.classList.contains("lang-pl") ? "pl" : "en";
       refreshLabels(true);
       renderAll();

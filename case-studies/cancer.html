@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The number went up. The danger went down. | Robert Maszkiewski</title>
-<meta name="description" content="Case study: 56 years of cancer mortality (1968–2023) rebuilt from raw WHO records across three ICD revisions, age-standardised with UN population denominators, plus IARC GLOBOCAN 2024 burden and projections to 2050. English edition focuses on the UK, Polish edition on Poland.">
+<meta name="description" content="Case study: 56 years of cancer mortality (1968–2023) rebuilt from raw WHO records across three ICD revisions, age-standardised with UN population denominators, plus IARC GLOBOCAN 2024 burden, projections to 2050, and a full analysis of HPV vaccination, cervical cancer subtypes and the infertility question. English edition focuses on the UK, Polish edition on Poland.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/css/style.css">
@@ -236,10 +236,159 @@
   </div>
 </section>
 
+<!-- ===== HPV ===== -->
+<section>
+  <div class="container">
+    <div class="phase"><span class="n">04</span><span class="lang-en">The one we can switch off</span><span class="lang-pl">Ten jeden, który można wyłączyć</span></div>
+    <h2><span class="lang-en">Cervical cancer: a virus, a vaccine, and a correlation I refuse to oversell</span><span class="lang-pl">Rak szyjki macicy: wirus, szczepionka i korelacja, której nie zamierzam Ci wciskać</span></h2>
+
+    <div class="pullout">
+      <span class="lang-en">Cervical cancer is the only common cancer with a single known cause that a vaccine can remove. That makes it the closest thing oncology has to a controlled experiment — and it makes the difference between countries impossible to blame on bad luck.</span>
+      <span class="lang-pl">Rak szyjki macicy to jedyny częsty nowotwór o jednej znanej przyczynie, którą da się usunąć szczepionką. To czyni go najbliższym eksperymentowi kontrolowanemu, jaki ma onkologia — i sprawia, że różnicy między krajami nie da się zrzucić na pecha.</span>
+    </div>
+
+    <div class="chart-grid">
+
+      <!-- A. Wirus i szczepionki -->
+      <div class="panel full">
+        <h3><span class="lang-en">Which virus, which vaccine, which cancers</span><span class="lang-pl">Który wirus, która szczepionka, które nowotwory</span></h3>
+        <p class="muted">
+          <span class="lang-en">The IARC classifies <strong>twelve</strong> HPV types as definitely carcinogenic. But they are wildly unequal. <strong>HPV 16 alone drives 60.5%</strong> of cervical cancers, and HPV 18 another 10.3%. Those two are in <em>every</em> HPV vaccine ever licensed — which is why the bivalent and the quadrivalent shots have <strong>identical</strong> cancer coverage. The quadrivalent's extra types, 6 and 11, cause genital warts and essentially <strong>zero</strong> cancer (0.1%). The 9-valent vaccine adds five more — 31, 33, 45, 52, 58 — worth another <strong>18.5%</strong>, taking the ceiling to <strong>89.4%</strong>.</span>
+          <span class="lang-pl">IARC klasyfikuje <strong>dwanaście</strong> typów HPV jako na pewno rakotwórcze. Ale są skrajnie nierówne. <strong>Sam HPV 16 odpowiada za 60,5%</strong> raków szyjki, a HPV 18 za kolejne 10,3%. Te dwa są w <em>każdej</em> dopuszczonej szczepionce przeciw HPV — dlatego dwuwalentna i czterowalentna mają <strong>identyczne</strong> pokrycie nowotworowe. Dodatkowe typy czterowalentnej, 6 i 11, wywołują brodawki płciowe i praktycznie <strong>zero</strong> raka (0,1%). Szczepionka 9-walentna dodaje pięć kolejnych — 31, 33, 45, 52, 58 — wartych następne <strong>18,5%</strong>, co podnosi sufit do <strong>89,4%</strong>.</span>
+        </p>
+        <div class="chart-wrap" style="height:300px"><canvas id="cTypes"></canvas></div>
+        <p class="muted" style="font-size:.85rem;margin-top:12px">
+          <span class="lang-en"><b>A caveat that most write-ups drop:</b> that 70.8% is the share among tumours in which HPV was <em>found</em>. Take all cervical cancers as the denominator and HPV 16/18 fall to roughly <strong>60%</strong>. And around <strong>10.6% of cases are caused by types no vaccine covers at all</strong> — vaccination is not a force field. Source: Serrano et al. 2012, on 8,977 tumours from 38 countries.</span>
+          <span class="lang-pl"><b>Zastrzeżenie, które większość opracowań pomija:</b> te 70,8% to udział wśród guzów, w których HPV <em>znaleziono</em>. Weź za mianownik wszystkie raki szyjki, a HPV 16/18 spada do około <strong>60%</strong>. I mniej więcej <strong>10,6% przypadków wywołują typy, których nie pokrywa żadna szczepionka</strong> — szczepienie nie jest polem siłowym. Źródło: Serrano i wsp. 2012, na 8977 guzach z 38 krajów.</span>
+        </p>
+      </div>
+
+      <!-- B. Histologia: to, czego cytologia nie widzi -->
+      <div class="panel full">
+        <h3><span class="lang-en">The type of cervical cancer that screening keeps missing</span><span class="lang-pl">Ten rodzaj raka szyjki, którego cytologia wciąż nie widzi</span></h3>
+        <p class="muted">
+          <span class="lang-en">This is the part that makes the vaccine matter <em>even in a country that screens well</em>, and almost nobody explains it. Cervical cancer is not one disease. About four in five cases are <strong>squamous cell carcinoma</strong>, which grows on the outer surface of the cervix where a smear brush actually reaches. The rest — and a <em>rising</em> share — is <strong>adenocarcinoma</strong>, which grows up inside the cervical canal, where the brush does not.</span>
+          <span class="lang-pl">To jest ta część, przez którą szczepionka ma znaczenie <em>nawet w kraju, który dobrze bada</em> — i prawie nikt tego nie wyjaśnia. Rak szyjki macicy nie jest jedną chorobą. Około czterech na pięć przypadków to <strong>rak płaskonabłonkowy</strong>, rosnący na zewnętrznej powierzchni szyjki, tam gdzie szczoteczka do cytologii faktycznie sięga. Reszta — i to udział <em>rosnący</em> — to <strong>gruczolakorak</strong>, który rośnie w głębi kanału szyjki, gdzie szczoteczka nie dociera.</span>
+        </p>
+        <p class="muted">
+          <span class="lang-en">In England the squamous share fell from 82.6% to 70.4% between 1989 and 2009, while adenocarcinoma climbed from 13.2% to <strong>22.1%</strong>. Screening is quietly winning against one type and stalling against the other. The evidence is blunt: cytology cuts squamous cancer risk by about <strong>86%</strong> but adenocarcinoma risk by only <strong>54%</strong>. And here is the single most damning row in the literature — among women who go on to develop <strong>adenocarcinoma, 44.3% were up to date with their smears</strong>, versus 25.2% of women who develop squamous cancer. <em>They did everything right and it found them anyway.</em></span>
+          <span class="lang-pl">W Anglii udział raka płaskonabłonkowego spadł z 82,6% do 70,4% w latach 1989–2009, a gruczolakoraka wzrósł z 13,2% do <strong>22,1%</strong>. Badania przesiewowe po cichu wygrywają z jednym typem, a grzęzną przy drugim. Dowód jest brutalny: cytologia obniża ryzyko raka płaskonabłonkowego o około <strong>86%</strong>, ale gruczolakoraka tylko o <strong>54%</strong>. A oto najbardziej obciążający wiersz w całej literaturze — wśród kobiet, u których rozwinął się <strong>gruczolakorak, 44,3% miało aktualną cytologię</strong>, wobec 25,2% wśród kobiet z rakiem płaskonabłonkowym. <em>Zrobiły wszystko jak trzeba, a rak i tak je znalazł.</em></span>
+        </p>
+        <p class="muted">
+          <span class="lang-en">Now the twist that ties it together. Adenocarcinoma has a <em>different</em> viral fingerprint: HPV 18 causes <strong>57%</strong> of it, versus only 12% of squamous cancer. So the tumour type that screening is worst at catching is the one most strongly driven by a type sitting in every vaccine on the market. Put plainly: <b>cytology down-stages adenocarcinoma; it does not prevent it. The vaccine prevents it.</b> Those two tools are not redundant — they cover each other's blind spots.</span>
+          <span class="lang-pl">A teraz zwrot, który to wszystko spina. Gruczolakorak ma <em>inny</em> odcisk wirusa: HPV 18 wywołuje <strong>57%</strong> jego przypadków, wobec zaledwie 12% raka płaskonabłonkowego. Czyli typ guza, który cytologia łapie najgorzej, jest najsilniej napędzany przez wirusa siedzącego w każdej szczepionce na rynku. Mówiąc wprost: <b>cytologia wykrywa gruczolakoraka wcześniej, ale mu nie zapobiega. Szczepionka zapobiega.</b> Te dwa narzędzia nie są nadmiarowe — nawzajem zasłaniają swoje martwe pola.</span>
+        </p>
+      </div>
+
+      <!-- C. Pokrycie -->
+      <div class="panel full">
+        <h3><span class="lang-en">Who actually vaccinated</span><span class="lang-pl">Kto naprawdę zaszczepił</span></h3>
+        <p class="muted">
+          <span class="lang-en">Britain began vaccinating schoolgirls in <strong>September 2008</strong> and drove coverage to around <strong>85–88%</strong> — among the highest on earth. Then it slipped: the 2024/25 figure for Year 8 girls is <strong>71.7%</strong>, still 16 points below where it stood before the pandemic. That decline is the single most actionable number on this page.</span>
+          <span class="lang-pl">Wielka Brytania zaczęła szczepić uczennice we <strong>wrześniu 2008</strong> i wywindowała pokrycie do około <strong>85–88%</strong> — jednego z najwyższych na świecie. Polska nie zrobiła nic. Krajowy program ruszył dopiero <strong>1 czerwca 2023</strong>, piętnaście lat później. Wcześniej szczepionka była na rynku, ale nierefundowana, za około <strong>1500 zł</strong> — mniej więcej 60% średniej pensji. Zaszczepiało się <strong>1–1,5%</strong> dziewcząt.</span>
+        </p>
+        <p class="muted">
+          <span class="lang-en">Poland is the flat line at zero. It had no national programme at all until <strong>1 June 2023</strong> — the last country in the EU. The vaccine was on the market but unfunded, at around <strong>1,500 PLN</strong>, roughly 60% of an average monthly salary. Roughly <strong>1–1.5%</strong> of girls got it. Official coverage as of August 2025: <strong>14.9%</strong>.</span>
+          <span class="lang-pl">Oficjalne pokrycie na sierpień 2025: <strong>14,9%</strong> — wobec ustawowego celu 60% do 2028 i celu WHO na poziomie 90%. Ta płaska linia przy zerze ciągnąca się przez piętnaście lat to nie jest luka w danych. To decyzja, którą ktoś podjął — a raczej jej brak.</span>
+        </p>
+        <div class="chart-wrap"><canvas id="cHpvCov"></canvas></div>
+        <p class="muted" style="font-size:.85rem;margin-top:10px">
+          <span class="lang-en">WHO/UNICEF estimates, girls in the target cohort. The 2021–22 dip is COVID closing schools. Spain's jump to 90% is partly real and partly definitional — it switched to a one-dose schedule in July 2024, which changed what "fully vaccinated" means.</span>
+          <span class="lang-pl">Szacunki WHO/UNICEF, dziewczęta z grupy docelowej. Spadek w 2021–22 to zamknięte przez COVID szkoły. Skok Hiszpanii do 90% jest częściowo realny, a częściowo definicyjny — w lipcu 2024 przeszła na schemat jednodawkowy, co zmieniło znaczenie słowa „w pełni zaszczepiona".</span>
+        </p>
+      </div>
+
+      <!-- D. Korelacja -->
+      <div class="panel full">
+        <h3><span class="lang-en">The correlation you came for</span><span class="lang-pl">Korelacja, po którą przyszedłeś</span></h3>
+        <p class="muted">
+          <span class="lang-en">Here it is: cervical cancer death rates in women aged 20–34 — the only age band where vaccinated women currently exist. Between 2012 and 2022, Britain fell <strong>40%</strong>. The USA fell 18%. Spain <em>rose</em> 45%, and Poland rose 35%.</span>
+          <span class="lang-pl">Oto ona: umieralność na raka szyjki macicy u kobiet 20–34 lata — jedynej grupie wieku, w której zaszczepione kobiety w ogóle już są. Między 2012 a 2022 Wielka Brytania spadła o <strong>40%</strong>. USA o 18%. Hiszpania <em>wzrosła</em> o 45%, a Polska o 35%.</span>
+        </p>
+        <div class="chart-wrap"><canvas id="cCervYoung"></canvas></div>
+        <p class="muted" style="margin-top:14px">
+          <span class="lang-en"><b>And now I am going to argue against my own chart.</b> Four countries is not a sample — any correlation coefficient I printed here would be decoration, not evidence. I have no idea which of these women were vaccinated; I only have national averages. Spain has 90% coverage today and its young-women death rate went <em>up</em>, which on a naive reading would mean the vaccine kills. It doesn't mean that. It means Spain's screening is barely organised (a government survey found only <em>one</em> of fifteen regions runs a genuine population-based programme), that its coverage climbed late, and that we are dividing by very small numbers.</span>
+          <span class="lang-pl"><b>A teraz zamierzam podważyć własny wykres.</b> Cztery kraje to nie jest próba — każdy współczynnik korelacji, jaki bym tu wydrukował, byłby ozdobnikiem, a nie dowodem. Nie mam pojęcia, które z tych kobiet były zaszczepione; mam wyłącznie średnie krajowe. Hiszpania ma dziś 90% pokrycia, a jej umieralność młodych kobiet <em>wzrosła</em> — co w naiwnym odczycie znaczyłoby, że szczepionka zabija. Nie znaczy. Znaczy, że hiszpański screening jest ledwie zorganizowany (rządowy przegląd wykazał, że tylko <em>jeden</em> z piętnastu regionów prowadzi prawdziwy program populacyjny), że pokrycie rosło tam późno, i że dzielimy przez bardzo małe liczby.</span>
+        </p>
+        <p class="muted">
+          <span class="lang-en"><b>The proof exists — it just isn't mine.</b> England linked <em>individual</em> vaccination records to <em>individual</em> cancer registrations. Women offered the vaccine at 12–13 had <strong>87% fewer cervical cancers</strong> and <strong>97% fewer CIN3 pre-cancers</strong> (Falcaro, <em>Lancet</em> 2021). Sweden found 88% fewer cancers; Scotland recorded <em>zero</em> invasive cancers among women vaccinated at 12–13. And four weeks ago — <strong>17 June 2026</strong> — the first mortality evidence landed: in English women aged 20–24, <strong>no cervical cancer deaths occurred at all, against 23.1 expected</strong> (Sasieni &amp; Falcaro, <em>Lancet</em> 2026). At 25–29 the reduction was 69%. At 30–34 it was not yet statistically significant. <em>That is what the leading edge of a 20-year lag looks like.</em></span>
+          <span class="lang-pl"><b>Dowód istnieje — tylko nie jest mój.</b> Anglia połączyła <em>indywidualne</em> rejestry szczepień z <em>indywidualnymi</em> rozpoznaniami raka. Kobiety, którym zaproponowano szczepionkę w wieku 12–13 lat, miały <strong>87% mniej raków szyjki</strong> i <strong>97% mniej stanów przedrakowych CIN3</strong> (Falcaro, <em>Lancet</em> 2021). Szwecja: 88% mniej raków. Szkocja: <em>zero</em> raków inwazyjnych wśród zaszczepionych w wieku 12–13 lat. A cztery tygodnie temu — <strong>17 czerwca 2026</strong> — pojawił się pierwszy dowód na spadek zgonów: wśród Angielek w wieku 20–24 lat <strong>nie było ani jednego zgonu na raka szyjki, wobec 23,1 oczekiwanych</strong> (Sasieni i Falcaro, <em>Lancet</em> 2026). W grupie 25–29 spadek wyniósł 69%. W grupie 30–34 nie był jeszcze istotny statystycznie. <em>Tak wygląda czoło dwudziestoletniego opóźnienia.</em></span>
+        </p>
+        <p class="muted">
+          <span class="lang-en"><b>So why is the effect so hard to see?</b> Because a cervical cancer death arrives decades after the infection. The median age at diagnosis is <strong>50</strong>; the median age at death is <strong>60</strong>. Barely <strong>4%</strong> of cervical cancer deaths happen between 20 and 34 — which is the <em>entire</em> window where vaccinated women currently live. A girl vaccinated in 2008 reaches the median age of death around <strong>2055</strong>. WHO's own modelling puts the mortality benefit of vaccination alone at <strong>0.1% by 2030</strong> — and <strong>89% by 2120</strong>.</span>
+          <span class="lang-pl"><b>Dlaczego więc efekt jest tak trudno zobaczyć?</b> Bo zgon na raka szyjki przychodzi dekady po zakażeniu. Mediana wieku rozpoznania to <strong>50 lat</strong>, mediana wieku zgonu — <strong>60</strong>. Ledwie <strong>4%</strong> zgonów na raka szyjki zdarza się między 20. a 34. rokiem życia, a to jest <em>całe</em> okno, w którym zaszczepione kobiety dziś żyją. Dziewczynka zaszczepiona w 2008 osiągnie medianę wieku zgonu około <strong>2055 roku</strong>. Modelowanie WHO wycenia efekt samych szczepień na <strong>0,1% spadku zgonów do 2030</strong> — i <strong>89% do 2120</strong>.</span>
+        </p>
+        <div class="callout" style="margin-top:16px">
+          <p>
+            <span class="lang-en"><b>Which leaves Britain with an uncomfortable conclusion.</b> Vaccination is a bet on the 2050s. <em>Screening</em> is what saves lives this decade — and British screening coverage has fallen to 68.8%, while vaccination has slid from 88% to 71.7%. Both levers are being let go at once, and the bill for that arrives long after the ministers who dropped them have left.</span>
+            <span class="lang-pl"><b>Co zostawia Polskę z bardzo niewygodnym wnioskiem.</b> Szczepienia to zakład o lata pięćdziesiąte tego wieku. To <em>badania przesiewowe</em> ratują życie w tej dekadzie — a Polska ma zaszczepione <strong>14,9%</strong> dziewcząt i przebadane <strong>15,5%</strong> uprawnionych kobiet (Eurostat daje nam 10,9% — drugie miejsce od końca w Unii). <b>Oba dźwignie są opuszczone naraz.</b> I to jest dokładny powód, dla którego Polka umiera dziś na raka szyjki <strong>dwa i pół raza częściej</strong> niż Brytyjka — nie biologia, nie pech, tylko dwie liczby, które ktoś mógł podnieść i nie podniósł.</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- E. Kogo zabija -->
+      <div class="panel">
+        <h3><span class="lang-en">The cancer that kills women young</span><span class="lang-pl">Rak, który zabija kobiety młodo</span></h3>
+        <p class="muted">
+          <span class="lang-en">Nearly every cancer is a disease of old age. Cervical cancer is the exception: <strong>15.6%</strong> of its deaths in our data fall before 45 — three times breast cancer's share, twenty times lung's. In the US registry, <strong>38% of cases are diagnosed before 45</strong>, against 8.5% for cancer as a whole. This is why it does damage far beyond its death count. And it is the honest bridge to the question below.</span>
+          <span class="lang-pl">Niemal każdy nowotwór jest chorobą starości. Rak szyjki macicy jest wyjątkiem: <strong>15,6%</strong> jego zgonów w naszych danych przypada przed 45. rokiem życia — trzy razy więcej niż w raku piersi, dwadzieścia razy więcej niż w płucu. W rejestrze amerykańskim <strong>38% rozpoznań stawia się przed 45. rokiem życia</strong>, wobec 8,5% dla nowotworów ogółem. Dlatego wyrządza szkody daleko wykraczające poza liczbę zgonów. I dlatego jest uczciwym pomostem do pytania poniżej.</span>
+        </p>
+        <div class="chart-wrap"><canvas id="cYoung"></canvas></div>
+      </div>
+
+      <!-- F. Nieplodnosc -->
+      <div class="panel">
+        <h3><span class="lang-en">"Does the vaccine cause infertility?"</span><span class="lang-pl">„Czy szczepionka powoduje niepłodność?"</span></h3>
+        <p class="muted">
+          <span class="lang-en">I went looking for the data to test this, and found something better than an answer: I found out <em>why the question is almost never answered honestly</em>.</span>
+          <span class="lang-pl">Poszedłem szukać danych, żeby to sprawdzić, i znalazłem coś lepszego niż odpowiedź: znalazłem powód, dla którego <em>na to pytanie prawie nigdy nie odpowiada się uczciwie</em>.</span>
+        </p>
+        <p class="muted">
+          <span class="lang-en"><b>First, the claim's foundation.</b> The paper everyone shares — "HPV vaccine lowers the probability of pregnancy", DeLong 2018 — was <strong>retracted in 2022</strong> for serious flaws in its statistics. Against it stand roughly <strong>1.25 million women</strong> in cohort studies: 199,078 in a US health system (hazard ratio <strong>0.30</strong>), 996,300 in Denmark's national registry (<strong>0.96</strong>), and a prospective study that measured actual time-to-pregnancy (<strong>0.98</strong> — i.e. no difference). The WHO's vaccine-safety committee reviewed it and concluded the data "do not support an association".</span>
+          <span class="lang-pl"><b>Najpierw fundament tego twierdzenia.</b> Praca, którą wszyscy udostępniają — „szczepionka HPV obniża prawdopodobieństwo ciąży", DeLong 2018 — została <strong>wycofana w 2022 roku</strong> z powodu poważnych błędów statystycznych. Naprzeciw niej stoi około <strong>1,25 miliona kobiet</strong> w badaniach kohortowych: 199 078 w amerykańskim systemie zdrowia (współczynnik ryzyka <strong>0,30</strong>), 996 300 w duńskim rejestrze krajowym (<strong>0,96</strong>) i badanie prospektywne mierzące realny czas do zajścia w ciążę (<strong>0,98</strong> — czyli bez różnicy). Komitet WHO ds. bezpieczeństwa szczepionek uznał, że dane „nie potwierdzają związku".</span>
+        </p>
+        <p class="muted">
+          <span class="lang-en"><b>But I will not tell you it is "proven impossible".</b> Premature ovarian insufficiency is rare, so even a million-woman study has limited power — the Danish authors say so themselves. There is <em>no positive evidence of harm</em>. That is a different sentence, and the difference is the whole of good science.</span>
+          <span class="lang-pl"><b>Ale nie powiem Ci, że to „udowodniono, że niemożliwe".</b> Przedwczesne wygasanie czynności jajników jest rzadkie, więc nawet badanie na milionie kobiet ma ograniczoną moc — duńscy autorzy mówią to wprost. <em>Nie ma żadnego pozytywnego dowodu na szkodę.</em> To jest inne zdanie, a ta różnica jest istotą uczciwej nauki.</span>
+        </p>
+        <p class="muted">
+          <span class="lang-en"><b>Now the reversal.</b> There <em>is</em> a proven link between cervical cancer and infertility — it runs the other way. Curative treatment destroys fertility: a radical hysterectomy removes the uterus, and pelvic radiotherapy causes ovarian failure in essentially <strong>100%</strong> of women within two years unless the ovaries are surgically moved out of the beam. Even treating the <em>pre-cancer</em> carries a cost — cutting a cone of tissue from the cervix raises the risk of premature birth in a later pregnancy (roughly <strong>1.8×</strong>, and up to <strong>4.9×</strong> for the deepest excisions). <b>The vaccine's effect on fertility is real. It protects it.</b></span>
+          <span class="lang-pl"><b>A teraz odwrócenie.</b> Udowodniony związek między rakiem szyjki a niepłodnością <em>istnieje</em> — tylko biegnie w drugą stronę. Leczenie ratujące życie niszczy płodność: radykalna histerektomia usuwa macicę, a radioterapia miednicy powoduje wygaszenie jajników u praktycznie <strong>100%</strong> kobiet w ciągu dwóch lat, o ile jajników nie przeniesie się chirurgicznie poza wiązkę. Nawet leczenie <em>stanu przedrakowego</em> ma swoją cenę — wycięcie stożka tkanki z szyjki podnosi ryzyko przedwczesnego porodu w późniejszej ciąży (około <strong>1,8×</strong>, a przy najgłębszych wycięciach nawet <strong>4,9×</strong>). <b>Wpływ szczepionki na płodność jest realny. Ona ją chroni.</b></span>
+        </p>
+      </div>
+
+      <!-- G. Czego nie da sie zmierzyc -->
+      <div class="panel full">
+        <h3><span class="lang-en">And now the finding I did not expect</span><span class="lang-pl">A teraz odkrycie, którego się nie spodziewałem</span></h3>
+        <p class="muted">
+          <span class="lang-en">You asked me to chart the rise of female infertility across these countries over time. I could not. <b>Not because the data is hard to get — because it does not exist.</b> Britain has a single survey from 2010–12 and no trend at all. Spain has never published a prevalence figure. And Poland has <em>nothing</em>: no survey, no registry, no measurement, ever. The famous "1.5 million infertile Polish couples" is a professional-body estimate that was never derived from any Polish population study. Poland is running a state IVF programme worth <strong>half a billion złoty a year</strong> against a number nobody has ever measured.</span>
+          <span class="lang-pl">Poprosiłeś, żebym pokazał wzrost niepłodności kobiet w tych krajach na przestrzeni lat. Nie mogłem. <b>Nie dlatego, że dane są trudne do zdobycia — dlatego, że one nie istnieją.</b> Wielka Brytania ma jedno badanie z lat 2010–12 i żadnego trendu. Hiszpania nigdy nie opublikowała wskaźnika. A Polska nie ma <em>nic</em>: żadnego badania, żadnego rejestru, żadnego pomiaru, nigdy. Słynne „1,5 miliona niepłodnych par" to szacunek towarzystwa naukowego, którego nigdy nie wyprowadzono z jakiegokolwiek polskiego badania populacyjnego. Polska prowadzi państwowy program in vitro wart <strong>pół miliarda złotych rocznie</strong> — wycelowany w liczbę, której nikt nigdy nie zmierzył.</span>
+        </p>
+        <p class="muted">
+          <span class="lang-en">Only the United States has actually measured it, in the same survey since 1982. And the answer is not the one either side of this argument wants: infertility among married women <strong>fell</strong> from 8.5% to 6.0%, then <strong>climbed back to 8.7%</strong> — <em>above</em> where it started. A U-shape. Anyone claiming "infertility has been rising" is right about the last decade and wrong about the three before it; anyone claiming it has been falling is the reverse.</span>
+          <span class="lang-pl">Tylko Stany Zjednoczone naprawdę to zmierzyły — w tym samym badaniu od 1982 roku. I odpowiedź nie jest taka, jakiej chce którakolwiek ze stron tego sporu: niepłodność wśród zamężnych kobiet <strong>spadła</strong> z 8,5% do 6,0%, a potem <strong>wróciła do 8,7%</strong> — <em>powyżej</em> punktu wyjścia. Litera U. Kto twierdzi, że „niepłodność rośnie", ma rację co do ostatniej dekady i myli się co do trzech poprzednich; kto twierdzi, że spada — odwrotnie.</span>
+        </p>
+        <div class="chart-wrap" style="height:280px"><canvas id="cInfert"></canvas></div>
+        <p class="muted" style="margin-top:14px">
+          <span class="lang-en"><b>And the vaccine cannot explain that curve.</b> The rise begins in a survey wave covering 2011–15, in a country where barely a quarter of teenage girls were fully vaccinated. What <em>can</em> explain it is sitting in plain sight: the age at which women start trying. In Poland it moved from <strong>23.7 to 28.7</strong>; in Spain from 25.8 to <strong>31.5</strong>. Fertility falls with age — so postponing motherhood by five years <em>mechanically</em> raises measured infertility, without a single biological thing having changed. That is the whole story, and it has nothing to do with a vaccine.</span>
+          <span class="lang-pl"><b>I szczepionka tej krzywej nie tłumaczy.</b> Wzrost zaczyna się w fali badania obejmującej lata 2011–15, w kraju, w którym ledwie ćwierć nastolatek była w pełni zaszczepiona. Tłumaczy ją natomiast coś, co leży na wierzchu: wiek, w którym kobiety zaczynają starania. W Polsce przesunął się z <strong>23,7 na 28,7 lat</strong>; w Hiszpanii z 25,8 na <strong>31,5</strong>. Płodność spada z wiekiem — więc odłożenie macierzyństwa o pięć lat <em>mechanicznie</em> podnosi mierzoną niepłodność, choć biologicznie nie zmieniło się nic. To jest cała historia i nie ma w niej szczepionki.</span>
+        </p>
+        <div class="chart-wrap" style="height:280px;margin-top:8px"><canvas id="cFert"></canvas></div>
+        <p class="muted" style="font-size:.85rem;margin-top:10px">
+          <span class="lang-en"><b>Read this chart with care — it is a trap.</b> It shows the <em>total fertility rate</em>: births per woman. It is <strong>not</strong> infertility. It is dominated by choice, housing and economics. Poland's fertility collapsed from 2.28 to 1.37 between 1980 and 2000 — before the HPV vaccine existed anywhere on earth. If you want the ecological argument anyway: the country that vaccinated hardest (Britain, ~87%) has the <em>highest</em> fertility here, and the one that vaccinated least (Poland, 13%) sits near the bottom. But four countries is not a sample, and I would not accept that argument from someone I disagreed with, so I will not make it as if it settles anything.</span>
+          <span class="lang-pl"><b>Czytaj ten wykres ostrożnie — to pułapka.</b> Pokazuje <em>współczynnik dzietności</em>: liczbę dzieci na kobietę. To <strong>nie jest</strong> niepłodność. Rządzą nim wybór, mieszkania i ekonomia. Dzietność w Polsce runęła z 2,28 do 1,37 w latach 1980–2000 — zanim szczepionka przeciw HPV istniała gdziekolwiek na świecie. A jeśli mimo wszystko chcesz argumentu ekologicznego: kraj, który szczepił najintensywniej (Wielka Brytania, ~87%), ma tu <em>najwyższą</em> dzietność, a ten, który szczepił najmniej (Polska, 13%), jest przy dole. Ale cztery kraje to nie jest próba i nie przyjąłbym takiego argumentu od kogoś, z kim się nie zgadzam — więc nie będę go stawiał tak, jakby cokolwiek rozstrzygał.</span>
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
 <!-- 4 · WHAT IT DOES NOT SAY -->
 <section class="section-soft">
   <div class="container">
-    <div class="phase"><span class="n">04</span><span class="lang-en">Honesty</span><span class="lang-pl">Uczciwość</span></div>
+    <div class="phase"><span class="n">05</span><span class="lang-en">Honesty</span><span class="lang-pl">Uczciwość</span></div>
     <h2><span class="lang-en">What this data does not say</span><span class="lang-pl">Czego te dane nie mówią</span></h2>
     <p class="lede" style="margin-bottom:22px">
       <span class="lang-en">This is the part most dashboards skip. Every chart above can be misread, and some of the misreadings are extremely tempting. Here are the ones I would attack first if someone handed me this page.</span>
@@ -286,7 +435,7 @@
 <!-- 5 · BUILD -->
 <section>
   <div class="container">
-    <div class="phase"><span class="n">05</span><span class="lang-en">Build</span><span class="lang-pl">Warsztat</span></div>
+    <div class="phase"><span class="n">06</span><span class="lang-en">Build</span><span class="lang-pl">Warsztat</span></div>
     <h2><span class="lang-en">How the record was rebuilt</span><span class="lang-pl">Jak odbudowano dane</span></h2>
     <div class="pullout">
       <span class="lang-en">The first version of this dataset drew a confident straight line through <strong>twenty years that did not exist</strong>. It passed its own validation. That is the failure worth talking about — not the bug, but the fact that nothing caught it.</span>
