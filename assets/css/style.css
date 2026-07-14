@@ -168,3 +168,7 @@ footer a{color:#fff;font-weight:600}
   .seg button{padding:6px 11px;font-size:.78rem}
   .lang-seg{margin-left:0}
 }
+
+/* wyjasnienie luk pod wykresem — luka zawsze ma powod, czytelnik ma go znac */
+.gap-note{display:none;font-size:.82rem;line-height:1.5;color:var(--ink-soft);margin-top:10px;padding:9px 12px;background:var(--bg-soft);border-left:3px solid var(--amber);border-radius:0 8px 8px 0}
+.gap-note b{color:var(--ink)}

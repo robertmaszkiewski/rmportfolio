@@ -149,6 +149,71 @@
     };
   }
 
+
+  /* ---------- WYJASNIANIE LUK ----------
+     Luka na wykresie zawsze ma powod. Zamiast zostawiac czytelnika z dziura,
+     opisujemy ja pod wykresem — tekstem wyliczonym z DANYCH, nie wpisanym recznie. */
+  function nullRuns(data) {
+    var runs = [], cur = null;
+    for (var i = 0; i < data.length; i++) {
+      if (!data[i] || data[i].y === null || data[i].y === undefined) {
+        if (!cur) cur = { from: data[i].x, to: data[i].x };
+        else cur.to = data[i].x;
+      } else if (cur) { runs.push(cur); cur = null; }
+    }
+    if (cur) runs.push(cur);
+    return runs;
+  }
+  function fmtRange(r) { return r.from === r.to ? String(r.from) : r.from + "\u2013" + r.to; }
+  function cleanLabel(d) { return String(d.label || "").replace(/\s*\(.*\)\s*$/, "").replace(/\s*\u2717$/, ""); }
+
+  function explainGaps(noteId, datasets, opts) {
+    var el = document.getElementById(noteId);
+    if (!el) return;
+    opts = opts || {};
+    var pl = (lang === "pl");
+    /* Ta sama luka dotyka zwykle wielu serii naraz (np. UK nie zaraportowal roku 2000
+       dla ZADNEGO nowotworu). Grupujemy je, zeby nie powtarzac tego samego szesc razy. */
+    var groups = {}, order = [], total = 0;
+    datasets.forEach(function (d) {
+      if (!d.data || !d.data.length) return;
+      total++;
+      var runs = nullRuns(d.data);
+      if (!runs.length) return;
+      var firstX = d.data[0].x, lastX = d.data[d.data.length - 1].x;
+      var name = cleanLabel(d);
+      runs.forEach(function (r) {
+        var kind = (r.from === firstX) ? "lead" : (r.to === lastX) ? "trail" : "mid";
+        var key = kind + "|" + r.from + "|" + r.to;
+        if (!groups[key]) { groups[key] = { kind: kind, r: r, names: [] }; order.push(key); }
+        if (groups[key].names.indexOf(name) === -1) groups[key].names.push(name);
+      });
+    });
+    var parts = order.map(function (key) {
+      var g = groups[key];
+      var who = (g.names.length >= total && total > 1)
+        ? (pl ? "wszystkie serie" : "all series")
+        : g.names.join(" + ");   // " + " a nie przecinek — nazwy same zawieraja przecinki
+      if (g.kind === "lead") {
+        return opts.lead
+          ? opts.lead(who, g.r.to + 1, pl)
+          : who + (pl ? ": dane dopiero od " : ": data only from ") + (g.r.to + 1);
+      }
+      if (g.kind === "trail") {
+        return who + (pl ? ": dane kończą się w " : ": data end in ") + (g.r.from - 1);
+      }
+      return who + (pl ? ": brak danych za " : ": no data for ") + fmtRange(g.r);
+    });
+    if (opts.brk) {
+      parts.push(pl
+        ? "linia jest celowo przerwana na zmianie rewizji ICD \u2014 zmieniła się definicja choroby"
+        : "the line is deliberately broken at an ICD revision \u2014 the definition of the disease changed");
+    }
+    if (!parts.length) { el.style.display = "none"; el.innerHTML = ""; return; }
+    el.style.display = "block";
+    el.innerHTML = "<b>" + (pl ? "Dlaczego są tu luki: " : "Why there are gaps here: ") + "</b>" + parts.join(" \u00b7 ");
+  }
+
   /* ---------- 1. Szesc nowotworow, szesc roznych kierunkow ---------- */
   var DIVERGE = [
     { site: "STOMACH", col: GREEN },
@@ -172,6 +237,9 @@
         borderWidth: 2.2, pointRadius: 0, tension: .25, spanGaps: false
       };
     }).filter(function (d) { return d.data; });
+    explainGaps("dvNote", ds, {
+      brk: DIVERGE.some(function (d) { return !H.sites[d.site].continuous; })
+    });
     charts.dv = new Chart(document.getElementById("cDiverge"), {
       type: "line", data: { datasets: ds },
       options: legendOn({
@@ -194,9 +262,12 @@
         borderColor: color, backgroundColor: color, borderDash: dash,
         borderWidth: 2.2, pointRadius: 0, tension: .25 };
     };
+    var cvDs = [mk("crude", SLATE, [6, 4], T().crude), mk("asr", RED, [], T().asr)];
+    // obie linie to ten sam kraj i te same luki — opisujemy raz, podmiotem jest KRAJ
+    explainGaps("cvNote", [{ label: T().geo[iso], data: cvDs[1].data }], {});
     charts.cv = new Chart(document.getElementById("cCrude"), {
       type: "line",
-      data: { datasets: [mk("crude", SLATE, [6, 4], T().crude), mk("asr", RED, [], T().asr)] },
+      data: { datasets: cvDs },
       options: legendOn({
         responsive: true, maintainAspectRatio: false, parsing: false,
         interaction: { mode: "index", intersect: false },
@@ -224,11 +295,7 @@
         borderWidth: 2.2, pointRadius: 0, tension: .25, spanGaps: false };
     }).filter(function (d) { return d.data; });
 
-    var note = document.getElementById("trNote");
-    if (note) {
-      note.textContent = brk ? T().breakNote : "";
-      note.style.display = brk ? "block" : "none";
-    }
+    explainGaps("trNote", ds, { brk: brk });
     var sexWrap = document.getElementById("trSexWrap");
     if (sexWrap) sexWrap.style.display = meta.sex ? "none" : "";
 
@@ -322,6 +389,13 @@
         borderWidth: 2.4, pointRadius: 2.5, tension: .2, spanGaps: false
       };
     });
+    explainGaps("hcNote", ds, {
+      lead: function (name, year, pl) {
+        return name + (pl
+          ? " \u2014 przed " + year + " nie było krajowego programu szczepień (to nie brak danych, tylko brak szczepień)"
+          : " \u2014 no national vaccination programme before " + year + " (this is not missing data, it is missing vaccination)");
+      }
+    });
     charts.hc = new Chart(document.getElementById("cHpvCov"), {
       type: "line", data: { datasets: ds },
       options: legendOn({
@@ -376,6 +450,7 @@
         borderWidth: 2.2, pointRadius: 0, tension: .25, spanGaps: false
       };
     });
+    explainGaps("ftNote", ds, {});
     charts.ft2 = new Chart(document.getElementById("cFert"), {
       type: "line", data: { datasets: ds },
       options: legendOn({
@@ -455,6 +530,7 @@
         borderWidth: 2.2, pointRadius: 0, tension: .3, spanGaps: false
       };
     });
+    explainGaps("cyNote", ds, {});
     charts.cyg = new Chart(document.getElementById("cCervYoung"), {
       type: "line", data: { datasets: ds },
       options: legendOn({
@@ -563,6 +639,7 @@
         borderColor: col, backgroundColor: col, borderDash: dash,
         borderWidth: 2.4, pointRadius: 0, tension: .25, spanGaps: false };
     };
+    explainGaps("oroNote", [mk("hpv", RED, [], T().oroHpv), mk("other", SLATE, [6, 4], T().oroOther)], {});
     charts.oro = new Chart(document.getElementById("cOro"), {
       type: "line",
       data: { datasets: [mk("hpv", RED, [], T().oroHpv),

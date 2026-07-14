@@ -134,6 +134,7 @@
         </p>
         <div class="ctrls"><select id="dvIso" aria-label="Country"></select></div>
         <div class="chart-wrap"><canvas id="cDiverge"></canvas></div>
+        <p class="gap-note" id="dvNote"></p>
         <p class="muted" style="font-size:.85rem;margin-top:10px">
           <span class="lang-en">Age-standardised deaths per 100,000, both sexes. Liver appears only from 1999 — the ICD-9 code covered primary liver cancer only, so joining it to the modern series would have invented a trend that never existed.</span>
           <span class="lang-pl">Zgony standaryzowane wiekiem na 100 tys., obie płcie. Wątroba pojawia się dopiero od 1999 — kod ICD-9 obejmował wyłącznie raka pierwotnego, więc doklejenie go do nowej serii wykreowałoby trend, którego nigdy nie było.</span>
@@ -155,6 +156,7 @@
           <select id="cvSite" aria-label="Cancer"></select>
         </div>
         <div class="chart-wrap"><canvas id="cCrude"></canvas></div>
+        <p class="gap-note" id="cvNote"></p>
       </div>
 
       <div class="panel full">
@@ -176,7 +178,7 @@
           <span id="trSexWrap"><select id="trSex" aria-label="Sex"></select></span>
         </div>
         <div class="chart-wrap"><canvas id="cTrend"></canvas></div>
-        <p class="note" id="trNote"></p>
+        <p class="gap-note" id="trNote"></p>
       </div>
 
       <div class="panel">
@@ -292,6 +294,7 @@
           <span class="lang-pl">Wcześniej szczepionka była na rynku, ale nierefundowana — około 1500 zł, mniej więcej 60% średniej pensji. Szczepiło się od jednego do półtora procenta dziewcząt. Pokrycie na sierpień 2025: <strong>14,9%</strong>, wobec ustawowego celu 60% do 2028 i celu WHO na poziomie 90%. Płaska linia przy zerze, ciągnąca się przez piętnaście lat tego wykresu, to nie brak danych. To decyzja.</span>
         </p>
         <div class="chart-wrap"><canvas id="cHpvCov"></canvas></div>
+        <p class="gap-note" id="hcNote"></p>
       </div>
 
       <!-- Q4: korelacja -->
@@ -302,6 +305,7 @@
           <span class="lang-pl">Jedyna grupa wieku, w której zaszczepione kobiety dziś istnieją, to 20–34 lata. W dziewięciu krajach z użytecznymi danymi umieralność w tej grupie zmieniła się między 2012 a 2022 tak (Dania do 2021, tam kończy się jej seria): Dania <strong>−46%</strong>, Szwecja <strong>−45%</strong>, Wielka Brytania <strong>−40%</strong>, Australia <strong>−39%</strong>, Finlandia −32%, USA −18%, Holandia −10%. Polska, która nie szczepiła wcale, wzrosła o <strong>+35%</strong>. A Hiszpania — dziś z 90-procentowym pokryciem — o <strong>+45%</strong>.</span>
         </p>
         <div class="chart-wrap"><canvas id="cCervYoung"></canvas></div>
+        <p class="gap-note" id="cyNote"></p>
         <p class="muted" style="font-size:.85rem;margin:10px 0 18px">
           <span class="lang-en">Three-year rolling average — the annual counts are small (16–60 deaths per country) and the raw series is mostly noise.</span>
           <span class="lang-pl">Średnia trzyletnia — roczne liczby są małe (16–60 zgonów na kraj), a surowa seria to w większości szum.</span>
@@ -379,6 +383,7 @@
         </p>
         <div class="ctrls"><select id="oroIso" aria-label="Country"></select></div>
         <div class="chart-wrap"><canvas id="cOro"></canvas></div>
+        <p class="gap-note" id="oroNote"></p>
         <p class="muted" style="margin-top:14px">
           <span class="lang-en"><b>Britain is the uncomfortable case.</b> Its HPV-linked sites have <strong>doubled</strong> since 2001 — and unlike the USA, Sweden, Denmark or Australia, its <em>tobacco-driven</em> sites are rising too, by <strong>18%</strong>. Poland's tobacco sites are up only 7%. On this one measure, Britain is losing on both fronts and Poland is not. <b>And this cancer kills men.</b> The male-to-female ratio is <strong>3.7× in Britain, 4.7× in the USA, 4.5× in Poland</strong> — where the male rate, 2.17 per 100,000, is the highest in this comparison. Which exposes an awkward fact about the last two decades of policy: most countries vaccinated only <em>girls</em> until around 2019, on the logic that cervical cancer was the target. They were protecting against the wrong half of the disease for eleven years. Poland, whose programme began in 2023, has vaccinated <strong>both sexes from day one</strong> — the single thing it has done better than the West, arrived at fifteen years late.</span>
           <span class="lang-pl"><b>Ale uczciwie: to nie Polska wypada tu najgorzej.</b> Polskie podmiejsca tytoniowe urosły o 7%, brytyjskie o <strong>18%</strong> — to Brytania przegrywa na obu frontach naraz, nie my. <b>A ten rak zabija mężczyzn.</b> Stosunek mężczyzn do kobiet wynosi <strong>3,7× w Wielkiej Brytanii, 4,7× w USA i 4,5× w Polsce</strong> — gdzie wskaźnik męski, 2,17 na 100 tysięcy, jest najwyższy w całym porównaniu. To obnaża niewygodny fakt o dwóch dekadach polityki zdrowotnej: większość krajów szczepiła wyłącznie <em>dziewczęta</em> mniej więcej do 2019 roku, w logice, że celem jest rak szyjki. Przez jedenaście lat chroniono niewłaściwą połowę choroby. Polska, której program ruszył w 2023, szczepi <strong>obie płcie od pierwszego dnia</strong> — jedyna rzecz, którą zrobiła lepiej niż Zachód, tyle że piętnaście lat później.</span>
@@ -429,6 +434,7 @@
           <span class="lang-pl"><b>Szczepionka tej krzywej nie tłumaczy.</b> Wzrost zaczyna się w fali badania obejmującej lata 2011–15, w kraju, w którym ledwie ćwierć nastolatek była w pełni zaszczepiona. Tłumaczy ją natomiast coś, co leży na wierzchu: wiek, w którym kobiety zaczynają starania. W Polsce przesunął się z <strong>23,7 na 28,7 lat</strong>; w Hiszpanii z 25,8 na <strong>31,5</strong>. Płodność spada z wiekiem, więc odłożenie macierzyństwa o pięć lat <em>mechanicznie</em> podnosi mierzoną niepłodność, bez żadnej zmiany biologicznej.</span>
         </p>
         <div class="chart-wrap" style="height:280px;margin-top:8px"><canvas id="cFert"></canvas></div>
+        <p class="gap-note" id="ftNote"></p>
         <p class="muted" style="font-size:.85rem;margin-top:10px">
           <span class="lang-en"><b>This chart is a trap and is included as one.</b> It shows the <em>total fertility rate</em> — births per woman — which is <strong>not</strong> infertility. It is dominated by choice, housing and economics. Poland's fertility collapsed from 2.28 to 1.37 between 1980 and 2000, before the HPV vaccine existed anywhere on earth. Read naively, this chart can be bent to almost any thesis — including, if you squint, the scare itself: <strong>Spain has the highest vaccination coverage here (90%) and the lowest fertility (1.10)</strong>. That is precisely why it must not be read this way. Poland vaccinated <em>least</em> of all (13%) and sits second-lowest; Britain vaccinated hard and sits highest. The points line up in no direction at all — because the variable driving them is not vaccination. Spain's fertility collapsed from 2.22 to 1.22 between 1980 and 2000, before the vaccine existed anywhere. A four-point ecological chart settles nothing for anyone, in either direction, and it appears here as a demonstration of that fact rather than as evidence of anything.</span>
           <span class="lang-pl"><b>Ten wykres jest pułapką i jako pułapka jest tu umieszczony.</b> Pokazuje <em>współczynnik dzietności</em> — liczbę dzieci na kobietę — czyli <strong>nie</strong> niepłodność. Rządzą nim wybór, mieszkania i ekonomia. Dzietność w Polsce runęła z 2,28 do 1,37 w latach 1980–2000, zanim szczepionka przeciw HPV istniała gdziekolwiek na świecie. Odczytany naiwnie, ten wykres da się nagiąć do niemal każdej tezy — łącznie z samym straszakiem: <strong>Hiszpania ma na nim najwyższe pokrycie szczepieniami (90%) i najniższą dzietność (1,10)</strong>. I właśnie dlatego nie wolno go tak czytać. Polska zaszczepiła <em>najmniej</em> ze wszystkich (13%) i jest druga od końca; Wielka Brytania szczepiła intensywnie i jest najwyżej. Punkty nie układają się w żadną stronę — bo zmienną, która nimi rządzi, nie są szczepienia. Hiszpańska dzietność runęła z 2,22 do 1,22 w latach 1980–2000, zanim szczepionka gdziekolwiek powstała. Wykres ekologiczny na czterech punktach nie rozstrzyga niczego i w żadną stronę — i stoi tu jako dowód tej właśnie tezy, a nie czegokolwiek innego.</span>
