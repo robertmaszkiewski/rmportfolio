@@ -14,8 +14,9 @@
     document.documentElement.lang = pl ? "pl" : "en";
     syncButtons(pl);
     try { localStorage.setItem("rmlang", l); } catch (e) {}
-    // pages with re-renderable charts (climate) expose this hook
+    // pages with re-renderable charts expose a hook so labels/axes follow the language
     if (typeof window.setClimateLang === "function") window.setClimateLang(l);
+    if (typeof window.setCancerLang === "function") window.setCancerLang(l);
   }
   window.setLang = apply;
 

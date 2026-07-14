@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cancer is not one trend — 56 years of mortality, rebuilt from the raw records | Robert Maszkiewski</title>
+<meta name="description" content="Case study: cancer mortality in Poland, the UK, Spain and the USA, 1968–2023, rebuilt from raw WHO Mortality Database records across three ICD revisions, age-standardised with UN population denominators — plus IARC GLOBOCAN 2024 burden and projections to 2050. Bilingual EN/PL.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+  .ctrls{display:flex;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
+  .ctrls select{font-family:inherit;font-size:.85rem;font-weight:600;color:var(--ink-soft);
+    background:#fff;border:1px solid var(--line);border-radius:999px;padding:7px 12px;cursor:pointer}
+  .ctrls select:focus{outline:2px solid var(--green);outline-offset:1px}
+  .chart-wrap{height:340px}
+  .note{font-size:.82rem;color:var(--amber);font-weight:600;margin-top:8px}
+  .fixes{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+  .fixes li{display:flex;gap:10px;align-items:flex-start;font-size:.94rem}
+  .fixes b{color:var(--ink)}
+  .tick{color:var(--green);font-weight:800;flex-shrink:0}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container">
+    <a class="brand" href="../index.html">Robert&nbsp;<span>Maszkiewski</span></a>
+    <div class="nav-links">
+      <a href="../index.html#cases"><span class="lang-en">Case studies</span><span class="lang-pl">Projekty</span></a>
+      <a class="hide-sm" href="../index.html#about"><span class="lang-en">About</span><span class="lang-pl">O mnie</span></a>
+      <span class="seg lang-seg" role="group" aria-label="Language">
+        <button id="langEn" class="active" onclick="setLang('en')">EN</button>
+        <button id="langPl" onclick="setLang('pl')">PL</button>
+      </span>
+      <a class="nav-cta" href="https://github.com/robertmaszkiewski/global-cancer-trends-analysis" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</nav>
+
+<header class="cs-hero">
+  <div class="container">
+    <a class="back" href="../index.html">← <span class="lang-en">Back to portfolio</span><span class="lang-pl">Powrót do portfolio</span></a>
+    <h1 style="margin-top:14px">
+      <span class="lang-en">Cancer is not one trend</span>
+      <span class="lang-pl">Rak to nie jeden trend</span>
+    </h1>
+    <p class="lede">
+      <span class="lang-en">Ask whether cancer is getting better or worse and you get one number. That number is almost always wrong — because populations age, and an ageing population produces more cancer deaths even when the underlying risk is <em>collapsing</em>. This is <strong>56 years of mortality (1968–2023)</strong> for Poland, the UK, Spain and the USA, rebuilt from the <strong>raw WHO records</strong> across three ICD revisions, age-standardised against UN population denominators. Once you strip out ageing, a very different — and much more hopeful — story appears.</span>
+      <span class="lang-pl">Zapytaj, czy z rakiem jest lepiej czy gorzej, a dostaniesz jedną liczbę. Ta liczba jest prawie zawsze błędna — bo społeczeństwa się starzeją, a starzejąca się populacja daje więcej zgonów na raka nawet wtedy, gdy realne ryzyko <em>gwałtownie spada</em>. Oto <strong>56 lat umieralności (1968–2023)</strong> dla Polski, Wielkiej Brytanii, Hiszpanii i USA, odbudowane z <strong>surowych rekordów WHO</strong> przez trzy rewizje ICD i wystandaryzowane wiekiem na mianownikach ONZ. Gdy odejmiesz starzenie, wyłania się zupełnie inna — i o wiele bardziej optymistyczna — historia.</span>
+    </p>
+    <div class="cs-meta">
+      <span><b>Tools:</b> Python (pandas, pyarrow) · Chart.js</span>
+      <span><b>Data:</b> WHO Mortality Database (ICD-8/9/10) · UN World Population Prospects 2024 · IARC GLOBOCAN 2024</span>
+      <span><b>Period:</b> 1968–2050</span>
+      <span><b>Links:</b> <a href="https://github.com/robertmaszkiewski/global-cancer-trends-analysis" target="_blank" rel="noopener">GitHub</a></span>
+    </div>
+  </div>
+</header>
+
+<!-- 1 · ASK -->
+<section>
+  <div class="container">
+    <div class="phase"><span class="n">01</span><span class="lang-en">Ask</span><span class="lang-pl">Pytanie</span></div>
+    <h2><span class="lang-en">The questions</span><span class="lang-pl">Pytania</span></h2>
+    <div class="steps">
+      <div>
+        <h3><span class="lang-en">Is cancer really rising?</span><span class="lang-pl">Czy raka naprawdę przybywa?</span></h3>
+        <p class="muted"><span class="lang-en">Deaths keep climbing. But is the <em>risk</em> climbing, or is the population simply older?</span><span class="lang-pl">Zgonów wciąż przybywa. Ale czy rośnie <em>ryzyko</em>, czy po prostu populacja jest starsza?</span></p>
+      </div>
+      <div>
+        <h3><span class="lang-en">Do countries move together?</span><span class="lang-pl">Czy kraje idą w tym samym rytmie?</span></h3>
+        <p class="muted"><span class="lang-en">If one exposure drives a cancer, its rise and fall should ripple across countries with a delay.</span><span class="lang-pl">Jeśli jedna ekspozycja napędza nowotwór, jego wzrost i spadek powinny przechodzić przez kraje z opóźnieniem.</span></p>
+      </div>
+      <div>
+        <h3><span class="lang-en">Can a 57-year record even be trusted?</span><span class="lang-pl">Czy 57-letniej serii można w ogóle ufać?</span></h3>
+        <p class="muted"><span class="lang-en">The disease codes were rewritten twice in that span. A trend drawn across a definition change is fiction.</span><span class="lang-pl">Kody chorób przepisano w tym czasie dwa razy. Trend narysowany przez zmianę definicji to fikcja.</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2 · KPI -->
+<section class="section-soft">
+  <div class="container">
+    <div class="phase"><span class="n">02</span><span class="lang-en">Headline</span><span class="lang-pl">Nagłówek</span></div>
+    <h2><span class="lang-en">What the corrected data says</span><span class="lang-pl">Co mówią poprawione dane</span></h2>
+    <div class="kpis">
+      <div class="kpi"><div class="v">−50%</div><div class="l"><span class="lang-en">Lung cancer death rate, Polish men, since the 1995 peak</span><span class="lang-pl">Umieralność na raka płuca, polscy mężczyźni, od szczytu w 1995</span></div></div>
+      <div class="kpi"><div class="v">−71%</div><div class="l"><span class="lang-en">Same, British men — who peaked back in 1974</span><span class="lang-pl">To samo, Brytyjczycy — u nich szczyt był już w 1974</span></div></div>
+      <div class="kpi bad"><div class="v">−14%</div><div class="l"><span class="lang-en">What the <em>crude</em> rate claims instead of −47% (Polish men, 1999–2023)</span><span class="lang-pl">Tyle twierdzi współczynnik <em>surowy</em> zamiast −47% (polscy mężczyźni, 1999–2023)</span></div></div>
+      <div class="kpi"><div class="v">−82%</div><div class="l"><span class="lang-en">Stomach cancer, Poland, since 1969 — a forgotten victory</span><span class="lang-pl">Rak żołądka, Polska, od 1969 — zapomniane zwycięstwo</span></div></div>
+      <div class="kpi bad"><div class="v">2018</div><div class="l"><span class="lang-en">Lung-cancer peak for Polish <em>women</em> — 23 years after the men</span><span class="lang-pl">Szczyt raka płuca u polskich <em>kobiet</em> — 23 lata po mężczyznach</span></div></div>
+      <div class="kpi"><div class="v">20.6M</div><div class="l"><span class="lang-en">New cancer cases worldwide, 2024 (IARC GLOBOCAN)</span><span class="lang-pl">Nowych zachorowań na świecie, 2024 (IARC GLOBOCAN)</span></div></div>
+      <div class="kpi bad"><div class="v">34.4M</div><div class="l"><span class="lang-en">Projected for 2050 — +67%, driven by ageing, not risk</span><span class="lang-pl">Prognoza na 2050 — +67%, napędzane starzeniem, nie ryzykiem</span></div></div>
+      <div class="kpi"><div class="v">19</div><div class="l"><span class="lang-en">Years of history recovered that were missing (1980–1998)</span><span class="lang-pl">Odzyskanych lat historii, których brakowało (1980–1998)</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 · ANALYSE -->
+<section>
+  <div class="container">
+    <div class="phase"><span class="n">03</span><span class="lang-en">Analyse</span><span class="lang-pl">Analiza</span></div>
+    <h2><span class="lang-en">The story in the data</span><span class="lang-pl">Historia ukryta w danych</span></h2>
+
+    <div class="chart-grid">
+
+      <div class="panel full">
+        <h3><span class="lang-en">The tobacco epidemic, rolling across countries</span><span class="lang-pl">Epidemia tytoniowa przetaczająca się przez kraje</span></h3>
+        <p class="muted"><span class="lang-en">Every country peaks — then falls. But each peaks in a <em>different decade</em>: Britain in 1974, the USA in 1987, Poland and Spain in 1995. That 20-year lag is the smoking epidemic arriving late and leaving late. Switch to women and the whole curve shifts a generation later — because women started smoking later. In Spain, women have not peaked yet.</span><span class="lang-pl">Każdy kraj osiąga szczyt — a potem spada. Ale każdy w <em>innej dekadzie</em>: Wielka Brytania w 1974, USA w 1987, Polska i Hiszpania w 1995. To 20-letnie opóźnienie to epidemia palenia, która przyszła później i później odchodzi. Przełącz na kobiety, a cała krzywa przesunie się o pokolenie — bo kobiety zaczęły palić później. W Hiszpanii kobiety jeszcze nie osiągnęły szczytu.</span></p>
+        <div class="ctrls">
+          <select id="lungSex" aria-label="Sex"></select>
+        </div>
+        <div class="chart-wrap"><canvas id="cLung"></canvas></div>
+      </div>
+
+      <div class="panel full">
+        <h3><span class="lang-en">Why age-standardisation changes the answer</span><span class="lang-pl">Dlaczego standaryzacja wiekiem zmienia odpowiedź</span></h3>
+        <p class="muted"><span class="lang-en">The dashed line is the raw death rate — what you get if you just divide deaths by population. The solid line removes the effect of an ageing population. For Polish men and lung cancer they tell opposite stories: the crude rate drifts down <strong>14%</strong> and looks like stagnation; the age-standardised rate falls <strong>47%</strong>. Same deaths, same people. One of these two lines has been misleading readers for years.</span><span class="lang-pl">Linia przerywana to surowy współczynnik zgonów — to, co dostajesz, dzieląc zgony przez populację. Linia ciągła usuwa wpływ starzenia się społeczeństwa. Dla polskich mężczyzn i raka płuca mówią one dwie różne historie: surowy spada o <strong>14%</strong> i wygląda jak stagnacja; standaryzowany spada o <strong>47%</strong>. Te same zgony, ci sami ludzie. Jedna z tych linii od lat wprowadza czytelników w błąd.</span></p>
+        <div class="ctrls">
+          <select id="cvIso" aria-label="Country"></select>
+          <select id="cvSite" aria-label="Cancer"></select>
+        </div>
+        <div class="chart-wrap"><canvas id="cCrude"></canvas></div>
+      </div>
+
+      <div class="panel full">
+        <h3><span class="lang-en">Explore any cancer</span><span class="lang-pl">Zbadaj dowolny nowotwór</span></h3>
+        <p class="muted"><span class="lang-en">Stomach cancer collapsed by <strong>82%</strong> in Poland without a screening programme or a drug — refrigeration, fresh food and <em>H. pylori</em> did it quietly. Cervical cancer fell where screening arrived. Where a series crosses an ICD revision that redefined the disease, the line is <strong>deliberately broken</strong> rather than drawn through the gap.</span><span class="lang-pl">Rak żołądka spadł w Polsce o <strong>82%</strong> bez programu przesiewowego i bez leku — zrobiły to lodówki, świeża żywność i <em>H. pylori</em>, po cichu. Rak szyjki macicy spadł tam, gdzie pojawiły się badania przesiewowe. Tam, gdzie seria przechodzi przez rewizję ICD, która zmieniła definicję choroby, linia jest <strong>celowo przerwana</strong>, zamiast być przeciągnięta przez lukę.</span></p>
+        <div class="ctrls">
+          <select id="trSite" aria-label="Cancer"></select>
+          <select id="trMetric" aria-label="Metric">
+            <option value="asr">Age-standardised</option>
+            <option value="crude">Crude rate</option>
+          </select>
+          <span id="trSexWrap"><select id="trSex" aria-label="Sex"></select></span>
+        </div>
+        <div class="chart-wrap"><canvas id="cTrend"></canvas></div>
+        <p class="note" id="trNote"></p>
+      </div>
+
+      <div class="panel">
+        <h3><span class="lang-en">Today's burden — 2024</span><span class="lang-pl">Dzisiejsze obciążenie — 2024</span></h3>
+        <p class="muted"><span class="lang-en">IARC GLOBOCAN 2024 modelled estimates. Aggregate and residual categories are excluded — a ranking that lists "all cancers" as the top cancer is not a ranking.</span><span class="lang-pl">Modelowane szacunki IARC GLOBOCAN 2024. Kategorie zbiorcze i resztkowe są wykluczone — ranking, w którym „wszystkie nowotwory" są nowotworem nr 1, nie jest rankingiem.</span></p>
+        <div class="ctrls">
+          <select id="rkGeo" aria-label="Country"></select>
+          <select id="rkMeas" aria-label="Measure">
+            <option value="incidence">Incidence</option>
+            <option value="mortality">Mortality</option>
+          </select>
+        </div>
+        <div class="chart-wrap"><canvas id="cRank"></canvas></div>
+      </div>
+
+      <div class="panel">
+        <h3><span class="lang-en">Cancer is a disease of age</span><span class="lang-pl">Rak jest chorobą wieku</span></h3>
+        <p class="muted"><span class="lang-en">Rates per 100,000 by five-year age band. The curve rises almost vertically after 60 — which is exactly why a crude national rate is dominated by how old the country is.</span><span class="lang-pl">Współczynniki na 100 tys. w pięcioletnich grupach wieku. Krzywa rośnie niemal pionowo po 60. roku życia — i właśnie dlatego surowy współczynnik krajowy zależy głównie od tego, jak stary jest dany kraj.</span></p>
+        <div class="ctrls">
+          <select id="agGeo" aria-label="Country"></select>
+          <select id="agSite" aria-label="Cancer"></select>
+          <select id="agMeas" aria-label="Measure">
+            <option value="incidence">Incidence</option>
+            <option value="mortality">Mortality</option>
+          </select>
+        </div>
+        <div class="chart-wrap"><canvas id="cAge"></canvas></div>
+      </div>
+
+      <div class="panel full">
+        <h3><span class="lang-en">2050: more cancer, not more risk</span><span class="lang-pl">2050: więcej raka, ale nie więcej ryzyka</span></h3>
+        <p class="muted"><span class="lang-en">IARC projects <strong>34.4 million</strong> new cases by 2050 — a 67% rise. Read it carefully: these projections hold today's risk <em>constant</em> and simply age the population forward. The rise is a demographic forecast, not a warning that cancer is becoming more dangerous. Both things are true at once — the individual risk is falling and the number of patients is climbing.</span><span class="lang-pl">IARC prognozuje <strong>34,4 mln</strong> zachorowań do 2050 — wzrost o 67%. Czytaj uważnie: te prognozy utrzymują dzisiejsze ryzyko na <em>stałym</em> poziomie i jedynie postarzają populację. Ten wzrost to prognoza demograficzna, a nie ostrzeżenie, że rak staje się groźniejszy. Obie rzeczy są prawdziwe naraz — ryzyko indywidualne spada, a liczba pacjentów rośnie.</span></p>
+        <div class="ctrls">
+          <select id="ftGeo" aria-label="Country"></select>
+          <select id="ftMeas" aria-label="Measure">
+            <option value="incidence">Incidence</option>
+            <option value="mortality">Mortality</option>
+          </select>
+        </div>
+        <div class="chart-wrap"><canvas id="cFuture"></canvas></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- 4 · BUILD -->
+<section class="section-soft">
+  <div class="container">
+    <div class="phase"><span class="n">04</span><span class="lang-en">Build</span><span class="lang-pl">Warsztat</span></div>
+    <h2><span class="lang-en">Rebuilding the record</span><span class="lang-pl">Odbudowa danych</span></h2>
+    <p class="lede" style="margin-bottom:22px">
+      <span class="lang-en">A first pass at this dataset produced a chart with a straight line running through <strong>twenty years that did not exist</strong>. That is the failure mode worth talking about, so here is what it took to fix it.</span>
+      <span class="lang-pl">Pierwsze podejście do tego zbioru wyprodukowało wykres z prostą linią przeciągniętą przez <strong>dwadzieścia lat, których nie było</strong>. To jest ta usterka, o której warto mówić — więc oto, czego wymagała naprawa.</span>
+    </p>
+    <div class="chart-grid">
+      <div class="panel">
+        <h3><span class="lang-en">Five things that were wrong</span><span class="lang-pl">Pięć rzeczy, które były źle</span></h3>
+        <ul class="fixes">
+          <li><span class="tick">✓</span><span><b><span class="lang-en">A 19-year hole.</span><span class="lang-pl">19-letnia dziura.</span></b> <span class="lang-en">1980–1998 was missing entirely. All four countries report ICD-9 under WHO list <code>09B</code>; the code was looking for <code>09A</code>. Recovered.</span><span class="lang-pl">Lata 1980–1998 nie istniały. Wszystkie cztery kraje raportują ICD-9 na liście WHO <code>09B</code>; kod szukał <code>09A</code>. Odzyskane.</span></span></li>
+          <li><span class="tick">✓</span><span><b><span class="lang-en">No age-standardisation.</span><span class="lang-pl">Brak standaryzacji.</span></b> <span class="lang-en">Every long trend was a crude rate, so every trend was really a measure of population ageing.</span><span class="lang-pl">Każdy długi trend był surowym współczynnikiem — czyli w istocie miarą starzenia się populacji.</span></span></li>
+          <li><span class="tick">✓</span><span><b><span class="lang-en">Missing denominators.</span><span class="lang-pl">Brakujące mianowniki.</span></b> <span class="lang-en">WHO stops publishing US populations after 2007. UN WPP supplies them — the seam at 2007 is 0.09%.</span><span class="lang-pl">WHO nie publikuje populacji USA po 2007. Dostarcza je UN WPP — szew w 2007 wynosi 0,09%.</span></span></li>
+          <li><span class="tick">✓</span><span><b><span class="lang-en">Silent drops.</span><span class="lang-pl">Ciche gubienie danych.</span></b> <span class="lang-en">Unmappable records vanished without a counter. Now every dropped row is counted and reported.</span><span class="lang-pl">Niezmapowane rekordy znikały bez licznika. Teraz każdy odrzucony wiersz jest liczony i raportowany.</span></span></li>
+          <li><span class="tick">✓</span><span><b><span class="lang-en">Definition drift.</span><span class="lang-pl">Dryf definicji.</span></b> <span class="lang-en">ICD-8 "melanoma" secretly included all skin cancer. Sites are now defined to mean the same thing in every revision — and tested for it.</span><span class="lang-pl">„Czerniak" w ICD-8 po cichu obejmował wszystkie raki skóry. Lokalizacje są teraz zdefiniowane tak, by znaczyć to samo w każdej rewizji — i to jest testowane.</span></span></li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h3><span class="lang-en">How it is checked</span><span class="lang-pl">Jak to jest sprawdzane</span></h3>
+        <ul class="fixes">
+          <li><span class="tick">✓</span><span><b><span class="lang-en">Against reality.</span><span class="lang-pl">Wobec rzeczywistości.</span></b> <span class="lang-en">Counts are matched to published figures: Polish lung-cancer deaths 1990 = 14,539; US = 91,089. Every check must pass or the build fails.</span><span class="lang-pl">Liczby porównane z publikacjami: zgony na raka płuca w Polsce 1990 = 14 539; w USA = 91 089. Każda kontrola musi przejść, inaczej build pada.</span></span></li>
+          <li><span class="tick">✓</span><span><b><span class="lang-en">Against the ICD seams.</span><span class="lang-pl">Wobec szwów ICD.</span></b> <span class="lang-en">Each site is tested at every revision change. <strong>18 of 20</strong> survive intact. The two that don't are drawn with a visible break instead of a comforting straight line.</span><span class="lang-pl">Każda lokalizacja jest testowana na każdej zmianie rewizji. <strong>18 z 20</strong> przechodzi bez szwanku. Dwie, które nie przechodzą, są rysowane z widoczną przerwą zamiast wygodnej prostej.</span></span></li>
+          <li><span class="tick">✓</span><span><b><span class="lang-en">Against itself.</span><span class="lang-pl">Wobec siebie.</span></b> <span class="lang-en">Age bands must sum to the total, both sexes must equal men plus women, every rate must reproduce from its own numerator and denominator.</span><span class="lang-pl">Grupy wieku muszą sumować się do całości, „obie płcie" musi równać się mężczyźni plus kobiety, każdy współczynnik musi się odtworzyć ze swojego licznika i mianownika.</span></span></li>
+          <li><span class="tick">✓</span><span><b><span class="lang-en">Against the source.</span><span class="lang-pl">Wobec źródła.</span></b> <span class="lang-en">The IARC layer was compared line-by-line with IARC's own fact sheets: <strong>340 of 340</strong> cancer-level figures match to the case.</span><span class="lang-pl">Warstwa IARC porównana wiersz po wierszu z kartami faktograficznymi IARC: <strong>340 z 340</strong> wartości zgadza się co do przypadku.</span></span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 · LIMITS -->
+<section>
+  <div class="container">
+    <div class="phase"><span class="n">05</span><span class="lang-en">Limits</span><span class="lang-pl">Granice</span></div>
+    <h2><span class="lang-en">What this does not say</span><span class="lang-pl">Czego to nie mówi</span></h2>
+    <div class="callout">
+      <p>
+        <span class="lang-en"><b>This is mortality, not survival.</b> Fewer deaths can mean better treatment, earlier detection, or less exposure — this data cannot separate them. <b>It is not incidence.</b> A falling death rate is not proof that fewer people are getting ill. <b>Three years are still missing</b> (Poland 1997–98, UK 2000) and they are shown as gaps, not bridged. <b>Bone and testicular cancer break</b> across an ICD revision and are drawn in segments. <b>1968–1979 offers fewer cancer sites</b> than later decades, because ICD-8 simply did not record them separately — the earlier era is coarser, and pretending otherwise would be the whole mistake repeated.</span>
+        <span class="lang-pl"><b>To jest umieralność, nie przeżywalność.</b> Mniej zgonów może oznaczać lepsze leczenie, wcześniejsze wykrycie albo mniejszą ekspozycję — te dane nie potrafią tego rozdzielić. <b>To nie jest zachorowalność.</b> Spadająca umieralność nie dowodzi, że mniej ludzi choruje. <b>Trzech lat wciąż brakuje</b> (Polska 1997–98, Wielka Brytania 2000) i są pokazane jako luki, a nie zasypane. <b>Rak kości i jądra pękają</b> na zmianie rewizji ICD i są rysowane odcinkami. <b>Lata 1968–1979 oferują mniej lokalizacji</b> niż późniejsze dekady, bo ICD-8 po prostu nie zapisywał ich osobno — wcześniejsza era jest zgrubna, a udawanie inaczej byłoby powtórzeniem całego błędu.</span>
+      </p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p class="muted">© <span id="yr">2026</span> Robert Maszkiewski · <span class="lang-en">Data analyst</span><span class="lang-pl">Analityk danych</span></p>
+    <div class="foot-links">
+      <a href="../index.html"><span class="lang-en">Portfolio</span><span class="lang-pl">Portfolio</span></a>
+      <a href="https://github.com/robertmaszkiewski/global-cancer-trends-analysis" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://www.linkedin.com/in/robert-maszkiewski" target="_blank" rel="noopener">LinkedIn</a>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/js/lang.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="../assets/js/cancer-dashboard.js"></script>
+<script>document.getElementById("yr").textContent = new Date().getFullYear();</script>
+</body>
+</html>
