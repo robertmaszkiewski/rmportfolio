@@ -388,7 +388,9 @@
       var s = P.cervixYoungRate[iso];
       return {
         label: T().geo[iso],
-        data: s.rate.map(function (v, i) { return { x: s.y0 + i, y: v }; }),
+        // lata JAWNIE — Polska nie ma 1997-98, UK nie ma 2000.
+        // Zalozenie ciaglosci przesuwalo cala polska linie o dwa lata.
+        data: s.rate.map(function (v, i) { return { x: s.years[i], y: v }; }),
         borderColor: GEO_COL[iso], backgroundColor: GEO_COL[iso],
         borderWidth: 2.2, pointRadius: 0, tension: .3
       };

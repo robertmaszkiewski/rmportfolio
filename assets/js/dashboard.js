@@ -13,6 +13,26 @@
   var gbp0 = function (v) { return "£" + Math.round(v).toLocaleString(); };
   var gbpM = function (v) { return "£" + (v / 1e6).toFixed(2) + "m"; };
 
+  /* ---------- i18n: wykresy musza mowic tym samym jezykiem co tekst obok ---------- */
+  var LANG = (document.body || document.documentElement).classList.contains("lang-pl") ? "pl" : "en";
+  var STR = {
+    en: { pctRevenue: "% of revenue", cohort: "Cohort", seg: {} },
+    pl: {
+      pctRevenue: "% przychodu", cohort: "Kohorta",
+      seg: {
+        "Champions": "Najlepsi klienci",
+        "Loyal": "Lojalni",
+        "At risk (was loyal)": "Zagrożeni (byli lojalni)",
+        "Needs attention": "Wymagają uwagi",
+        "Hibernating / Lost": "Uśpieni / utraceni",
+        "New / Promising": "Nowi / obiecujący"
+      }
+    }
+  };
+  function T() { return STR[LANG]; }
+  /* Nazwy produktow i krajow zostaja w oryginale — to dane zrodlowe, nie etykiety UI. */
+  function tSeg(x) { return T().seg[x] || x; }
+
   function baseOpts(extra) {
     return Object.assign({
       responsive: true, maintainAspectRatio: false,
@@ -21,104 +41,114 @@
   }
 
   // 5.1 Revenue by month (line)
-  new Chart(document.getElementById("chRevenue"), {
-    type: "line",
-    data: {
-      labels: D.revenue_by_month.map(function (r) { return r.month; }),
-      datasets: [{
-        data: D.revenue_by_month.map(function (r) { return r.revenue; }),
-        borderColor: GREEN, backgroundColor: GREENL, fill: true,
-        tension: .32, pointRadius: 2.5, pointHoverRadius: 5, borderWidth: 2.5
-      }]
-    },
-    options: baseOpts({
-      plugins: { tooltip: { callbacks: { label: function (c) { return gbp0(c.parsed.y); } } } },
-      scales: {
-        x: { grid: { display: false }, ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 12 } },
-        y: { grid: { color: GRID }, beginAtZero: true, ticks: { callback: function (v) { return "£" + (v / 1e6).toFixed(1) + "m"; } } }
-      }
-    })
-  });
+  function renderCharts() {
+    // zmiana jezyka -> niszczymy stare wykresy, inaczej nakladalyby sie na siebie
+    ['chRevenue','chProducts','chCountry','chRfm','chReturns'].forEach(function (id) {
+      var el = document.getElementById(id);
+      var ex = el && Chart.getChart ? Chart.getChart(el) : null;
+      if (ex) ex.destroy();
+    });
+    new Chart(document.getElementById("chRevenue"), {
+      type: "line",
+      data: {
+        labels: D.revenue_by_month.map(function (r) { return r.month; }),
+        datasets: [{
+          data: D.revenue_by_month.map(function (r) { return r.revenue; }),
+          borderColor: GREEN, backgroundColor: GREENL, fill: true,
+          tension: .32, pointRadius: 2.5, pointHoverRadius: 5, borderWidth: 2.5
+        }]
+      },
+      options: baseOpts({
+        plugins: { tooltip: { callbacks: { label: function (c) { return gbp0(c.parsed.y); } } } },
+        scales: {
+          x: { grid: { display: false }, ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 12 } },
+          y: { grid: { color: GRID }, beginAtZero: true, ticks: { callback: function (v) { return "£" + (v / 1e6).toFixed(1) + "m"; } } }
+        }
+      })
+    });
+  
+    // 5.2 Top products (horizontal bar)
+    new Chart(document.getElementById("chProducts"), {
+      type: "bar",
+      data: {
+        labels: D.top_products.map(function (r) { return r.name; }),
+        datasets: [{ data: D.top_products.map(function (r) { return r.revenue; }), backgroundColor: GREEN, borderRadius: 4 }]
+      },
+      options: baseOpts({
+        indexAxis: "y",
+        plugins: { tooltip: { callbacks: { label: function (c) { return gbp0(c.parsed.x); } } } },
+        scales: {
+          x: { grid: { color: GRID }, beginAtZero: true, ticks: { callback: function (v) { return "£" + (v / 1e3) + "k"; } } },
+          y: { grid: { display: false }, ticks: { font: { size: 10 } } }
+        }
+      })
+    });
+  
+    // 5.3 Country (horizontal bar)
+    new Chart(document.getElementById("chCountry"), {
+      type: "bar",
+      data: {
+        labels: D.revenue_by_country.map(function (r) { return r.country; }),
+        datasets: [{ data: D.revenue_by_country.map(function (r) { return r.revenue; }), backgroundColor: "#3b4ea0", borderRadius: 4 }]
+      },
+      options: baseOpts({
+        indexAxis: "y",
+        plugins: { tooltip: { callbacks: { label: function (c) { return gbp0(c.parsed.x); } } } },
+        scales: {
+          x: { grid: { color: GRID }, beginAtZero: true, ticks: { callback: function (v) { return "£" + (v / 1e6).toFixed(1) + "m"; } } },
+          y: { grid: { display: false } }
+        }
+      })
+    });
+  
+    // 5.4 RFM segments (horizontal bar, by revenue)
+    var seg = D.rfm_segments.slice().sort(function (a, b) { return a.revenue - b.revenue; });
+    new Chart(document.getElementById("chRfm"), {
+      type: "bar",
+      data: {
+        labels: seg.map(function (r) { return tSeg(r.segment); }),
+        datasets: [{
+          data: seg.map(function (r) { return r.revenue; }),
+          backgroundColor: seg.map(function (r) { return r.segment.indexOf("Champ") === 0 ? GREEN : "#9bbfae"; }),
+          borderRadius: 4
+        }]
+      },
+      options: baseOpts({
+        indexAxis: "y",
+        plugins: { tooltip: { callbacks: { label: function (c) {
+          var s = seg[c.dataIndex]; return gbp0(s.revenue) + "  ·  " + s.customers.toLocaleString() + " customers  ·  " + s.share + "%"; } } } },
+        scales: {
+          x: { grid: { color: GRID }, beginAtZero: true, ticks: { callback: function (v) { return "£" + (v / 1e6).toFixed(1) + "m"; } } },
+          y: { grid: { display: false }, ticks: { font: { size: 10 } } }
+        }
+      })
+    });
+  
+    // 5.6 Returns rate (line)
+    new Chart(document.getElementById("chReturns"), {
+      type: "line",
+      data: {
+        labels: D.returns_by_month.map(function (r) { return r.month; }),
+        datasets: [{
+          data: D.returns_by_month.map(function (r) { return r.rate; }),
+          borderColor: RED, backgroundColor: "rgba(192,57,43,.12)", fill: true,
+          tension: .3, pointRadius: 2, pointHoverRadius: 5, borderWidth: 2.5
+        }]
+      },
+      options: baseOpts({
+        plugins: { tooltip: { callbacks: { label: function (c) { return c.parsed.y + "% of revenue"; } } } },
+        scales: {
+          x: { grid: { display: false }, ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 12 } },
+          y: { grid: { color: GRID }, beginAtZero: true, ticks: { callback: function (v) { return v + "%"; } } }
+        }
+      })
+    });
+  
+    // Cohort heatmap (HTML table)
+  }
+  renderCharts();
 
-  // 5.2 Top products (horizontal bar)
-  new Chart(document.getElementById("chProducts"), {
-    type: "bar",
-    data: {
-      labels: D.top_products.map(function (r) { return r.name; }),
-      datasets: [{ data: D.top_products.map(function (r) { return r.revenue; }), backgroundColor: GREEN, borderRadius: 4 }]
-    },
-    options: baseOpts({
-      indexAxis: "y",
-      plugins: { tooltip: { callbacks: { label: function (c) { return gbp0(c.parsed.x); } } } },
-      scales: {
-        x: { grid: { color: GRID }, beginAtZero: true, ticks: { callback: function (v) { return "£" + (v / 1e3) + "k"; } } },
-        y: { grid: { display: false }, ticks: { font: { size: 10 } } }
-      }
-    })
-  });
-
-  // 5.3 Country (horizontal bar)
-  new Chart(document.getElementById("chCountry"), {
-    type: "bar",
-    data: {
-      labels: D.revenue_by_country.map(function (r) { return r.country; }),
-      datasets: [{ data: D.revenue_by_country.map(function (r) { return r.revenue; }), backgroundColor: "#3b4ea0", borderRadius: 4 }]
-    },
-    options: baseOpts({
-      indexAxis: "y",
-      plugins: { tooltip: { callbacks: { label: function (c) { return gbp0(c.parsed.x); } } } },
-      scales: {
-        x: { grid: { color: GRID }, beginAtZero: true, ticks: { callback: function (v) { return "£" + (v / 1e6).toFixed(1) + "m"; } } },
-        y: { grid: { display: false } }
-      }
-    })
-  });
-
-  // 5.4 RFM segments (horizontal bar, by revenue)
-  var seg = D.rfm_segments.slice().sort(function (a, b) { return a.revenue - b.revenue; });
-  new Chart(document.getElementById("chRfm"), {
-    type: "bar",
-    data: {
-      labels: seg.map(function (r) { return r.segment; }),
-      datasets: [{
-        data: seg.map(function (r) { return r.revenue; }),
-        backgroundColor: seg.map(function (r) { return r.segment.indexOf("Champ") === 0 ? GREEN : "#9bbfae"; }),
-        borderRadius: 4
-      }]
-    },
-    options: baseOpts({
-      indexAxis: "y",
-      plugins: { tooltip: { callbacks: { label: function (c) {
-        var s = seg[c.dataIndex]; return gbp0(s.revenue) + "  ·  " + s.customers.toLocaleString() + " customers  ·  " + s.share + "%"; } } } },
-      scales: {
-        x: { grid: { color: GRID }, beginAtZero: true, ticks: { callback: function (v) { return "£" + (v / 1e6).toFixed(1) + "m"; } } },
-        y: { grid: { display: false }, ticks: { font: { size: 10 } } }
-      }
-    })
-  });
-
-  // 5.6 Returns rate (line)
-  new Chart(document.getElementById("chReturns"), {
-    type: "line",
-    data: {
-      labels: D.returns_by_month.map(function (r) { return r.month; }),
-      datasets: [{
-        data: D.returns_by_month.map(function (r) { return r.rate; }),
-        borderColor: RED, backgroundColor: "rgba(192,57,43,.12)", fill: true,
-        tension: .3, pointRadius: 2, pointHoverRadius: 5, borderWidth: 2.5
-      }]
-    },
-    options: baseOpts({
-      plugins: { tooltip: { callbacks: { label: function (c) { return c.parsed.y + "% of revenue"; } } } },
-      scales: {
-        x: { grid: { display: false }, ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 12 } },
-        y: { grid: { color: GRID }, beginAtZero: true, ticks: { callback: function (v) { return v + "%"; } } }
-      }
-    })
-  });
-
-  // Cohort heatmap (HTML table)
-  (function () {
+  function renderCohort() {
     var c = D.cohort, el = document.getElementById("cohort");
     if (!c || !el) return;
     var max = 50; // cap for colour scale
@@ -129,7 +159,7 @@
       var col = a > 0.55 ? "#fff" : "#15233f";
       return '<td style="background:' + bg + ';color:' + col + '">' + Math.round(v) + '</td>';
     }
-    var h = '<table class="cohort"><thead><tr><th class="lab">Cohort</th>';
+    var h = '<table class="cohort"><thead><tr><th class="lab">' + T().cohort + '</th>';
     c.offsets.forEach(function (o) { h += '<th>M' + o + '</th>'; });
     h += '</tr></thead><tbody>';
     c.cohorts.forEach(function (name, i) {
@@ -139,5 +169,15 @@
     });
     h += '</tbody></table>';
     el.innerHTML = h;
-  })();
+  }
+  renderCohort();
+
+  /* lang.js wola ten hook -> przerysowanie w nowym jezyku, bez przeladowania strony */
+  window.setRetailLang = function (l) {
+    var next = (l === "pl") ? "pl" : "en";
+    if (next === LANG) return;
+    LANG = next;
+    renderCharts();
+    renderCohort();
+  };
 })();

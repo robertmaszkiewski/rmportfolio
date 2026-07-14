@@ -17,6 +17,8 @@
     // pages with re-renderable charts expose a hook so labels/axes follow the language
     if (typeof window.setClimateLang === "function") window.setClimateLang(l);
     if (typeof window.setCancerLang === "function") window.setCancerLang(l);
+    if (typeof window.setCrimeLang === "function") window.setCrimeLang(l);
+    if (typeof window.setRetailLang === "function") window.setRetailLang(l);
   }
   window.setLang = apply;
 

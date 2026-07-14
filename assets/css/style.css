@@ -71,7 +71,7 @@ section{padding:64px 0}
 .chip strong{color:var(--green-d)}
 
 /* ---- case study cards ---- */
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:24px}
 .card{display:flex;flex-direction:column;background:#fff;border:1px solid var(--line);border-radius:var(--radius);
   overflow:hidden;transition:.2s;box-shadow:var(--shadow)}
 .card.live:hover{transform:translateY(-4px);border-color:#cfe6da}
