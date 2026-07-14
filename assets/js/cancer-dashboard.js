@@ -42,6 +42,9 @@
   var H = null, C = null, F = null, charts = {}, lang = "en";
   function T() { return STR[lang]; }
   function L(o) { return (lang === "pl" ? o.pl : o.en) || o.en; }
+  /* Wersja EN opowiada o Wielkiej Brytanii, wersja PL o Polsce —
+     wykresy startuja od kraju, o ktorym mowi tekst obok. */
+  function homeGeo() { return lang === "pl" ? "POL" : "GBR"; }
 
   function destroy() {
     Object.keys(charts).forEach(function (k) { if (charts[k]) charts[k].destroy(); });
@@ -78,18 +81,26 @@
     return out;
   }
 
-  /* ---------- 1. Epidemia tytoniowa: ASR raka pluca ---------- */
-  function lungChart() {
-    var sex = val("lungSex") || "male";
-    var ds = ["GBR", "USA", "POL", "ESP"].map(function (iso) {
+  /* ---------- 1. Szesc nowotworow, szesc roznych kierunkow ---------- */
+  var DIVERGE = [
+    { site: "STOMACH", col: GREEN },
+    { site: "LUNG", col: RED },
+    { site: "COLORECTUM", col: INDIGO },
+    { site: "PANCREAS", col: SLATE },
+    { site: "LIVER", col: AMBER },
+    { site: "ORAL_PHARYNX", col: BLUE }
+  ];
+  function divergeChart() {
+    var iso = val("dvIso") || homeGeo();
+    var ds = DIVERGE.map(function (d) {
       return {
-        label: T().geo[iso],
-        data: points(iso + "|LUNG|" + sex, "asr", false),
-        borderColor: GEO_COL[iso], backgroundColor: GEO_COL[iso],
+        label: L(H.sites[d.site]),
+        data: points(iso + "|" + d.site + "|both", "asr", !H.sites[d.site].continuous),
+        borderColor: d.col, backgroundColor: d.col,
         borderWidth: 2.2, pointRadius: 0, tension: .25, spanGaps: false
       };
-    });
-    charts.lung = new Chart(document.getElementById("cLung"), {
+    }).filter(function (d) { return d.data; });
+    charts.dv = new Chart(document.getElementById("cDiverge"), {
       type: "line", data: { datasets: ds },
       options: legendOn({
         responsive: true, maintainAspectRatio: false, parsing: false,
@@ -101,7 +112,7 @@
 
   /* ---------- 2. Dlaczego standaryzacja: surowy vs ASR ---------- */
   function crudeChart() {
-    var iso = val("cvIso") || "POL", site = val("cvSite") || "LUNG";
+    var iso = val("cvIso") || homeGeo(), site = val("cvSite") || "LUNG";
     var meta = H.sites[site];
     var sex = meta.sex || "male";
     var mk = function (metric, color, dash, label) {
@@ -155,7 +166,7 @@
 
   /* ---------- 4. Obciazenie 2024 (GLOBOCAN) ---------- */
   function rankChart() {
-    var geo = val("rkGeo") || "POL", meas = val("rkMeas") || "incidence";
+    var geo = val("rkGeo") || homeGeo(), meas = val("rkMeas") || "incidence";
     var rows = (C.burden[geo + "|" + meas] || []).slice(0, 10);
     charts.rk = new Chart(document.getElementById("cRank"), {
       type: "bar",
@@ -175,7 +186,7 @@
 
   /* ---------- 5. Profil wieku ---------- */
   function ageChart() {
-    var geo = val("agGeo") || "POL", site = val("agSite") || "LUNG",
+    var geo = val("agGeo") || homeGeo(), site = val("agSite") || "LUNG",
         meas = val("agMeas") || "incidence";
     var a = C.age[geo + "|" + site + "|" + meas];
     if (!a) { return; }
@@ -212,7 +223,7 @@
 
   function renderAll() {
     destroy();
-    lungChart(); crudeChart(); trendChart(); rankChart(); ageChart(); futureChart();
+    divergeChart(); crudeChart(); trendChart(); rankChart(); ageChart(); futureChart();
   }
 
   /* ---------- selektory ---------- */
@@ -240,22 +251,24 @@
     return out;
   }
 
-  function refreshLabels() {
+  function refreshLabels(resetGeo) {
     var keep = { trSite: val("trSite"), cvSite: val("cvSite"), agSite: val("agSite") };
     fillSelect("trSite", siteEntries(H.sites), keep.trSite || "STOMACH");
     fillSelect("cvSite", siteEntries(H.sites), keep.cvSite || "LUNG");
     fillSelect("agSite", siteEntries(ageSites()), keep.agSite || "LUNG");
-    [["lungSex", ["male", "female", "both"]], ["trSex", ["both", "male", "female"]]]
+    var cur = val("trSex");
+    fillSelect("trSex", ["both", "male", "female"].map(function (s) { return [s, T().sex[s]]; }),
+               cur || "both");
+    // Po zmianie jezyka wykresy wracaja do kraju, o ktorym opowiada tekst (EN->UK, PL->Polska).
+    var home = homeGeo();
+    [["dvIso", ["POL", "GBR", "ESP", "USA"]], ["cvIso", ["POL", "GBR", "ESP", "USA"]],
+     ["rkGeo", ["POL", "GBR", "ESP", "USA", "WORLD"]], ["agGeo", ["POL", "GBR", "ESP", "USA", "WORLD"]]]
       .forEach(function (p) {
-        var cur = val(p[0]);
-        fillSelect(p[0], p[1].map(function (s) { return [s, T().sex[s]]; }), cur || p[1][0]);
+        var sel = resetGeo ? home : (val(p[0]) || home);
+        fillSelect(p[0], p[1].map(function (g) { return [g, T().geo[g]]; }), sel);
       });
-    [["cvIso", ["POL", "GBR", "ESP", "USA"]], ["rkGeo", ["POL", "GBR", "ESP", "USA", "WORLD"]],
-     ["agGeo", ["POL", "GBR", "ESP", "USA", "WORLD"]], ["ftGeo", ["WORLD", "POL", "GBR", "ESP", "USA"]]]
-      .forEach(function (p) {
-        var cur = val(p[0]);
-        fillSelect(p[0], p[1].map(function (g) { return [g, T().geo[g]]; }), cur || p[1][0]);
-      });
+    fillSelect("ftGeo", ["WORLD", "POL", "GBR", "ESP", "USA"].map(function (g) { return [g, T().geo[g]]; }),
+               val("ftGeo") || "WORLD");
     [["rkMeas", 0], ["agMeas", 0], ["ftMeas", 0], ["trMetric", 0]].forEach(function (p) {
       var el = document.getElementById(p[0]);
       if (!el) return;
@@ -269,9 +282,11 @@
   }
 
   window.setCancerLang = function (l) {
-    lang = (l === "pl") ? "pl" : "en";
+    var next = (l === "pl") ? "pl" : "en";
+    var changed = (next !== lang);
+    lang = next;
     if (!H) return;
-    refreshLabels();
+    refreshLabels(changed);   // zmiana jezyka -> wykresy przeskakuja na kraj tej narracji
     renderAll();
   };
 
@@ -283,9 +298,9 @@
     ]).then(function (res) {
       H = res[0]; C = res[1]; F = res[2];
       lang = document.body.classList.contains("lang-pl") ? "pl" : "en";
-      refreshLabels();
+      refreshLabels(true);
       renderAll();
-      ["lungSex", "cvIso", "cvSite", "trSite", "trMetric", "trSex",
+      ["dvIso", "cvIso", "cvSite", "trSite", "trMetric", "trSex",
        "rkGeo", "rkMeas", "agGeo", "agSite", "agMeas", "ftGeo", "ftMeas"]
         .forEach(function (id) {
           var el = document.getElementById(id);
