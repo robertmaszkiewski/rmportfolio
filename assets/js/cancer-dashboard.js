@@ -33,7 +33,13 @@
       typeNona: "Added by the 9-valent vaccine (31, 33, 45, 52, 58)",
       typeNone: "Covered by no vaccine",
       infertY: "Infertile (%), married women aged 15–44",
-      youngRateY: "Cervical cancer deaths per 100,000 (women 20–34)"
+      youngRateY: "Cervical cancer deaths per 100,000 (women 20–34)",
+      wideY: "Cervical cancer deaths per 100,000 (age-standardised)",
+      scatterX: "HPV vaccination coverage (%)",
+      scatterY: "Change in deaths, women 20–34 (2012→2022, %)",
+      oroY: "Deaths per 100,000 (age-standardised)",
+      oroHpv: "HPV-linked sites (tongue base, tonsil, oropharynx)",
+      oroOther: "Rest of the head & neck block (tobacco, alcohol)"
     },
     pl: {
       asrY: "Zgony na 100 tys. (standaryzowane wiekiem)",
@@ -55,7 +61,13 @@
       typeNona: "Dodane przez szczepionkę 9-walentną (31, 33, 45, 52, 58)",
       typeNone: "Nie pokryte przez żadną szczepionkę",
       infertY: "Niepłodne (%), kobiety zamężne 15–44 lata",
-      youngRateY: "Zgony na raka szyjki na 100 tys. (kobiety 20–34)"
+      youngRateY: "Zgony na raka szyjki na 100 tys. (kobiety 20–34)",
+      wideY: "Zgony na raka szyjki na 100 tys. (standaryzowane wiekiem)",
+      scatterX: "Pokrycie szczepieniami HPV (%)",
+      scatterY: "Zmiana zgonów, kobiety 20–34 (2012→2022, %)",
+      oroY: "Zgony na 100 tys. (standaryzowane wiekiem)",
+      oroHpv: "Podmiejsca HPV-zależne (nasada języka, migdałek, gardło środkowe)",
+      oroOther: "Reszta bloku głowa–szyja (tytoń, alkohol)"
     }
   };
 
@@ -394,10 +406,108 @@
     });
   }
 
+
+  /* 13. Rak szyjki w 11 krajach — gdzie stoi Polska */
+  var GEO11 = { POL: "#c0392b", GBR: AMBER, ESP: BLUE, USA: "#7f8c8d",
+                DNK: GREEN, SWE: GREEN, FIN: GREEN, NOR: GREEN,
+                AUS: "#8e44ad", NLD: "#16a085", PRT: "#d35400" };
+  var NAME11 = {
+    en: { DNK: "Denmark", SWE: "Sweden", FIN: "Finland", NOR: "Norway",
+          AUS: "Australia", NLD: "Netherlands", PRT: "Portugal" },
+    pl: { DNK: "Dania", SWE: "Szwecja", FIN: "Finlandia", NOR: "Norwegia",
+          AUS: "Australia", NLD: "Holandia", PRT: "Portugalia" }
+  };
+  function geoName(iso) {
+    return T().geo[iso] || NAME11[lang][iso] || iso;
+  }
+  function wideChart() {
+    if (!P || !P.wide || !document.getElementById("cWide")) return;
+    var rows = Object.keys(P.wide.asr).map(function (iso) {
+      var a = P.wide.asr[iso];
+      var cov = P.wide.coverage[iso];
+      return { iso: iso, asr: a.v[a.v.length - 1], year: a.years[a.years.length - 1],
+               cov: cov ? cov.pct[cov.pct.length - 1] : null };
+    }).sort(function (a, b) { return a.asr - b.asr; });
+    charts.wd = new Chart(document.getElementById("cWide"), {
+      type: "bar",
+      data: {
+        labels: rows.map(function (r) {
+          return geoName(r.iso) + (r.cov !== null ? "  (" + r.cov + "%)" : "");
+        }),
+        datasets: [{
+          data: rows.map(function (r) { return r.asr; }),
+          backgroundColor: rows.map(function (r) { return r.iso === "POL" ? RED : SLATE; }),
+          borderRadius: 5
+        }]
+      },
+      options: {
+        indexAxis: "y", responsive: true, maintainAspectRatio: false,
+        plugins: { tooltip: { callbacks: {
+          label: function (c) { return c.raw + " / 100k (" + rows[c.dataIndex].year + ")"; } } } },
+        scales: axes(T().wideY, null, { x: { grid: { color: GRID }, beginAtZero: true } })
+      }
+    });
+  }
+
+  /* 14. Pokrycie vs zmiana umieralnosci — 9 krajow. Hiszpania odstaje i to widac. */
+  function scatterChart() {
+    if (!P || !P.scatter || !document.getElementById("cScatter")) return;
+    charts.sc = new Chart(document.getElementById("cScatter"), {
+      type: "scatter",
+      data: {
+        datasets: P.scatter.map(function (p) {
+          var col = p.iso === "POL" ? RED : (p.iso === "ESP" ? AMBER : INDIGO);
+          return {
+            label: geoName(p.iso),
+            data: [{ x: p.cov, y: p.chg }],
+            backgroundColor: col, borderColor: col,
+            pointRadius: 7, pointHoverRadius: 9
+          };
+        })
+      },
+      options: legendOn({
+        responsive: true, maintainAspectRatio: false,
+        plugins: { tooltip: { callbacks: { label: function (c) {
+          return c.dataset.label + ": " + c.parsed.x + "% → " + c.parsed.y + "%"; } } } },
+        scales: axes(T().scatterX, T().scatterY, {
+          x: { beginAtZero: true, max: 100, grid: { color: GRID } },
+          y: { grid: { color: GRID } }
+        })
+      })
+    });
+  }
+
+  /* 15. Drugi rak HPV: gardlo srodkowe rosnie, gdy tytoniowe spadaja */
+  function oroChart() {
+    if (!P || !P.oro || !document.getElementById("cOro")) return;
+    var iso = val("oroIso") || (lang === "pl" ? "POL" : "GBR");
+    var o = P.oro[iso];
+    if (!o) return;
+    var mk = function (grp, col, dash, label) {
+      var s = o[grp];
+      return { label: label,
+        data: s.years.map(function (y, i) { return { x: y, y: s.v[i] }; }),
+        borderColor: col, backgroundColor: col, borderDash: dash,
+        borderWidth: 2.4, pointRadius: 0, tension: .25 };
+    };
+    charts.oro = new Chart(document.getElementById("cOro"), {
+      type: "line",
+      data: { datasets: [mk("hpv", RED, [], T().oroHpv),
+                         mk("other", SLATE, [6, 4], T().oroOther)] },
+      options: legendOn({
+        responsive: true, maintainAspectRatio: false, parsing: false,
+        interaction: { mode: "index", intersect: false },
+        scales: axes(T().year, T().oroY, { x: { type: "linear", ticks: { stepSize: 5 } },
+                                           y: { beginAtZero: true } })
+      })
+    });
+  }
+
   function renderAll() {
     destroy();
     divergeChart(); crudeChart(); trendChart(); rankChart(); ageChart(); futureChart();
     hpvCovChart(); youngChart(); fertChart(); typeChart(); infertChart(); cervYoungChart();
+    wideChart(); scatterChart(); oroChart();
   }
 
   /* ---------- selektory ---------- */
@@ -443,6 +553,10 @@
       });
     fillSelect("ftGeo", ["WORLD", "POL", "GBR", "ESP", "USA"].map(function (g) { return [g, T().geo[g]]; }),
                val("ftGeo") || "WORLD");
+    if (P && P.oro) {
+      fillSelect("oroIso", Object.keys(P.oro).map(function (g) { return [g, geoName(g)]; }),
+                 resetGeo ? homeGeo() : (val("oroIso") || homeGeo()));
+    }
     [["rkMeas", 0], ["agMeas", 0], ["ftMeas", 0], ["trMetric", 0]].forEach(function (p) {
       var el = document.getElementById(p[0]);
       if (!el) return;
@@ -476,7 +590,7 @@
       refreshLabels(true);
       renderAll();
       ["dvIso", "cvIso", "cvSite", "trSite", "trMetric", "trSex",
-       "rkGeo", "rkMeas", "agGeo", "agSite", "agMeas", "ftGeo", "ftMeas"]
+       "rkGeo", "rkMeas", "agGeo", "agSite", "agMeas", "ftGeo", "ftMeas", "oroIso"]
         .forEach(function (id) {
           var el = document.getElementById(id);
           if (el) el.addEventListener("change", renderAll);
