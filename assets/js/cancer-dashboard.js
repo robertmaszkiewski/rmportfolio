@@ -456,19 +456,26 @@
       type: "scatter",
       data: {
         datasets: P.scatter.map(function (p) {
-          var col = p.iso === "POL" ? RED : (p.iso === "ESP" ? AMBER : INDIGO);
+          // Zielony = kraj przeprowadzil kampanie nadrabiajaca obejmujaca roczniki,
+          // ktore dzis maja 20-34 lata. Czerwony = nie przeprowadzil.
+          var col = p.catchup ? GREEN : RED;
           return {
-            label: geoName(p.iso),
+            label: geoName(p.iso) + (p.catchup ? "" : " ✗"),
             data: [{ x: p.cov, y: p.chg }],
             backgroundColor: col, borderColor: col,
-            pointRadius: 7, pointHoverRadius: 9
+            pointRadius: 8, pointHoverRadius: 10,
+            pointStyle: p.catchup ? "circle" : "triangle"
           };
         })
       },
       options: legendOn({
         responsive: true, maintainAspectRatio: false,
         plugins: { tooltip: { callbacks: { label: function (c) {
-          return c.dataset.label + ": " + c.parsed.x + "% → " + c.parsed.y + "%"; } } } },
+          var p = P.scatter[c.datasetIndex];
+          var cu = P.catchup[p.iso];
+          return [c.dataset.label + ": " + c.parsed.x + "% → " + c.parsed.y + "%",
+                  (cu.has ? (lang === "pl" ? "kampania nadrabiająca: " : "catch-up: ") + cu.cohorts
+                          : (lang === "pl" ? "bez kampanii nadrabiającej" : "no catch-up campaign"))]; } } } },
         scales: axes(T().scatterX, T().scatterY, {
           x: { beginAtZero: true, max: 100, grid: { color: GRID } },
           y: { grid: { color: GRID } }
@@ -578,12 +585,36 @@
     renderAll();
   };
 
+  /* Serwer ma fallback try_files -> index.html, wiec BRAKUJACY plik wraca
+     jako HTML ze statusem 200. Bez tej kontroli wykresy po prostu cicho znikaja. */
+  function getJson(path) {
+    return fetch(path).then(function (r) {
+      if (!r.ok) throw new Error(path + " -> HTTP " + r.status);
+      var ct = r.headers && r.headers.get ? (r.headers.get("content-type") || "") : "";
+      if (ct && ct.indexOf("json") === -1) {
+        throw new Error(path + " -> serwer zwrocil '" + ct + "', nie JSON");
+      }
+      return r.json();
+    });
+  }
+  function showLoadError(e) {
+    console.error("Cancer data load failed:", e);
+    var msg = document.createElement("p");
+    msg.className = "note";
+    msg.style.cssText = "color:#c0392b;font-weight:700;text-align:center;padding:20px";
+    msg.textContent = (lang === "pl")
+      ? "Nie udało się wczytać danych — wykresy są niedostępne. (" + e.message + ")"
+      : "Data failed to load — charts unavailable. (" + e.message + ")";
+    var host = document.querySelector(".chart-grid");
+    if (host && host.parentNode) host.parentNode.insertBefore(msg, host);
+  }
+
   function boot() {
     Promise.all([
-      fetch("../assets/data/cancer-history.json").then(function (r) { return r.json(); }),
-      fetch("../assets/data/cancer-current.json").then(function (r) { return r.json(); }),
-      fetch("../assets/data/cancer-future.json").then(function (r) { return r.json(); }),
-      fetch("../assets/data/cancer-hpv.json").then(function (r) { return r.json(); })
+      getJson("../assets/data/cancer-history.json"),
+      getJson("../assets/data/cancer-current.json"),
+      getJson("../assets/data/cancer-future.json"),
+      getJson("../assets/data/cancer-hpv.json")
     ]).then(function (res) {
       H = res[0]; C = res[1]; F = res[2]; P = res[3];
       lang = document.body.classList.contains("lang-pl") ? "pl" : "en";
@@ -595,7 +626,7 @@
           var el = document.getElementById(id);
           if (el) el.addEventListener("change", renderAll);
         });
-    }).catch(function (e) { console.error("Cancer data load failed", e); });
+    }).catch(showLoadError);
   }
 
   if (document.readyState === "loading") {
